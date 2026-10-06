@@ -1,0 +1,18 @@
+# Python environments and caches
+.venv/
+.venv-viewer/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+*.log
+
+# MuJoCo Menagerie is its own sparse git clone, pinned at 4d038b3 (s2r2s/scripts/setup.ps1 fetches it)
+assets/menagerie/
+
+# Legacy training runs and bulky diagnostics stay on disk, out of git
+/runs/
+artifacts/videos/
+artifacts/checkpoints/
+artifacts/**/*.npz
+artifacts/**/*.npy
+artifacts/**/*.pt

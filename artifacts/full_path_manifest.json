@@ -1,0 +1,15 @@
+﻿{
+    "checkpoint_date":  "2026-10-04",
+    "training_started":  false,
+    "sha256":  {
+                   "artifacts/planned_path.npz":  "96b3a9dc20a058468ac9a480792b2d0b4185e5819074d00533102a9c3a268529",
+                   "artifacts/full_path_validation.json":  "a588e50b73b5fd415f8f7f0a78a4ceab419e3d980f15cbda992b00aa97a3c4d5",
+                   "artifacts/full_path_validation.npz":  "c40e189fff58bebbce68b12f8b8c7fbf529962f1ea564378430111e88911056c",
+                   "artifacts/full_path_validation_1ms.json":  "d18138ab021fd1fb6aecc41f9f9e4884ead5685479f145f9c27297768bf05702",
+                   "artifacts/full_path_validation_1ms.npz":  "af4e265a28c88218fab39e2e774faef17bf8bd526753bf9d47b930072e32f4ed",
+                   "scripts/validate_path.py":  "f542dc67ad92a6a4b177f0157a9ac1516a2b7917a534212552ff46056a7e4ed9",
+                   "scripts/plan_path.py":  "2e3676a156a14287be3e1639d7fd8d85ce6ae5b08711a8343bb62c26780094de",
+                   "src/so101_m1/env.py":  "61c68406ad2a59053b2f329526a455740fda54d5ac35c1a87a4899efe1e1b70b",
+                   "src/so101_m1/scene.py":  "b6eb9f67c0c05a47df89b5fa54d79a6c1d82f0c2ee3c033d0b1bd734a95fe3b8"
+               }
+}

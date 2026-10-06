@@ -1,0 +1,14 @@
+{
+  "original_checkpoint_and_production_sources_preserved": true,
+  "physics_preflight_unchanged_pass": true,
+  "overnight_recommended": false,
+  "source_sha256": {
+    "scripts/stage2_rewards.py": "1ca3ca60b633afc28d9141c368ae158281eb659dda76ac9b0c03caa48e6b9c17",
+    "scripts/stage2_directional.py": "8f4a427c1e3372477ea3b27912dae986bfa6f14673c66c94f9a8914842d934ba",
+    "scripts/stage2_experiment.py": "a3f0d166283da6198b210e47cd379ebf00bbe7574dcc85f5c5a6e56dadcffb97",
+    "scripts/check_stage2_rewards.py": "b9b239d3e9f385c897739e5f739ee332110ecdfa6085b98f1c8c65652a7695c0",
+    "scripts/record_policy.py": "2bff18dbd3c8fbb9c318776c0eb45c1dcab017ad7ecf0d138dece91eb1bfac5b",
+    "scripts/watch-policy.ps1": "52a8ec8c82465900aabe9bbf8d03dea018dcb3e440b89ccec7a6cc75c18e2892",
+    "scripts/train-stage2.ps1": "806ca746af16d406b13977c6c682f030f1debcf8ec65073ed56de7083b62fdfc"
+  }
+}

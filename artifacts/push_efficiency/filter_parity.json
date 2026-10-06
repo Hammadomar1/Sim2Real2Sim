@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "steps": 20,
+  "terminal_reset": true,
+  "filter_alpha": 0.5,
+  "scope": "Recorded-policy wrapper matches evaluated filter dynamics exactly in native test; rewards intentionally differ."
+}

@@ -1,0 +1,25 @@
+{
+  "checkpoint": "runs/seed0/latest.pt",
+  "checkpoint_sha256": "6fdb961fedb1396b22daec91695fb35947c7b983b585b4e942d3a6fd6d32ba81",
+  "stage": 2,
+  "seed": 3000000,
+  "backend": "warp",
+  "episodes": [
+    {
+      "env": 0.0,
+      "stage": 2.0,
+      "success": 0.0,
+      "failed": 0.0,
+      "timeout": 1.0,
+      "position_error_m": 0.05002954602241516,
+      "orientation_error_rad": 0.48063719272613525,
+      "seconds": 30.0,
+      "return": 5.359978675842285,
+      "joint_jerk_integral": 179.27593994140625,
+      "passed_gate": 0.0,
+      "failure_flags": 0,
+      "failure_categories": []
+    }
+  ],
+  "scope": "One consecutive deterministic learned-policy rollout; not an aggregate evaluation."
+}

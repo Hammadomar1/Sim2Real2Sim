@@ -1,0 +1,20 @@
+{
+  "terminal": [
+    {
+      "env": 0.0,
+      "stage": 5.0,
+      "success": 1.0,
+      "failed": 0.0,
+      "timeout": 0.0,
+      "position_error_m": 0.0018872322394538005,
+      "orientation_error_rad": 0.008433799007566245,
+      "seconds": 28.0,
+      "return": 35.54171209476668,
+      "joint_jerk_integral": 29558.387246216065,
+      "passed_gate": 1.0,
+      "failure_flags": 0,
+      "failure_categories": []
+    }
+  ],
+  "input_sha256": "4388d3035e22a18d103c62ba75701287543ccce75a0a6155636c0b14efd8587f"
+}

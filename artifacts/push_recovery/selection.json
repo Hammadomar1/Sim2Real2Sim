@@ -1,0 +1,8 @@
+{
+  "selected": "update005",
+  "checkpoint": "runs/push_recovery_seed9440/update005.pt",
+  "criterion": "Development success, then lower position error; heldout panel not used for checkpoint selection",
+  "development_seed": 6500000,
+  "heldout_seed": 6700000,
+  "training_bank_seed": 6600000
+}

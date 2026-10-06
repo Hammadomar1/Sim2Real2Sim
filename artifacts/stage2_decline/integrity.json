@@ -1,0 +1,15 @@
+{
+  "physics_preflight_pass": true,
+  "checkpoints": {
+    "best_level0": {
+      "sha256": "f8aa3f8e166422e9a4d06884b08bedb9f54c318e31a36e07bbc41e04e0a60c55",
+      "iteration": 25,
+      "source_compatible": true
+    },
+    "latest": {
+      "sha256": "fbf57906d223b0127c679a7b8189bf57558dc0e6c502adbd3ac6461e68c97bff",
+      "iteration": 100,
+      "source_compatible": true
+    }
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "early": {
+    "fixed": {
+      "checkpoint": "runs/stage2_distance_seed73/best_level0.pt",
+      "checkpoint_sha256": "f8aa3f8e166422e9a4d06884b08bedb9f54c318e31a36e07bbc41e04e0a60c55",
+      "panel": "fixed",
+      "seed": 5300000,
+      "initial_scene_hashes": [
+        "d02b6e731adf1a9d474eaa39c386f7b33764e344968ccec807b57c3d19b317e6",
+        "98d29fa9ed4f39996851944d3af6bff928405a3ce9c7463820cb7ce921cce1a9"
+      ],
+      "summary": {
+        "episodes": 128,
+        "success_rate": 0.1875,
+        "success_95ci_wilson": [
+          0.12936141696376852,
+          0.2638491807071743
+        ],
+        "mean_position_error_mm": 13.252920361992437,
+        "mean_orientation_error_deg": 3.5769201044430194,
+        "mean_seconds": 27.005078200250864,
+        "mean_joint_jerk_integral": 26.94716377556324,
+        "failures": 0,
+        "timeouts": 104
+      },
+      "metrics": {
+        "progress_mm": 4.302712013188284,
+        "forward_displacement_mm": 5.922617296804674,
+        "jaw_contact_seconds": 7.408586508827284,
+        "jaw_contact_fraction": 0.2522211934007001,
+        "longest_contact_seconds": 4.166022760764463,
+        "jerk_per_second": 1.2372599754317082
+      },
+      "episodes_with_jaw_contact": 123,
+      "contact_definition": "Actual allowed jaw/block contact at <=0 separation, sampled at each 20 Hz control boundary, captured before auto-reset; not exact physics-step contact duration."
+    },
+    "fresh": {
+      "checkpoint": "runs/stage2_distance_seed73/best_level0.pt",
+      "checkpoint_sha256": "f8aa3f8e166422e9a4d06884b08bedb9f54c318e31a36e07bbc41e04e0a60c55",
+      "panel": "fresh",
+      "seed": 6400000,
+      "initial_scene_hashes": [
+        "178be6c6d5119564250e577d192533a80f0d78dbcdc8bf22340918d8f3bd6338",
+        "5f6af8c66964dac8637e7644e4092649664d425fa791a260645522a970932951"
+      ],
+      "summary": {
+        "episodes": 128,
+        "success_rate": 0.2109375,
+        "success_95ci_wilson": [
+          0.14921308750498039,
+          0.28950671534064165
+        ],
+        "mean_position_error_mm": 13.130145009199623,
+        "mean_orientation_error_deg": 3.9064914090097687,
+        "mean_seconds": 25.776562532410026,
+        "mean_joint_jerk_integral": 24.946649610996246,
+        "failures": 0,
+        "timeouts": 101
+      },
+      "metrics": {
+        "progress_mm": 4.387588937242981,
+        "forward_displacement_mm": 5.967197594829486,
+        "jaw_contact_seconds": 7.267962004174478,
+        "jaw_contact_fraction": 0.24934384910403828,
+        "longest_contact_seconds": 4.309772757231258,
+        "jerk_per_second": 1.3076486364929518
+      },
+      "episodes_with_jaw_contact": 119,
+      "contact_definition": "Actual allowed jaw/block contact at <=0 separation, sampled at each 20 Hz control boundary, captured before auto-reset; not exact physics-step contact duration."
+    }
+  },
+  "adaptive": {
+    "fixed": {
+      "checkpoint": "runs/stage2_lr_comparison/adaptive/final.pt",
+      "checkpoint_sha256": "12f3cae429d565ea4cc72bf83c9106956a0b870255ca3d56019d706bb1b5008b",
+      "panel": "fixed",
+      "seed": 5300000,
+      "initial_scene_hashes": [
+        "d02b6e731adf1a9d474eaa39c386f7b33764e344968ccec807b57c3d19b317e6",
+        "98d29fa9ed4f39996851944d3af6bff928405a3ce9c7463820cb7ce921cce1a9"
+      ],
+      "summary": {
+        "episodes": 128,
+        "success_rate": 0.03125,
+        "success_95ci_wilson": [
+          0.01221826524505338,
+          0.07759763126136077
+        ],
+        "mean_position_error_mm": 15.083540150953922,
+        "mean_orientation_error_deg": 2.4774995181843726,
+        "mean_seconds": 29.234375,
+        "mean_joint_jerk_integral": 25.99587534368038,
+        "failures": 0,
+        "timeouts": 124
+      },
+      "metrics": {
+        "progress_mm": 2.472092224226799,
+        "forward_displacement_mm": 3.2280654014357424,
+        "jaw_contact_seconds": 1.5765594691038132,
+        "jaw_contact_fraction": 0.05397369064608644,
+        "longest_contact_seconds": 1.2726546541671269,
+        "jerk_per_second": 1.2826618549459345
+      },
+      "episodes_with_jaw_contact": 100,
+      "contact_definition": "Actual allowed jaw/block contact at <=0 separation, sampled at each 20 Hz control boundary, captured before auto-reset; not exact physics-step contact duration."
+    },
+    "fresh": {
+      "checkpoint": "runs/stage2_lr_comparison/adaptive/final.pt",
+      "checkpoint_sha256": "12f3cae429d565ea4cc72bf83c9106956a0b870255ca3d56019d706bb1b5008b",
+      "panel": "fresh",
+      "seed": 6400000,
+      "initial_scene_hashes": [
+        "178be6c6d5119564250e577d192533a80f0d78dbcdc8bf22340918d8f3bd6338",
+        "5f6af8c66964dac8637e7644e4092649664d425fa791a260645522a970932951"
+      ],
+      "summary": {
+        "episodes": 128,
+        "success_rate": 0.0234375,
+        "success_95ci_wilson": [
+          0.008002416396755481,
+          0.06664374505143222
+        ],
+        "mean_position_error_mm": 14.995728219219018,
+        "mean_orientation_error_deg": 2.799243847572952,
+        "mean_seconds": 29.017187505960464,
+        "mean_joint_jerk_integral": 25.868654046207666,
+        "failures": 2,
+        "timeouts": 123
+      },
+      "metrics": {
+        "progress_mm": 2.5220057272235863,
+        "forward_displacement_mm": 3.4611352852080017,
+        "jaw_contact_seconds": 1.3574211434170138,
+        "jaw_contact_fraction": 0.046851507309036325,
+        "longest_contact_seconds": 1.04531254406902,
+        "jerk_per_second": 1.0950419599775165
+      },
+      "episodes_with_jaw_contact": 89,
+      "contact_definition": "Actual allowed jaw/block contact at <=0 separation, sampled at each 20 Hz control boundary, captured before auto-reset; not exact physics-step contact duration."
+    }
+  },
+  "fixed": {
+    "fixed": {
+      "checkpoint": "runs/stage2_lr_comparison/fixed/final.pt",
+      "checkpoint_sha256": "e5e2f5489fd4aff842e416fdf9e403d7055099de0ee5f6f7e3b23b7b31733bda",
+      "panel": "fixed",
+      "seed": 5300000,
+      "initial_scene_hashes": [
+        "d02b6e731adf1a9d474eaa39c386f7b33764e344968ccec807b57c3d19b317e6",
+        "98d29fa9ed4f39996851944d3af6bff928405a3ce9c7463820cb7ce921cce1a9"
+      ],
+      "summary": {
+        "episodes": 128,
+        "success_rate": 0.09375,
+        "success_95ci_wilson": [
+          0.054443804399147026,
+          0.15672997257307855
+        ],
+        "mean_position_error_mm": 13.48248687281739,
+        "mean_orientation_error_deg": 2.442765239789058,
+        "mean_seconds": 27.957421896979213,
+        "mean_joint_jerk_integral": 68.16514046490192,
+        "failures": 0,
+        "timeouts": 116
+      },
+      "metrics": {
+        "progress_mm": 4.073145502363332,
+        "forward_displacement_mm": 5.251790685870219,
+        "jaw_contact_seconds": 0.3832027302123606,
+        "jaw_contact_fraction": 0.013221934622539764,
+        "longest_contact_seconds": 0.21484361417242326,
+        "jerk_per_second": 3.175703266799805
+      },
+      "episodes_with_jaw_contact": 85,
+      "contact_definition": "Actual allowed jaw/block contact at <=0 separation, sampled at each 20 Hz control boundary, captured before auto-reset; not exact physics-step contact duration."
+    },
+    "fresh": {
+      "checkpoint": "runs/stage2_lr_comparison/fixed/final.pt",
+      "checkpoint_sha256": "e5e2f5489fd4aff842e416fdf9e403d7055099de0ee5f6f7e3b23b7b31733bda",
+      "panel": "fresh",
+      "seed": 6400000,
+      "initial_scene_hashes": [
+        "178be6c6d5119564250e577d192533a80f0d78dbcdc8bf22340918d8f3bd6338",
+        "5f6af8c66964dac8637e7644e4092649664d425fa791a260645522a970932951"
+      ],
+      "summary": {
+        "episodes": 128,
+        "success_rate": 0.1796875,
+        "success_95ci_wilson": [
+          0.12282459974516051,
+          0.25521626286755583
+        ],
+        "mean_position_error_mm": 13.238175204605795,
+        "mean_orientation_error_deg": 2.7576771861027343,
+        "mean_seconds": 26.003906279802322,
+        "mean_joint_jerk_integral": 60.337638042867184,
+        "failures": 0,
+        "timeouts": 105
+      },
+      "metrics": {
+        "progress_mm": 4.279558741836809,
+        "forward_displacement_mm": 5.520367313409224,
+        "jaw_contact_seconds": 0.25859396063606255,
+        "jaw_contact_fraction": 0.009101161154416892,
+        "longest_contact_seconds": 0.15625015427940525,
+        "jerk_per_second": 2.9352023705834878
+      },
+      "episodes_with_jaw_contact": 73,
+      "contact_definition": "Actual allowed jaw/block contact at <=0 separation, sampled at each 20 Hz control boundary, captured before auto-reset; not exact physics-step contact duration."
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+*.log
+
+# Training runs are regenerable. Keep only the Milestone 1 deliverable: the policy and its evaluation results.
+runs/*
+!runs/tee_v1/
+runs/tee_v1/*
+!runs/tee_v1/best.pt
+!runs/tee_v1/*.json
+!runs/tee_v1/*.jsonl
+!runs/tee_v1/train.log
+!runs/tee_v1/final_evals.log
+
+# Videos are regenerable (python -m s2r2s.record). Keep the camera-placement figure that ROADMAP.md cites.
+videos/*
+!videos/camera_study/

@@ -1,0 +1,36 @@
+[project]
+name = "s2r2s"
+version = "0.1.0"
+description = "Failure-guided Sim2Real2Sim on the SO-101: MuJoCo pushing tasks, PPO training, evaluation"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mujoco==3.11.0",
+  "numpy>=2.0",
+  "torch==2.11.0",
+  "tensorboard",
+  "matplotlib",
+  "imageio",
+  "imageio-ffmpeg",
+  "pyyaml",
+  "opencv-python",
+  "pytest",
+]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["s2r2s*"]
+
+# RTX 50-series (Blackwell, sm_120) needs CUDA 12.8+ builds of PyTorch.
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

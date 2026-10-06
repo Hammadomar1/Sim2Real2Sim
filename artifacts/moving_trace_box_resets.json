@@ -1,0 +1,174 @@
+{
+  "plane_candidate": false,
+  "worlds": 3,
+  "reset_failed_worlds": true,
+  "reset_events": [
+    {
+      "seconds": 4.5,
+      "ids": [
+        2
+      ],
+      "unreset_world_max_abs_change": {
+        "qpos": 0.0,
+        "qvel": 0.0,
+        "qacc_warmstart": 0.0,
+        "ctrl": 0.0
+      }
+    },
+    {
+      "seconds": 14.350000000000001,
+      "ids": [
+        2
+      ],
+      "unreset_world_max_abs_change": {
+        "qpos": 0.0,
+        "qvel": 0.0,
+        "qacc_warmstart": 0.0,
+        "ctrl": 0.0
+      }
+    }
+  ],
+  "initial": {
+    "qpos": {
+      "spread": 0.0,
+      "max_abs": 1.1700646877288818
+    },
+    "qvel": {
+      "spread": 0.0,
+      "max_abs": 0.0
+    },
+    "qacc_warmstart": {
+      "spread": 0.0,
+      "max_abs": 0.0
+    },
+    "ctrl": {
+      "spread": 0.0,
+      "max_abs": 1.1700646877288818
+    },
+    "site_xpos": {
+      "spread": 0.0,
+      "max_abs": 0.14098623394966125
+    }
+  },
+  "first_failures": [
+    {
+      "world": 2,
+      "seconds": 4.472,
+      "flags": 16,
+      "qpos": [
+        -0.19430160522460938,
+        -0.2044176161289215,
+        0.6904263496398926,
+        1.0849013328552246,
+        0.6587573885917664,
+        -0.1739989072084427,
+        0.1589668095111847,
+        -0.00832465197890997,
+        0.009041020646691322,
+        0.7964390516281128,
+        0.0006672536837868392,
+        -0.00013095344183966517,
+        0.6047185659408569
+      ],
+      "qvel": [
+        0.6189627647399902,
+        -0.17729897797107697,
+        0.06422125548124313,
+        0.06004022806882858,
+        -0.00871115643531084,
+        3.651015958894277e-06,
+        -0.017136411741375923,
+        -0.05512194707989693,
+        -0.0040483493357896805,
+        -0.878656268119812,
+        0.03603631630539894,
+        -0.652509868144989
+      ],
+      "qacc": [
+        -162.64614868164062,
+        -33.17962646484375,
+        32.87605667114258,
+        30.775714874267578,
+        0.8233416080474854,
+        -0.055795177817344666,
+        -1.8298537731170654,
+        5.877810001373291,
+        -2.1605913639068604,
+        -227.18202209472656,
+        44.04279708862305,
+        217.52938842773438
+      ],
+      "solver_iterations": 8.0,
+      "contacts": [
+        {
+          "pair": [
+            "block_1",
+            "fixed_jaw_mesh_0"
+          ],
+          "distance_m": -0.00029578740941360593,
+          "normal_constraint_force_n": 9.350193977355957
+        },
+        {
+          "pair": [
+            "gate_north",
+            "moving_jaw_mesh_0"
+          ],
+          "distance_m": -5.741597851738334e-05,
+          "normal_constraint_force_n": 12.696488380432129
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -1.767929643392563e-05,
+          "normal_constraint_force_n": 0.0
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -1.767929643392563e-05,
+          "normal_constraint_force_n": 1.888076901435852
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -1.8915160353571991e-06,
+          "normal_constraint_force_n": 9.875638008117676
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -1.8915160353571991e-06,
+          "normal_constraint_force_n": 0.7008290886878967
+        }
+      ]
+    }
+  ],
+  "first_nonfinite": null,
+  "first_success_seconds": [
+    null,
+    null,
+    null
+  ],
+  "simulated_seconds": 30.0,
+  "final_flags": [
+    0,
+    0,
+    0
+  ],
+  "scope": "Every physics step; diagnostic continuation after failure or optional reset. Success applies only before the first safety failure/reset.",
+  "source_sha256": {
+    "scripts/trace_moving_contacts.py": "16453c3107f0626ab4798d101486ce11e5e8825c42e0086592db9770a0773ca2",
+    "scripts/table_candidate.py": "9807cf5dd5c5235a8ee1dddd8a0b838f1ef123dc71b1a92db69a9345db00c46a",
+    "src/so101_m1/scene.py": "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167",
+    "src/so101_m1/env.py": "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+    "src/so101_m1/rules.py": "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec"
+  }
+}

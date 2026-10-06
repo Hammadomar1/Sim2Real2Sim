@@ -1,0 +1,8 @@
+{
+  "physics_preflight_pass": true,
+  "preserved": {
+    "runs/seed0/latest.pt": true,
+    "src/so101_m1/env.py": true,
+    "src/so101_m1/training.py": true
+  }
+}

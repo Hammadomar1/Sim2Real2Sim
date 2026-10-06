@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "checks": [
+    "idle contact loses reward",
+    "goal progress outranks idle",
+    "moving away is penalized",
+    "rotation alone has no stage-2 cost",
+    "physics and done flags unchanged",
+    "terminal return includes correction"
+  ],
+  "idle_per_step": {
+    "position": 0.0,
+    "orientation": 0.0,
+    "approach": 0.0,
+    "proximity": 0.019999999552965164,
+    "old": 0.017999999225139618,
+    "new": -0.009999999776482582,
+    "delta": -0.0279999990016222
+  },
+  "stalled_trajectory_component_sums": {
+    "position": -1.024094741805767,
+    "orientation": -1.2015929445624352,
+    "approach": 0.1425079291048489,
+    "proximity": 8.647455765022805,
+    "old": 5.364276007759451,
+    "new": -8.929776296312454,
+    "delta": -14.294052304071904
+  },
+  "scope": "Reward subtotal excludes unchanged success/failure bonuses and smoothness penalties; recorded path is evaluated without altering it."
+}

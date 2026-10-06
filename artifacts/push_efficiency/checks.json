@@ -1,0 +1,20 @@
+{
+  "native": [
+    {
+      "stage": 1,
+      "physics_done_parity": true,
+      "terminal_return": true,
+      "state_roundtrip": true
+    },
+    {
+      "stage": 2,
+      "physics_done_parity": true,
+      "terminal_return": true,
+      "state_roundtrip": true
+    }
+  ],
+  "gpu16_zero_action_smoke": true,
+  "idle_reward_mean": -0.02000177651643753,
+  "failure_reward": -20.018829345703125,
+  "failure_cost_exceeds_full_idle_time_cost": true
+}

@@ -1,0 +1,6 @@
+{
+  "native_instrumentation_parity": true,
+  "forced_terminal_reset_checked": true,
+  "checks": 8,
+  "contact_pairs": "existing allowed==2 jaw/block pairs, same contact monitor as success rules"
+}

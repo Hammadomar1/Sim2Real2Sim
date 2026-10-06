@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "promotion_streak_and_reset": true,
+  "full_range_restored": true,
+  "results": [
+    {
+      "backend": "native",
+      "resets": [
+        {
+          "level": 0,
+          "min_distance_mm": 18.383695604588393,
+          "max_distance_mm": 18.383695604588393
+        },
+        {
+          "level": 1,
+          "min_distance_mm": 20.97944072854604,
+          "max_distance_mm": 20.97944072854604
+        },
+        {
+          "level": 2,
+          "min_distance_mm": 26.70877926304118,
+          "max_distance_mm": 26.70877926304118
+        },
+        {
+          "level": 3,
+          "min_distance_mm": 41.08405499736918,
+          "max_distance_mm": 41.08405499736918
+        }
+      ],
+      "zero_action_no_success": true,
+      "state_roundtrip": true,
+      "subset_reset": null
+    },
+    {
+      "backend": "warp",
+      "resets": [
+        {
+          "level": 0,
+          "min_distance_mm": 15.049047470092773,
+          "max_distance_mm": 19.878013610839844
+        },
+        {
+          "level": 1,
+          "min_distance_mm": 20.02065086364746,
+          "max_distance_mm": 24.997547149658203
+        },
+        {
+          "level": 2,
+          "min_distance_mm": 25.118553161621094,
+          "max_distance_mm": 29.985858917236328
+        },
+        {
+          "level": 3,
+          "min_distance_mm": 30.1843318939209,
+          "max_distance_mm": 40.6796875
+        }
+      ],
+      "zero_action_no_success": true,
+      "state_roundtrip": true,
+      "subset_reset": true
+    }
+  ]
+}

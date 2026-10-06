@@ -1,0 +1,25 @@
+{
+  "ready_for_rl": false,
+  "resting_jitter_isolated": true,
+  "full_path_nonfinite_resolved": false,
+  "sha256": {
+    "scripts/isolate_controller.py": "beecc779b03b71054dcae568270a1681c2a1d8ac2ea8f5c6b21d3239a8c410b1",
+    "scripts/isolate_gpu.py": "eb5da3205d3025641629a246e11cb676fc513fee673450d13a918de6e5148895",
+    "scripts/report_gpu_isolation.py": "da6190c22b2264bcf17ec7d4c90dc9842d45e33361167d185fba011389e0dc5c",
+    "scripts/native_settle_reference.py": "a412b973daa9930c7e31603e80b7874b87505cc6140b250effc9c232061c30a0",
+    "artifacts/isolation_controller_drive_coldFalse.json": "38f850658635ee4bcfd2ae7c484febc40c9e800d8e207395786324edc382b470",
+    "artifacts/isolation_controller_drive_coldFalse_boxjaws.json": "434132ab483f525fac4830cfad8c6ed0f0e8b1ac000750acf3b4149a722f8124",
+    "artifacts/isolation_controller_drive_coldTrue.json": "17b0848b6cbfbe20d619192138f1a79a1628a4dfd845a3bc77c66ae0676b31f8",
+    "artifacts/isolation_controller_hold_coldFalse.json": "963497fb3aa7dc5e742fa92e6ab6415bd63dd4e9279b6b43436eca6dfa3ba757",
+    "artifacts/isolation_native_settling.json": "f4ac1bcde1e875c19702b05ab9ec641b384d69c24cb2ae7c7e79ef1f2a285c98",
+    "artifacts/isolation_replay_shared.json": "ca83c78df86d1236254fc4ea194e36b56e92c0aef011a3655569fcc1d7c1f64a",
+    "artifacts/isolation_settling_False.json": "4e93e0ab8b4d61ec9b0089d840579f4cc18dc433cef0406223891c62fb4b57e5",
+    "artifacts/isolation_settling_True.json": "8ccbe55f2fadfc853e0afb9786f9294bda5137ba1aa9221aecdb1af93f58cd43",
+    "artifacts/isolation_settling_True_plane.json": "097a9717262629eebab5529e73cd0899fa15fadafeb7ab6a7ed3f1d1f399ac5f",
+    "artifacts/gripper_complete_path_audit.npz": "982970f57b92dcbe1a8212c130e1972c08dfd95171a39dcacdd3ee3eb02d2276",
+    "artifacts/full_replay_warp_single_nominal.npz": "eba728dbe6107601b7111d762f68dd710db18a1b41258e4f8b46a348ff36f23d",
+    "src/so101_m1/scene.py": "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167",
+    "src/so101_m1/env.py": "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+    "src/so101_m1/rules.py": "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec"
+  }
+}

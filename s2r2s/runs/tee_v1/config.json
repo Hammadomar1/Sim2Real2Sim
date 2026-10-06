@@ -1,0 +1,155 @@
+{
+  "env": {
+    "num_envs": 4096,
+    "seed": 0,
+    "num_threads": 0,
+    "task": {
+      "objects": [
+        "tee"
+      ],
+      "control_dt": 0.05,
+      "episode_seconds": 20.0,
+      "tool_height": 0.005,
+      "max_speed": 0.08,
+      "tracking_limit": 0.015,
+      "tool_r": [
+        0.12,
+        0.275
+      ],
+      "tool_az": 0.9599310885968813,
+      "obj_r": [
+        0.175,
+        0.225
+      ],
+      "obj_az": 0.5235987755982988,
+      "fail_r": [
+        0.135,
+        0.265
+      ],
+      "fail_az": 0.7330382858376184,
+      "difficulty": 0.0,
+      "goal_shift": [
+        0.03,
+        0.12
+      ],
+      "goal_turn": [
+        0.5235987755982988,
+        3.141592653589793
+      ],
+      "easy_fraction": 0.25,
+      "success_pos": 0.01,
+      "success_yaw": 0.17453292519943295,
+      "w_coarse": 1.0,
+      "w_fine": 1.0,
+      "sigma_coarse": 0.05,
+      "sigma_fine": 0.01,
+      "w_progress": 0.5,
+      "w_reach": 0.2,
+      "sigma_reach": 0.02,
+      "w_action": 0.01,
+      "w_action_rate": 0.05,
+      "failure_penalty": 10.0
+    },
+    "rand": {
+      "enabled": true,
+      "mass_scale": [
+        0.7,
+        1.5
+      ],
+      "com_offset": 0.003,
+      "table_friction": [
+        0.2,
+        0.5
+      ],
+      "pusher_friction": [
+        0.15,
+        0.5
+      ],
+      "servo_kp_scale": [
+        0.8,
+        1.2
+      ],
+      "damping_scale": [
+        0.8,
+        1.2
+      ],
+      "tool_height_error": 0.002,
+      "max_action_delay": 5,
+      "obs_latency_steps": [
+        0,
+        2
+      ],
+      "obs_pos_noise": 0.001,
+      "obs_yaw_noise": 0.017453292519943295,
+      "obs_dropout": 0.03,
+      "tool_noise": 0.0005
+    },
+    "scene": {
+      "timestep": 0.005,
+      "integrator": "implicitfast",
+      "cone": "elliptic",
+      "impratio": 10.0,
+      "iterations": 20,
+      "ls_iterations": 20,
+      "pusher_radius": 0.006,
+      "pusher_xy": [
+        -0.0014,
+        0.0
+      ],
+      "pusher_top_z": -0.075,
+      "pusher_tip_z": -0.131,
+      "gripper_hold": 0.1,
+      "table_friction": 0.35,
+      "pusher_friction": 0.3,
+      "camera_pos": [
+        0.46,
+        0.0,
+        0.62
+      ],
+      "camera_target": [
+        0.2,
+        0.0,
+        0.0
+      ],
+      "camera_fovy": 42.5
+    }
+  },
+  "ppo": {
+    "rollout_steps": 24,
+    "epochs": 5,
+    "minibatches": 4,
+    "gamma": 0.99,
+    "lam": 0.95,
+    "clip": 0.2,
+    "value_coef": 1.0,
+    "entropy_coef": 0.002,
+    "lr": 0.0003,
+    "lr_min": 1e-05,
+    "lr_max": 0.003,
+    "desired_kl": 0.01,
+    "max_grad_norm": 1.0,
+    "hidden": [
+      512,
+      256,
+      128
+    ],
+    "init_std": 0.5,
+    "min_std": 0.03
+  },
+  "args": {
+    "run": "tee_v1",
+    "objects": "tee",
+    "num_envs": 4096,
+    "minutes": 45.0,
+    "iterations": 100000,
+    "seed": 0,
+    "difficulty": 0.0,
+    "no_curriculum": false,
+    "no_randomization": false,
+    "timestep": 0.005,
+    "eval_every": 50,
+    "eval_episodes": 512,
+    "resume": "",
+    "device": "cuda"
+  }
+}

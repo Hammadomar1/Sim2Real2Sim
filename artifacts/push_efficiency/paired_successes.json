@@ -1,0 +1,44 @@
+{
+  "early_fresh": {
+    "common_successes": 4,
+    "old_only": 0.0,
+    "new_only": 3.0,
+    "seconds": {
+      "old_mean": 10.225000143051147,
+      "new_mean": 5.625000059604645
+    },
+    "contact_bouts": {
+      "old_mean": 2.25,
+      "new_mean": 1.25
+    },
+    "position_error_m": {
+      "old_mean": 0.00960001815110445,
+      "new_mean": 0.00890453637111932
+    },
+    "jerk_per_second": {
+      "old_mean": 3.36076073690967,
+      "new_mean": 25.88209545749224
+    }
+  },
+  "control_fresh": {
+    "common_successes": 4,
+    "old_only": 0.0,
+    "new_only": 3.0,
+    "seconds": {
+      "old_mean": 4.5000001192092896,
+      "new_mean": 5.625000059604645
+    },
+    "contact_bouts": {
+      "old_mean": 1.0,
+      "new_mean": 1.25
+    },
+    "position_error_m": {
+      "old_mean": 0.008805402321740985,
+      "new_mean": 0.00890453637111932
+    },
+    "jerk_per_second": {
+      "old_mean": 69.08419833042106,
+      "new_mean": 25.88209545749224
+    }
+  }
+}

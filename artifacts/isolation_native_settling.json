@@ -1,0 +1,16 @@
+[
+  {
+    "arm_away": false,
+    "finite": true,
+    "last_5s_max_linear": 6.695731110861418e-10,
+    "last_5s_max_angular": 7.42797695089009e-08,
+    "longest_velocity_hold_seconds": 5.0
+  },
+  {
+    "arm_away": true,
+    "finite": true,
+    "last_5s_max_linear": 6.695731110861418e-10,
+    "last_5s_max_angular": 7.42797695089009e-08,
+    "longest_velocity_hold_seconds": 5.0
+  }
+]

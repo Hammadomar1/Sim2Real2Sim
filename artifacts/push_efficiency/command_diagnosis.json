@@ -1,0 +1,11 @@
+{
+  "recording": "artifacts/fixed/final_stage2_seed3000000.npz",
+  "mean_command_speed_mm_s": 5.3163628578186035,
+  "mean_actual_tool_speed_mm_s": 5.3228136680180045,
+  "first_contact_in_native_pose_reconstruction": {
+    "time_seconds": 17.55,
+    "old_approach_error_mm": 35.81696374043308,
+    "corrected_jaw_gap_mm": 0.0
+  },
+  "scope": "Contact reconstructed from saved poses in native MuJoCo, not a new live rollout; physics-step contacts between 20 Hz frames may be missed."
+}

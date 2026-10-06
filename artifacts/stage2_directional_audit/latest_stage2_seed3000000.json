@@ -1,0 +1,26 @@
+{
+  "checkpoint": "runs/stage2_directional_audit/latest.pt",
+  "checkpoint_sha256": "461d24017a69d9995401430a482b87143b4e1798bdf7380a16287d7cec3227c0",
+  "reward_variant": "directional",
+  "stage": 2,
+  "seed": 3000000,
+  "backend": "warp",
+  "episodes": [
+    {
+      "env": 0.0,
+      "stage": 2.0,
+      "success": 0.0,
+      "failed": 0.0,
+      "timeout": 1.0,
+      "position_error_m": 0.02066069096326828,
+      "orientation_error_rad": 0.13368450105190277,
+      "seconds": 30.0,
+      "return": -0.7298765257000923,
+      "joint_jerk_integral": 201.19737243652344,
+      "passed_gate": 0.0,
+      "failure_flags": 0,
+      "failure_categories": []
+    }
+  ],
+  "scope": "One consecutive deterministic learned-policy rollout; not an aggregate evaluation."
+}

@@ -1,0 +1,63 @@
+runs/tee_v1/best.pt (iteration 1600, 157M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy    scripted
+success rate                                       96.6%       88.7%
+position error median (mm)                           1.4         4.5
+position error p90 (mm)                              3.9         6.7
+yaw error median (deg)                               2.0         3.9
+yaw error p90 (deg)                                  5.9         9.2
+mean E = pos/20mm + yaw/10deg                       0.51        1.33
+ever within tolerance                              97.7%       89.4%
+time to tolerance median (s)                         6.0         8.6
+failures (tipped/escaped)                           0.5%        0.1%
+action rate (smoothness, lower=smoother)          0.0268      0.1251
+runs/tee_v1/best.pt (iteration 1600, 157M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 2 ms, randomization on
+                                                  policy
+success rate                                       97.1%
+position error median (mm)                           1.3
+position error p90 (mm)                              3.8
+yaw error median (deg)                               2.1
+yaw error p90 (deg)                                  6.2
+mean E = pos/20mm + yaw/10deg                       0.46
+ever within tolerance                              97.8%
+time to tolerance median (s)                         5.8
+failures (tipped/escaped)                           0.3%
+action rate (smoothness, lower=smoother)          0.0246
+runs/tee_v1/best.pt (iteration 1600, 157M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization off
+                                                  policy
+success rate                                       94.5%
+position error median (mm)                           1.7
+position error p90 (mm)                              4.7
+yaw error median (deg)                               2.4
+yaw error p90 (deg)                                  7.6
+mean E = pos/20mm + yaw/10deg                       0.61
+ever within tolerance                              95.2%
+time to tolerance median (s)                         5.6
+failures (tipped/escaped)                           0.5%
+action rate (smoothness, lower=smoother)          0.0138
+
+noise (mm / deg, 1 sigma)
+         setting  success   pos mm  yaw deg  E mean  failures
+      0 mm/0 deg    96.1%      1.5      2.4    0.55      0.8%
+      1 mm/1 deg    98.0%      1.2      2.2    0.53      1.0%
+      2 mm/2 deg    96.1%      1.5      2.2    0.66      1.6%
+      4 mm/4 deg    76.0%      3.3      5.2    1.22      1.8%
+      8 mm/8 deg    22.7%      9.3     15.3    3.43      1.0%
+
+latency (50 ms steps)
+         setting  success   pos mm  yaw deg  E mean  failures
+          0-0 ms    97.5%      1.4      2.2    0.63      1.2%
+        0-100 ms    98.0%      1.2      2.2    0.53      1.0%
+      100-200 ms    94.9%      1.6      2.3    0.75      2.0%
+      200-300 ms    81.1%      2.6      3.1    1.17      3.3%
+      300-400 ms    50.8%      6.8      5.8    2.08      7.0%
+
+dropout (fraction of frames)
+         setting  success   pos mm  yaw deg  E mean  failures
+              0%    98.6%      1.4      2.1    0.50      0.8%
+              3%    98.0%      1.2      2.2    0.53      1.0%
+             10%    95.9%      1.3      2.0    0.61      1.4%
+             25%    96.1%      1.3      2.0    0.63      1.6%
+             50%    94.3%      1.5      2.2    0.65      1.6%
+
+wrote runs\tee_v1\sensitivity_best.json
+ALL_EVALS_DONE

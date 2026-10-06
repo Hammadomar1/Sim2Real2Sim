@@ -1,0 +1,310 @@
+{
+  "plane_candidate": true,
+  "worlds": 3,
+  "initial": {
+    "qpos": {
+      "spread": 0.0,
+      "max_abs": 1.1700646877288818
+    },
+    "qvel": {
+      "spread": 0.0,
+      "max_abs": 0.0
+    },
+    "qacc_warmstart": {
+      "spread": 0.0,
+      "max_abs": 0.0
+    },
+    "ctrl": {
+      "spread": 0.0,
+      "max_abs": 1.1700646877288818
+    },
+    "site_xpos": {
+      "spread": 0.0,
+      "max_abs": 0.14098623394966125
+    }
+  },
+  "first_failures": [
+    {
+      "world": 1,
+      "seconds": 13.618000000000002,
+      "flags": 64,
+      "qpos": [
+        -0.03834362328052521,
+        -0.1668764352798462,
+        0.6528322100639343,
+        1.0921852588653564,
+        0.6765962839126587,
+        -0.17553415894508362,
+        0.22387085855007172,
+        0.029427893459796906,
+        0.008991354145109653,
+        0.9458876252174377,
+        0.0002619021397549659,
+        -0.00018417384126223624,
+        0.32449448108673096
+      ],
+      "qvel": [
+        -0.050958890467882156,
+        0.8696083426475525,
+        -0.8473179936408997,
+        0.5050792098045349,
+        0.012332524172961712,
+        -0.039248742163181305,
+        0.0013350296067073941,
+        0.002016071928665042,
+        -0.0007746078190393746,
+        0.01803053356707096,
+        -0.002690162044018507,
+        0.11836662143468857
+      ],
+      "qacc": [
+        6.427765369415283,
+        -19.498443603515625,
+        3.9630794525146484,
+        15.236441612243652,
+        -16.21770668029785,
+        5.346639633178711,
+        0.026637617498636246,
+        0.26121628284454346,
+        -0.284419983625412,
+        -6.265003204345703,
+        27.62957191467285,
+        13.9442138671875
+      ],
+      "solver_iterations": 3.0,
+      "contacts": [
+        {
+          "pair": [
+            "block_0",
+            "moving_jaw_mesh_1"
+          ],
+          "distance_m": -0.00029287562938407063,
+          "normal_constraint_force_n": 37.698062896728516
+        },
+        {
+          "pair": [
+            "gate_north",
+            "block_0"
+          ],
+          "distance_m": -7.408374221995473e-05,
+          "normal_constraint_force_n": 7.908354759216309
+        },
+        {
+          "pair": [
+            "gate_north",
+            "block_0"
+          ],
+          "distance_m": -7.408374221995473e-05,
+          "normal_constraint_force_n": 9.66624927520752
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -2.9603950679302216e-05,
+          "normal_constraint_force_n": 4.564638137817383
+        },
+        {
+          "pair": [
+            "gate_north",
+            "block_1"
+          ],
+          "distance_m": -2.5594343242119066e-05,
+          "normal_constraint_force_n": 3.978407382965088
+        },
+        {
+          "pair": [
+            "gate_north",
+            "block_1"
+          ],
+          "distance_m": -2.5594343242119066e-05,
+          "normal_constraint_force_n": 4.734615325927734
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -2.1869316697120667e-05,
+          "normal_constraint_force_n": 4.898401260375977
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -2.1869316697120667e-05,
+          "normal_constraint_force_n": 4.898399829864502
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -1.70757994055748e-05,
+          "normal_constraint_force_n": 2.2965738773345947
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -1.6499310731887817e-05,
+          "normal_constraint_force_n": 3.2504749298095703
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -9.34116542339325e-06,
+          "normal_constraint_force_n": 1.9326555728912354
+        }
+      ]
+    },
+    {
+      "world": 0,
+      "seconds": 21.031,
+      "flags": 16,
+      "qpos": [
+        0.0544472374022007,
+        0.17497165501117706,
+        0.23075948655605316,
+        1.1667697429656982,
+        0.6618667244911194,
+        -0.17399878799915314,
+        0.23031295835971832,
+        0.04409124702215195,
+        0.00899919681251049,
+        0.5545861124992371,
+        8.443946875047459e-09,
+        5.396376234756417e-09,
+        0.8321263790130615
+      ],
+      "qvel": [
+        -0.047405097633600235,
+        0.11904276907444,
+        0.29724550247192383,
+        0.15025152266025543,
+        0.04798823222517967,
+        -4.5275301090441644e-05,
+        2.541167797021071e-11,
+        3.581814098790881e-12,
+        2.271291634770023e-07,
+        2.759321438006168e-09,
+        -7.193897699764307e-10,
+        -2.691106226052045e-17
+      ],
+      "qacc": [
+        -17.76129913330078,
+        34.04051971435547,
+        -172.33303833007812,
+        -40.26079559326172,
+        -5.52431583404541,
+        -0.03013952635228634,
+        -8.153738968730284e-12,
+        1.0860504856546882e-10,
+        1.84635542965772e-10,
+        3.80867692939546e-09,
+        1.1487971462997848e-08,
+        2.1928775090973498e-16
+      ],
+      "solver_iterations": 6.0,
+      "contacts": [
+        {
+          "pair": [
+            "gate_south",
+            "fixed_jaw_mesh_0"
+          ],
+          "distance_m": -7.838399324100465e-05,
+          "normal_constraint_force_n": 12.840266227722168
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.061312563717365265
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.06131255626678467
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.06131255626678467
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.061312511563301086
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.06131244823336601
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.06131250038743019
+        },
+        {
+          "pair": [
+            "table",
+            "block_0"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.06131243333220482
+        },
+        {
+          "pair": [
+            "table",
+            "block_1"
+          ],
+          "distance_m": -8.028000593185425e-07,
+          "normal_constraint_force_n": 0.061312463134527206
+        }
+      ]
+    }
+  ],
+  "first_nonfinite": null,
+  "first_success_seconds": [
+    null,
+    null,
+    null
+  ],
+  "simulated_seconds": 30.0,
+  "final_flags": [
+    16,
+    80,
+    0
+  ],
+  "scope": "Every physics step; no episode reset, continues after failure only to diagnose. Success after any safety failure cannot count.",
+  "source_sha256": {
+    "scripts/trace_moving_contacts.py": "b37f3682cedc786d108700e950de218ec7e43ab211ae2d60aa9d9bf60681ac8b",
+    "scripts/table_candidate.py": "9807cf5dd5c5235a8ee1dddd8a0b838f1ef123dc71b1a92db69a9345db00c46a",
+    "src/so101_m1/scene.py": "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167",
+    "src/so101_m1/env.py": "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+    "src/so101_m1/rules.py": "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec"
+  }
+}

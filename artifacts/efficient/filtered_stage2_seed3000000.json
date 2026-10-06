@@ -1,0 +1,30 @@
+{
+  "checkpoint": "runs/push_efficiency/efficient/filtered.pt",
+  "checkpoint_sha256": "77165ddff1230f5ef90f34ebbdb36a4b99051a832cd4517ad303c7dfb21f215d",
+  "reward_variant": "efficient_push",
+  "distance_level": 0,
+  "stage": 2,
+  "seed": 3000000,
+  "backend": "warp",
+  "episodes": [
+    {
+      "env": 0.0,
+      "stage": 2.0,
+      "success": 1.0,
+      "failed": 0.0,
+      "timeout": 0.0,
+      "position_error_m": 0.00949244573712349,
+      "orientation_error_rad": 0.00961571279913187,
+      "seconds": 7.300000190734863,
+      "return": 12.00379326287657,
+      "joint_jerk_integral": 18.595144271850586,
+      "passed_gate": 0.0,
+      "failure_flags": 0,
+      "failure_categories": [],
+      "distance_level": 0,
+      "initial_goal_distance_m": 0.016215136274695396
+    }
+  ],
+  "scope": "One consecutive deterministic learned-policy rollout; not an aggregate evaluation.",
+  "control_filter_alpha": 0.5
+}

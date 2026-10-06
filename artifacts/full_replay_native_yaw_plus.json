@@ -1,0 +1,5520 @@
+{
+  "scope": "Fixed-action replay, no replanning or RL policy; single-factor sensitivity, not a success-rate estimate.",
+  "backend": "native",
+  "constants_recomputed": false,
+  "wall_seconds": 4.606519927999997,
+  "results": [
+    {
+      "case": {
+        "name": "yaw_plus",
+        "yaw": 0.017453292519943295
+      },
+      "backend": "native",
+      "timestep": 0.001,
+      "env": 0.0,
+      "stage": 5.0,
+      "success": 0.0,
+      "failed": 1.0,
+      "timeout": 0.0,
+      "position_error_m": 0.05932967082046553,
+      "orientation_error_rad": 0.39033563784261127,
+      "seconds": 21.05000114440918,
+      "return": 2.421283686021633,
+      "joint_jerk_integral": 19469.852108644103,
+      "passed_gate": 0.0,
+      "failure_flags": 16,
+      "failure_categories": [
+        "invalid_robot_contact"
+      ],
+      "final_pose": [
+        0.2301748377354222,
+        0.04397688358973206,
+        1.9611319646375078
+      ]
+    }
+  ],
+  "traces": [
+    [
+      {
+        "seconds": 0.05,
+        "xy": [
+          0.1499999333439853,
+          1.717685386223485e-08
+        ],
+        "yaw": 1.5882496193147542,
+        "linear_speed": 0.0008414502350302142,
+        "angular_speed": 2.5940820074735308e-05,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.1,
+        "xy": [
+          0.1499999309471648,
+          1.7824164571761537e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 9.299561210801176e-06,
+        "angular_speed": 2.902162882667906e-07,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.15000000000000002,
+        "xy": [
+          0.14999993092083141,
+          1.783128085777419e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 1.0066559906995082e-07,
+        "angular_speed": 3.144310118377366e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.2,
+        "xy": [
+          0.14999993092054625,
+          1.783135799891933e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 1.0895752650330415e-09,
+        "angular_speed": 3.4061372902904965e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.25,
+        "xy": [
+          0.14999993092054323,
+          1.783135883511286e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 1.1793202623691438e-11,
+        "angular_speed": 3.696658754333539e-13,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.30000000000000004,
+        "xy": [
+          0.14999993092054345,
+          1.7831354409389767e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 5.4445565635231925e-12,
+        "angular_speed": 2.2364818503479216e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.35000000000000003,
+        "xy": [
+          0.14999993092065048,
+          1.7831171702613592e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 4.124447281379966e-12,
+        "angular_speed": 3.067959874249867e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.4,
+        "xy": [
+          0.14999993092091293,
+          1.7830952693764976e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 3.848763077290024e-12,
+        "angular_speed": 2.779956231323772e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.45,
+        "xy": [
+          0.14999993092121913,
+          1.783078900832576e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 4.2864988566285825e-12,
+        "angular_speed": 3.1514713602642304e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.5,
+        "xy": [
+          0.1499999309215321,
+          1.78306640500654e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 3.2579831567287536e-12,
+        "angular_speed": 2.2647922767137929e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.55,
+        "xy": [
+          0.14999993092180805,
+          1.7830572334410542e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 3.912761858880729e-12,
+        "angular_speed": 2.770016285624987e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.6000000000000001,
+        "xy": [
+          0.14999993092212657,
+          1.7830477755948998e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 4.377219145233948e-12,
+        "angular_speed": 3.100719678473735e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.65,
+        "xy": [
+          0.14999993092244343,
+          1.7830388934703805e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 3.4018253203888235e-12,
+        "angular_speed": 2.2136805801599975e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.7000000000000001,
+        "xy": [
+          0.1499999309227747,
+          1.7830299033453514e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 3.767192080026136e-12,
+        "angular_speed": 2.4638159593442634e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.75,
+        "xy": [
+          0.14999993092307465,
+          1.7830219356029522e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 4.413666874591329e-12,
+        "angular_speed": 2.9189543065226035e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.8,
+        "xy": [
+          0.14999993092341773,
+          1.7830128567041124e-08
+        ],
+        "yaw": 1.5882496193147633,
+        "linear_speed": 4.946308145171761e-12,
+        "angular_speed": 3.271058761336696e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.8500000000000001,
+        "xy": [
+          0.1499811438470445,
+          4.522745302875172e-05
+        ],
+        "yaw": 1.5863219362558882,
+        "linear_speed": 0.0014134300568191852,
+        "angular_speed": 0.04521091583663009,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.9,
+        "xy": [
+          0.15191602053777248,
+          0.0028487686496651518
+        ],
+        "yaw": 1.5649538694482317,
+        "linear_speed": 0.02895261232044472,
+        "angular_speed": 0.4686373799261532,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 0.9500000000000001,
+        "xy": [
+          0.1526928591212795,
+          0.0037620784450259942
+        ],
+        "yaw": 1.5562988242105076,
+        "linear_speed": 0.0061970665742608995,
+        "angular_speed": 0.8703834841351902,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.0,
+        "xy": [
+          0.15542396699835168,
+          0.00686538641214079
+        ],
+        "yaw": 1.5392430163079898,
+        "linear_speed": 0.059185395620554936,
+        "angular_speed": 0.5997637225007199,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.05,
+        "xy": [
+          0.155670732469449,
+          0.007142386879613328
+        ],
+        "yaw": 1.5374008826335865,
+        "linear_speed": 1.7884774179195726e-05,
+        "angular_speed": 0.0009389835808966609,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.1,
+        "xy": [
+          0.15590989918683854,
+          0.007354141958314073
+        ],
+        "yaw": 1.5364011140247305,
+        "linear_speed": 0.038278914857085344,
+        "angular_speed": 1.1920417476519118,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.1500000000000001,
+        "xy": [
+          0.15658212478101802,
+          0.00796868557680918
+        ],
+        "yaw": 1.5260949603390128,
+        "linear_speed": 0.04955517496685766,
+        "angular_speed": 1.5347439647961703,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.2000000000000002,
+        "xy": [
+          0.15753892886766055,
+          0.008893689239598726
+        ],
+        "yaw": 1.509539050884471,
+        "linear_speed": 0.004009006788246813,
+        "angular_speed": 0.08493344475339958,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.25,
+        "xy": [
+          0.1581216019575001,
+          0.009344080082144676
+        ],
+        "yaw": 1.4971861708052456,
+        "linear_speed": 0.08836172287801283,
+        "angular_speed": 2.831855903486834,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.3,
+        "xy": [
+          0.15978153616500115,
+          0.010626297160602977
+        ],
+        "yaw": 1.4663910900319717,
+        "linear_speed": 0.035132019458422856,
+        "angular_speed": 0.6917771198341246,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.35,
+        "xy": [
+          0.15987536598433508,
+          0.010676217580035365
+        ],
+        "yaw": 1.4639093253267168,
+        "linear_speed": 0.00016541746088165893,
+        "angular_speed": 0.005012516869158183,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.4000000000000001,
+        "xy": [
+          0.15987564588539988,
+          0.010675841088120223
+        ],
+        "yaw": 1.4639093237872076,
+        "linear_speed": 1.8135218293116386e-06,
+        "angular_speed": 5.3921034643295917e-05,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.4500000000000002,
+        "xy": [
+          0.15987564893883932,
+          0.01067583704330606
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.9637386893557343e-08,
+        "angular_speed": 5.842587376769371e-07,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.5,
+        "xy": [
+          0.15987564897192563,
+          0.010675836999477937
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 2.1262741034075153e-10,
+        "angular_speed": 6.330927233553409e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.55,
+        "xy": [
+          0.1598756489722671,
+          0.010675836999019599
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 4.428592084750681e-12,
+        "angular_speed": 2.02860680455469e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.6,
+        "xy": [
+          0.1598756489719971,
+          0.010675836999230554
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 3.350195497340018e-12,
+        "angular_speed": 1.9725652750449285e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.6500000000000001,
+        "xy": [
+          0.159875648971722,
+          0.010675836999381155
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 3.7622691997753e-12,
+        "angular_speed": 2.218526394733616e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.7000000000000002,
+        "xy": [
+          0.15987564897140993,
+          0.010675836999530728
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 4.08116953321501e-12,
+        "angular_speed": 2.4124897574599754e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.75,
+        "xy": [
+          0.15987564897112488,
+          0.010675836999655682
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 4.700043018492067e-12,
+        "angular_speed": 2.811251372885352e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.8,
+        "xy": [
+          0.1598756489707972,
+          0.010675836999793435
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.264815460080349e-12,
+        "angular_speed": 3.1502249851802335e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.85,
+        "xy": [
+          0.15987564897049117,
+          0.010675836999918621
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.783304008946624e-12,
+        "angular_speed": 3.4683391966510545e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.9000000000000001,
+        "xy": [
+          0.1598756489701952,
+          0.010675837000038171
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 4.639872954352345e-12,
+        "angular_speed": 2.381961181767036e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 1.9500000000000002,
+        "xy": [
+          0.1598756489698829,
+          0.010675837000163774
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.345853491581208e-12,
+        "angular_speed": 2.7794540606782406e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.0,
+        "xy": [
+          0.15987564896956868,
+          0.01067583700028979
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 4.429959749232811e-12,
+        "angular_speed": 1.8718809640220837e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.0500000000000003,
+        "xy": [
+          0.1598756489693004,
+          0.010675837000396675
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.01274317618108e-12,
+        "angular_speed": 2.108770646078618e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.1,
+        "xy": [
+          0.15987564896899265,
+          0.010675837000519975
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.634288840042157e-12,
+        "angular_speed": 2.3693770137163994e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.15,
+        "xy": [
+          0.15987564896868303,
+          0.010675837000643762
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 4.845060621165943e-12,
+        "angular_speed": 1.5299145020138692e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.2,
+        "xy": [
+          0.15987564896836393,
+          0.010675837000770917
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.362320226319485e-12,
+        "angular_speed": 1.729509426712651e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.25,
+        "xy": [
+          0.15987564896807566,
+          0.010675837000885384
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 5.854917500113234e-12,
+        "angular_speed": 1.7548185090940805e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.3000000000000003,
+        "xy": [
+          0.1598756489677462,
+          0.01067583700101711
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 6.59724828535703e-12,
+        "angular_speed": 1.982981060279085e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.35,
+        "xy": [
+          0.15987564896743875,
+          0.01067583700113946
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 7.0230343606950365e-12,
+        "angular_speed": 1.9715746969067531e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.4000000000000004,
+        "xy": [
+          0.1598756489671384,
+          0.010675837001259318
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 6.121471921668268e-12,
+        "angular_speed": 9.279656038828866e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.45,
+        "xy": [
+          0.159875648966826,
+          0.010675837001384053
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 7.031360090912244e-12,
+        "angular_speed": 1.1483529719771486e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.5,
+        "xy": [
+          0.15987564896650774,
+          0.010675837001511401
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 6.550629791666196e-12,
+        "angular_speed": 4.746370340340553e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.5500000000000003,
+        "xy": [
+          0.15987564896623874,
+          0.010675837001618357
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 7.008321188672891e-12,
+        "angular_speed": 8.029235215987215e-12,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.6,
+        "xy": [
+          0.1598756489659305,
+          0.01067583700174152
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 7.908859001561252e-12,
+        "angular_speed": 1.1493630844284737e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.6500000000000004,
+        "xy": [
+          0.159875648965617,
+          0.010675837001866795
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 7.689921260140518e-12,
+        "angular_speed": 3.721338810048467e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.7,
+        "xy": [
+          0.15987564896529716,
+          0.010675837001994457
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 8.473210648009086e-12,
+        "angular_speed": 3.450715091352929e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.75,
+        "xy": [
+          0.15987564896500836,
+          0.010675837002109202
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 8.858554808501079e-12,
+        "angular_speed": 1.2210046505294804e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.8000000000000003,
+        "xy": [
+          0.1598756489646789,
+          0.010675837002240824
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.001344932912817e-11,
+        "angular_speed": 1.3221978733050598e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.85,
+        "xy": [
+          0.15987564896440234,
+          0.010675837002351073
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 9.3348386931634e-12,
+        "angular_speed": 2.6094085011929603e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.9000000000000004,
+        "xy": [
+          0.15987564896411643,
+          0.010675837002465301
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.0680231755250276e-11,
+        "angular_speed": 2.8164347814191475e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 2.95,
+        "xy": [
+          0.15987564896379292,
+          0.010675837002594786
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.201492092125295e-11,
+        "angular_speed": 3.1836764329839886e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.0,
+        "xy": [
+          0.15987564896348944,
+          0.010675837002715781
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.2477403527700992e-11,
+        "angular_speed": 4.3971839673401964e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.0500000000000003,
+        "xy": [
+          0.15987564896318954,
+          0.010675837002835697
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.2599135590986159e-11,
+        "angular_speed": 4.803816698852049e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.1,
+        "xy": [
+          0.15987564896288434,
+          0.010675837002957697
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.4314769386011997e-11,
+        "angular_speed": 5.339317064469491e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.1500000000000004,
+        "xy": [
+          0.15987564896256887,
+          0.010675837003083876
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.5159249356799768e-11,
+        "angular_speed": 4.857460859477713e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.2,
+        "xy": [
+          0.15987564896224965,
+          0.010675837003211223
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.6613705934747914e-11,
+        "angular_speed": 5.225829184131174e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.25,
+        "xy": [
+          0.15987564896196022,
+          0.010675837003326364
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.7298827394350824e-11,
+        "angular_speed": 8.02965654919715e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.3000000000000003,
+        "xy": [
+          0.15987564896163334,
+          0.010675837003457093
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.955055247849968e-11,
+        "angular_speed": 8.90488732490071e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.35,
+        "xy": [
+          0.15987564896135373,
+          0.01067583700356849
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 1.9507807596805988e-11,
+        "angular_speed": 1.0174181783849488e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.4000000000000004,
+        "xy": [
+          0.15987564896107173,
+          0.010675837003681004
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 2.2200430997056683e-11,
+        "angular_speed": 1.1324526501456179e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.45,
+        "xy": [
+          0.15987564896075232,
+          0.010675837003808818
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 2.497739741215478e-11,
+        "angular_speed": 1.2768196865208724e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.5,
+        "xy": [
+          0.1598756489604492,
+          0.010675837003929708
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 2.6141519672568954e-11,
+        "angular_speed": 1.6057363124848898e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.5500000000000003,
+        "xy": [
+          0.15987564896015052,
+          0.010675837004048994
+        ],
+        "yaw": 1.4639093237872454,
+        "linear_speed": 2.7591024459214324e-11,
+        "angular_speed": 1.506163667219903e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.6,
+        "xy": [
+          0.1602301062618242,
+          0.010730096263474364
+        ],
+        "yaw": 1.448977029732382,
+        "linear_speed": 0.0008629871192997431,
+        "angular_speed": 0.03415419712208885,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.6500000000000004,
+        "xy": [
+          0.16083439577199596,
+          0.010815213730125482
+        ],
+        "yaw": 1.4242395671483048,
+        "linear_speed": 0.00028173419403335125,
+        "angular_speed": 0.030620984681713783,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.7,
+        "xy": [
+          0.1615828158439203,
+          0.010552750128009625
+        ],
+        "yaw": 1.3922366993018374,
+        "linear_speed": 0.0006117027604665664,
+        "angular_speed": 0.03018574479405137,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.75,
+        "xy": [
+          0.1625068841430961,
+          0.009855088603034986
+        ],
+        "yaw": 1.3525833828796714,
+        "linear_speed": 0.0003960960051741641,
+        "angular_speed": 0.02774538977480671,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.8000000000000003,
+        "xy": [
+          0.1632356141842727,
+          0.009288331505005857
+        ],
+        "yaw": 1.3192463237730045,
+        "linear_speed": 0.00039923868553633685,
+        "angular_speed": 0.05638940312389759,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.85,
+        "xy": [
+          0.16400897463596775,
+          0.008524556407955986
+        ],
+        "yaw": 1.2824000923080607,
+        "linear_speed": 0.0006506403211849719,
+        "angular_speed": 0.026134604699139058,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.9000000000000004,
+        "xy": [
+          0.16465073239099157,
+          0.007930427567358863
+        ],
+        "yaw": 1.2518211394249266,
+        "linear_speed": 0.0008028344317897566,
+        "angular_speed": 0.03766227635332671,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 3.95,
+        "xy": [
+          0.16553910853441084,
+          0.006993485422911037
+        ],
+        "yaw": 1.2071801582279051,
+        "linear_speed": 0.0012993482366244692,
+        "angular_speed": 0.07294541569377429,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.0,
+        "xy": [
+          0.16577318419587686,
+          0.006667626686166089
+        ],
+        "yaw": 1.1932479493986632,
+        "linear_speed": 0.0009266088121079184,
+        "angular_speed": 0.04967792801808174,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.05,
+        "xy": [
+          0.16728118327897706,
+          0.005221301496883644
+        ],
+        "yaw": 1.1185797114744283,
+        "linear_speed": 0.004530472138361888,
+        "angular_speed": 0.16368777292264494,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.1000000000000005,
+        "xy": [
+          0.16729290277262995,
+          0.005209438550210529
+        ],
+        "yaw": 1.1181896243926381,
+        "linear_speed": 2.383453366501027e-05,
+        "angular_speed": 0.0006569960901343379,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.15,
+        "xy": [
+          0.16830117350294033,
+          0.004535189573115793
+        ],
+        "yaw": 1.0694577752244687,
+        "linear_speed": 0.001685687480129978,
+        "angular_speed": 0.10713809743727704,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.2,
+        "xy": [
+          0.16843691495610233,
+          0.004397591762434616
+        ],
+        "yaw": 1.061761149316273,
+        "linear_speed": 0.0008335970025331059,
+        "angular_speed": 0.030894558440158065,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.25,
+        "xy": [
+          0.1700210802370863,
+          0.0032506986488040745
+        ],
+        "yaw": 0.9849306795129982,
+        "linear_speed": 0.0041914528727119,
+        "angular_speed": 0.24450177879988935,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.3,
+        "xy": [
+          0.1700347986093015,
+          0.003237916333146724
+        ],
+        "yaw": 0.9842949913285712,
+        "linear_speed": 3.787945440529894e-05,
+        "angular_speed": 0.0009667497115746073,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.3500000000000005,
+        "xy": [
+          0.17121811177025167,
+          0.002165398542835708
+        ],
+        "yaw": 0.9226649892597282,
+        "linear_speed": 0.004352834692782834,
+        "angular_speed": 0.2131056211618203,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.4,
+        "xy": [
+          0.17123430717314542,
+          0.002154721977168254
+        ],
+        "yaw": 0.9221422652496609,
+        "linear_speed": 4.807221217532949e-05,
+        "angular_speed": 0.0021523486176522376,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.45,
+        "xy": [
+          0.17257821547210023,
+          0.0008584634859965805
+        ],
+        "yaw": 0.8518643727197769,
+        "linear_speed": 0.0019359474318266627,
+        "angular_speed": 0.0933307026590095,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.5,
+        "xy": [
+          0.17257916308004465,
+          0.000857506407661838
+        ],
+        "yaw": 0.8515995730630579,
+        "linear_speed": 1.4320192827225517e-05,
+        "angular_speed": 0.0005607067864788988,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.55,
+        "xy": [
+          0.1725791292636382,
+          0.0008575467715559977
+        ],
+        "yaw": 0.8515995729189986,
+        "linear_speed": 1.556897090305343e-07,
+        "angular_speed": 6.066236007276849e-06,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.6000000000000005,
+        "xy": [
+          0.1726381622822568,
+          0.0008075765743962108
+        ],
+        "yaw": 0.8476795720377002,
+        "linear_speed": 0.00012220063290392172,
+        "angular_speed": 0.0033203283748220276,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.65,
+        "xy": [
+          0.1726694217745104,
+          0.0008044364620143333
+        ],
+        "yaw": 0.8469061823024333,
+        "linear_speed": 0.00037792826047551944,
+        "angular_speed": 0.014984382309728357,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.7,
+        "xy": [
+          0.1726703598853545,
+          0.000803347003067971
+        ],
+        "yaw": 0.8469059245901803,
+        "linear_speed": 4.547503108871497e-06,
+        "angular_speed": 0.00016688066257701309,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.75,
+        "xy": [
+          0.17267037023940893,
+          0.0008033352212079473
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 4.925829006805289e-08,
+        "angular_speed": 1.807853250310235e-06,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.800000000000001,
+        "xy": [
+          0.17267037035155994,
+          0.0008033350935743039
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 5.333005866380823e-10,
+        "angular_speed": 1.9582241223825462e-08,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.8500000000000005,
+        "xy": [
+          0.17267037035277447,
+          0.0008033350921916309
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 5.501704023899593e-11,
+        "angular_speed": 3.2949447960307814e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.9,
+        "xy": [
+          0.17267037035260357,
+          0.0008033350924273095
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.3554259374076882e-11,
+        "angular_speed": 1.0243290806045852e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 4.95,
+        "xy": [
+          0.1726703703524015,
+          0.0008033350927226609
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.5876154759499685e-11,
+        "angular_speed": 1.3341520300456886e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.0,
+        "xy": [
+          0.17267037035223096,
+          0.0008033350929783582
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.6153028101015517e-11,
+        "angular_speed": 1.4433957397360575e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.050000000000001,
+        "xy": [
+          0.17267037035206242,
+          0.0008033350932343979
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.969281589570886e-11,
+        "angular_speed": 1.6118484722445945e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.1000000000000005,
+        "xy": [
+          0.1726703703518728,
+          0.0008033350935257602
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 3.3405592079274146e-11,
+        "angular_speed": 1.816227960623572e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.15,
+        "xy": [
+          0.17267037035170849,
+          0.0008033350937787638
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 1.5106449282906092e-12,
+        "angular_speed": 1.3133984458314167e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.2,
+        "xy": [
+          0.17267037035154642,
+          0.0008033350940282921
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 1.908064117435901e-12,
+        "angular_speed": 1.663387780159726e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.25,
+        "xy": [
+          0.17267037035136304,
+          0.0008033350943118986
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.1385243608888236e-12,
+        "angular_speed": 1.858686149079367e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.300000000000001,
+        "xy": [
+          0.1726703703511864,
+          0.0008033350945849903
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 1.597694684325861e-12,
+        "angular_speed": 1.3848426590330782e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.3500000000000005,
+        "xy": [
+          0.17267037035099667,
+          0.0008033350948780793
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 1.765511304314166e-12,
+        "angular_speed": 1.5330951961599178e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.4,
+        "xy": [
+          0.1726703703508233,
+          0.00080333509514534
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.208584715771224e-12,
+        "angular_speed": 1.913383500504159e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.45,
+        "xy": [
+          0.17267037035062688,
+          0.0008033350954493838
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.4705202579442983e-12,
+        "angular_speed": 2.1412367293146328e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.5,
+        "xy": [
+          0.17267037035044352,
+          0.0008033350957327134
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.832599180858161e-12,
+        "angular_speed": 2.458238754817511e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.550000000000001,
+        "xy": [
+          0.17267037035027344,
+          0.0008033350959949098
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.2039212673769128e-12,
+        "angular_speed": 1.8986765531058575e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.6000000000000005,
+        "xy": [
+          0.17267037035008684,
+          0.0008033350962836889
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.535911127091936e-12,
+        "angular_speed": 2.1848597783348387e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.65,
+        "xy": [
+          0.17267037034990618,
+          0.0008033350965631214
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 1.8928072509740576e-12,
+        "angular_speed": 1.621366634771269e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.7,
+        "xy": [
+          0.17267037034974436,
+          0.0008033350968128035
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.3957548059876463e-12,
+        "angular_speed": 2.0513676968380386e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.75,
+        "xy": [
+          0.17267037034956054,
+          0.0008033350970971257
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.6719081460491223e-12,
+        "angular_speed": 2.2926831510026633e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.800000000000001,
+        "xy": [
+          0.1726703703493824,
+          0.0008033350973726893
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.004954815914819e-12,
+        "angular_speed": 1.70075634284846e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.8500000000000005,
+        "xy": [
+          0.17267037034919222,
+          0.0008033350976668911
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.2238457948725247e-12,
+        "angular_speed": 1.8853394364015066e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.9,
+        "xy": [
+          0.17267037034901883,
+          0.0008033350979349972
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.7557576248762757e-12,
+        "angular_speed": 2.3415552531388006e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 5.95,
+        "xy": [
+          0.17267037034882177,
+          0.0008033350982401506
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 3.0822262012699918e-12,
+        "angular_speed": 2.619200945602942e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.0,
+        "xy": [
+          0.17267037034866553,
+          0.000803335098481284
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.515453156267145e-12,
+        "angular_speed": 2.1147186590537643e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.050000000000001,
+        "xy": [
+          0.17267037034849395,
+          0.0008033350987469715
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 2.883695962207699e-12,
+        "angular_speed": 2.424860556386972e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.1000000000000005,
+        "xy": [
+          0.1726703703483006,
+          0.0008033350990465524
+        ],
+        "yaw": 0.8469059245903299,
+        "linear_speed": 3.241860231437708e-12,
+        "angular_speed": 2.7289489123784373e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.15,
+        "xy": [
+          0.17385203204023394,
+          -4.224962432880525e-05
+        ],
+        "yaw": 0.807765075946064,
+        "linear_speed": 0.0003241893096453226,
+        "angular_speed": 0.009160132821947265,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.2,
+        "xy": [
+          0.17430895403948213,
+          -0.00033059019999815743
+        ],
+        "yaw": 0.7952670340172701,
+        "linear_speed": 0.001069336650892758,
+        "angular_speed": 0.03498952635764104,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.25,
+        "xy": [
+          0.17566687491038682,
+          -0.0011453616220773507
+        ],
+        "yaw": 0.7544552938358683,
+        "linear_speed": 0.00034753382847930894,
+        "angular_speed": 0.034396673128553316,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.300000000000001,
+        "xy": [
+          0.17620698321037165,
+          -0.0014063744576560413
+        ],
+        "yaw": 0.7404481208844501,
+        "linear_speed": 0.000497977309455726,
+        "angular_speed": 0.034060163774983644,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.3500000000000005,
+        "xy": [
+          0.17774535935210356,
+          -0.002189016384722319
+        ],
+        "yaw": 0.6956755060715015,
+        "linear_speed": 0.001180119023846482,
+        "angular_speed": 0.04449123483506221,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.4,
+        "xy": [
+          0.17815761619214068,
+          -0.0024251802936190617
+        ],
+        "yaw": 0.6896402672070805,
+        "linear_speed": 0.0010715734668336361,
+        "angular_speed": 0.03633110717861318,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.45,
+        "xy": [
+          0.18095834562651414,
+          -0.0038635498728467593
+        ],
+        "yaw": 0.6643915723822102,
+        "linear_speed": 0.002066737779311472,
+        "angular_speed": 0.027157955287208727,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.5,
+        "xy": [
+          0.18096160815641069,
+          -0.003862245464373482
+        ],
+        "yaw": 0.6643212522899309,
+        "linear_speed": 1.0336886738668096e-05,
+        "angular_speed": 0.00018615206587129955,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.550000000000001,
+        "xy": [
+          0.18161573365421346,
+          -0.004557774999286041
+        ],
+        "yaw": 0.6526874494187913,
+        "linear_speed": 0.000536397138804766,
+        "angular_speed": 0.06290033799134116,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.6000000000000005,
+        "xy": [
+          0.18168150975044003,
+          -0.004788053501298566
+        ],
+        "yaw": 0.6506129949367926,
+        "linear_speed": 0.0006928040422710058,
+        "angular_speed": 0.007746035439125189,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.65,
+        "xy": [
+          0.18226007289998497,
+          -0.005395520404866965
+        ],
+        "yaw": 0.6394800052038123,
+        "linear_speed": 0.002201217480968576,
+        "angular_speed": 0.03203170337943293,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.7,
+        "xy": [
+          0.18268755740285708,
+          -0.005739633878699115
+        ],
+        "yaw": 0.6288019612444857,
+        "linear_speed": 0.0017974402683462224,
+        "angular_speed": 0.06767195550397163,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.75,
+        "xy": [
+          0.18372529129434417,
+          -0.006205554085856329
+        ],
+        "yaw": 0.6095258787004944,
+        "linear_speed": 0.004489068400518195,
+        "angular_speed": 0.12693329493584235,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.800000000000001,
+        "xy": [
+          0.1846311598854354,
+          -0.006599777493377164
+        ],
+        "yaw": 0.5906349359389503,
+        "linear_speed": 0.005338501529092362,
+        "angular_speed": 0.20285006955226437,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.8500000000000005,
+        "xy": [
+          0.18591197332937934,
+          -0.007028220403302006
+        ],
+        "yaw": 0.5667113007794347,
+        "linear_speed": 0.008413605400297468,
+        "angular_speed": 0.3023860161595093,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.9,
+        "xy": [
+          0.1874043453521215,
+          -0.007589078122229405
+        ],
+        "yaw": 0.5348427236948017,
+        "linear_speed": 0.007332226456622022,
+        "angular_speed": 0.22538437559237468,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 6.95,
+        "xy": [
+          0.18828617789752647,
+          -0.007894084107298277
+        ],
+        "yaw": 0.5190288193908009,
+        "linear_speed": 0.002758284602908523,
+        "angular_speed": 0.050272946860411206,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.0,
+        "xy": [
+          0.18953927985808158,
+          -0.008500171352928599
+        ],
+        "yaw": 0.49205680387237205,
+        "linear_speed": 0.0012462186527268722,
+        "angular_speed": 0.03789145718775143,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.050000000000001,
+        "xy": [
+          0.19103602926456797,
+          -0.009363552228700157
+        ],
+        "yaw": 0.4567766508161313,
+        "linear_speed": 0.0020662691994065524,
+        "angular_speed": 0.12741878645010188,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.1000000000000005,
+        "xy": [
+          0.19104166398381003,
+          -0.009369802334889736
+        ],
+        "yaw": 0.45667200770918104,
+        "linear_speed": 1.5984671108635845e-05,
+        "angular_speed": 0.00040686762788522395,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.15,
+        "xy": [
+          0.19147372042004537,
+          -0.010491168403939747
+        ],
+        "yaw": 0.42877111279059127,
+        "linear_speed": 0.0005967372833653115,
+        "angular_speed": 0.012257271599763843,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.2,
+        "xy": [
+          0.19159264047876684,
+          -0.010612378860211064
+        ],
+        "yaw": 0.4250611349844121,
+        "linear_speed": 0.0003680619324974299,
+        "angular_speed": 0.01656609678211054,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.25,
+        "xy": [
+          0.19151628419393696,
+          -0.011741328488888123
+        ],
+        "yaw": 0.40836957076868774,
+        "linear_speed": 0.0002755000376228861,
+        "angular_speed": 0.031004395505196933,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.300000000000001,
+        "xy": [
+          0.19151617636368853,
+          -0.011740270488897921
+        ],
+        "yaw": 0.40836800519537647,
+        "linear_speed": 3.8055660139046124e-06,
+        "angular_speed": 7.624685101884398e-05,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.3500000000000005,
+        "xy": [
+          0.19151618355440636,
+          -0.011740271192993349
+        ],
+        "yaw": 0.40836800519440225,
+        "linear_speed": 4.146153112347975e-08,
+        "angular_speed": 8.380840104971704e-07,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.4,
+        "xy": [
+          0.1915161836327383,
+          -0.011740271201274176
+        ],
+        "yaw": 0.4083680051944022,
+        "linear_speed": 4.487350834419637e-10,
+        "angular_speed": 9.078690544715531e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.45,
+        "xy": [
+          0.19151618363358694,
+          -0.011740271201363544
+        ],
+        "yaw": 0.4083680051944022,
+        "linear_speed": 4.8564436204057625e-12,
+        "angular_speed": 9.83400548384138e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.5,
+        "xy": [
+          0.19151618363340248,
+          -0.011740271201335976
+        ],
+        "yaw": 0.4083680051944022,
+        "linear_speed": 1.1384549249386477e-11,
+        "angular_speed": 1.7612884444090861e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.550000000000001,
+        "xy": [
+          0.19151618363315553,
+          -0.011740271201209913
+        ],
+        "yaw": 0.4083680051944022,
+        "linear_speed": 8.423413550249718e-12,
+        "angular_speed": 1.1104226268406663e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.6000000000000005,
+        "xy": [
+          0.1915161836329654,
+          -0.011740271200994645
+        ],
+        "yaw": 0.4083680051944022,
+        "linear_speed": 7.591601515355146e-12,
+        "angular_speed": 8.717730595288891e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.65,
+        "xy": [
+          0.19147858148004465,
+          -0.011733850093668202
+        ],
+        "yaw": 0.40920973794386833,
+        "linear_speed": 0.0005723185456050203,
+        "angular_speed": 0.023288550667786602,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.7,
+        "xy": [
+          0.19098330241048403,
+          -0.011561025368466331
+        ],
+        "yaw": 0.4254126724150686,
+        "linear_speed": 0.000753331472707342,
+        "angular_speed": 0.03446020752563407,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.75,
+        "xy": [
+          0.1907224598826625,
+          -0.01147136571821423
+        ],
+        "yaw": 0.4332538626918484,
+        "linear_speed": 0.0001195639396975851,
+        "angular_speed": 0.0034556930105098306,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.800000000000001,
+        "xy": [
+          0.19051496131721415,
+          -0.011343718376854828
+        ],
+        "yaw": 0.43739946286149983,
+        "linear_speed": 0.00010632217064328065,
+        "angular_speed": 0.0025741349581113963,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.8500000000000005,
+        "xy": [
+          0.19051474195984872,
+          -0.011343821846723993
+        ],
+        "yaw": 0.437399488117975,
+        "linear_speed": 1.2401894215786961e-06,
+        "angular_speed": 2.8091648222319737e-05,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.9,
+        "xy": [
+          0.19051473967144367,
+          -0.011343823164050953
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.3431823023212264e-08,
+        "angular_speed": 3.0442146027415897e-07,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 7.95,
+        "xy": [
+          0.1905147396466566,
+          -0.011343823178343428
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.4542174194312258e-10,
+        "angular_speed": 3.2985746308290834e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.0,
+        "xy": [
+          0.19051473964640178,
+          -0.011343823178485177
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.487855360819772e-12,
+        "angular_speed": 1.5433219330383173e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.05,
+        "xy": [
+          0.1905147396465762,
+          -0.011343823178211145
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.5164930032189277e-12,
+        "angular_speed": 2.0619486118427834e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.1,
+        "xy": [
+          0.1905147396466396,
+          -0.011343823177928453
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.9195321606935206e-12,
+        "angular_speed": 2.301165347445379e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.15,
+        "xy": [
+          0.19051473964665278,
+          -0.01134382317761875
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.197894212766294e-12,
+        "angular_speed": 2.5719242148016163e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.200000000000001,
+        "xy": [
+          0.19051473964663287,
+          -0.011343823177275945
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.56891372438757e-12,
+        "angular_speed": 2.8922131400356316e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.25,
+        "xy": [
+          0.19051473964659665,
+          -0.011343823176943144
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.6830223558089083e-12,
+        "angular_speed": 2.1169183957362334e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.3,
+        "xy": [
+          0.19051473964655688,
+          -0.011343823176651937
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.3174429705408952e-12,
+        "angular_speed": 2.645803408242621e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.35,
+        "xy": [
+          0.19051473964650703,
+          -0.011343823176319824
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.706781325949954e-12,
+        "angular_speed": 2.955691742822785e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.4,
+        "xy": [
+          0.19051473964645585,
+          -0.011343823175994458
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.806326183610268e-12,
+        "angular_speed": 2.1588368431844803e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.450000000000001,
+        "xy": [
+          0.19051473964640067,
+          -0.011343823175651867
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.1096407217356118e-12,
+        "angular_speed": 2.394838427150065e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.5,
+        "xy": [
+          0.19051473964634946,
+          -0.011343823175341654
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.749845596594348e-12,
+        "angular_speed": 2.915554176871757e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.55,
+        "xy": [
+          0.19051473964629118,
+          -0.011343823174987422
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.200365524455636e-12,
+        "angular_speed": 3.2630312698474095e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.6,
+        "xy": [
+          0.1905147396462363,
+          -0.011343823174658199
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.735911172067434e-12,
+        "angular_speed": 3.690061380661763e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.65,
+        "xy": [
+          0.19051473964618443,
+          -0.011343823174345825
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.682191403839734e-12,
+        "angular_speed": 2.7415440666623567e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.700000000000001,
+        "xy": [
+          0.1905147396461289,
+          -0.0113438231740105
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.239730555135822e-12,
+        "angular_speed": 3.1677439201980186e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.75,
+        "xy": [
+          0.19051473964607393,
+          -0.011343823173678274
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.259241560837978e-12,
+        "angular_speed": 2.2813649195853764e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.8,
+        "xy": [
+          0.19051473964602586,
+          -0.011343823173389946
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.925048484634796e-12,
+        "angular_speed": 2.791414783915887e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.85,
+        "xy": [
+          0.1905147396459715,
+          -0.011343823173059799
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.404478500795112e-12,
+        "angular_speed": 3.124235662984895e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.9,
+        "xy": [
+          0.19051473964591745,
+          -0.011343823172732737
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.427092189701498e-12,
+        "angular_speed": 2.2312772631440463e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 8.950000000000001,
+        "xy": [
+          0.19051473964586094,
+          -0.011343823172391482
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 3.796383626889378e-12,
+        "angular_speed": 2.483497081495818e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.0,
+        "xy": [
+          0.19051473964580937,
+          -0.011343823172083066
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.438930945226785e-12,
+        "angular_speed": 2.9380151936668256e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.05,
+        "xy": [
+          0.19051473964575105,
+          -0.011343823171730594
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.9787466213674966e-12,
+        "angular_speed": 3.2929102863130787e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.1,
+        "xy": [
+          0.19051473964569654,
+          -0.011343823171403098
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 5.511140265367934e-12,
+        "angular_speed": 3.658237620644048e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.15,
+        "xy": [
+          0.1905147396456442,
+          -0.011343823171088516
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.364119938700279e-12,
+        "angular_speed": 2.591174891788056e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.200000000000001,
+        "xy": [
+          0.190514739645589,
+          -0.011343823170755211
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 5.0247455299867425e-12,
+        "angular_speed": 3.012769481379654e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.25,
+        "xy": [
+          0.19051473964553364,
+          -0.011343823170420883
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.063869772733695e-12,
+        "angular_speed": 2.0885112459814752e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.3,
+        "xy": [
+          0.19051473964548588,
+          -0.011343823170134618
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.677279910684245e-12,
+        "angular_speed": 2.432937853150091e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.35,
+        "xy": [
+          0.1905147396454316,
+          -0.011343823169806354
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 5.253523493985037e-12,
+        "angular_speed": 2.729910820610238e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.4,
+        "xy": [
+          0.1905147396453774,
+          -0.011343823169477402
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.367089786761141e-12,
+        "angular_speed": 1.8451796759185377e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.450000000000001,
+        "xy": [
+          0.1905147396453209,
+          -0.011343823169137332
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 4.836016087689265e-12,
+        "angular_speed": 2.071902709978837e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.5,
+        "xy": [
+          0.19051473964526958,
+          -0.011343823168830338
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 5.382087268476091e-12,
+        "angular_speed": 2.2622596105095473e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.55,
+        "xy": [
+          0.19051473964521143,
+          -0.011343823168478893
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 6.060342363993731e-12,
+        "angular_speed": 2.54817540136589e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.600000000000001,
+        "xy": [
+          0.19051473964515656,
+          -0.011343823168151617
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 6.5239708054093534e-12,
+        "angular_speed": 2.683178119769167e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.65,
+        "xy": [
+          0.1905147396451036,
+          -0.011343823167833183
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 5.4818306520315696e-12,
+        "angular_speed": 1.5940938355573585e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.700000000000001,
+        "xy": [
+          0.19051473964504861,
+          -0.011343823167500868
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 6.3003761137007274e-12,
+        "angular_speed": 1.8974782578061e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.75,
+        "xy": [
+          0.1905147396449928,
+          -0.011343823167163621
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 5.6271910204977025e-12,
+        "angular_speed": 1.1071411586954409e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.8,
+        "xy": [
+          0.1905147396449448,
+          -0.011343823166878
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 6.120188352460664e-12,
+        "angular_speed": 9.858554720423696e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.850000000000001,
+        "xy": [
+          0.19051473964489046,
+          -0.011343823166550113
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 6.900519112821116e-12,
+        "angular_speed": 1.1226675259583543e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.9,
+        "xy": [
+          0.19051473964483556,
+          -0.011343823166217655
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 6.442546554294847e-12,
+        "angular_speed": 4.669624723277457e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 9.950000000000001,
+        "xy": [
+          0.19051473964477877,
+          -0.01134382316587721
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 7.109600529078961e-12,
+        "angular_speed": 5.746503484238462e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.0,
+        "xy": [
+          0.1905147396447272,
+          -0.011343823165570288
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 7.50544893514869e-12,
+        "angular_speed": 8.063651208188508e-12,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.05,
+        "xy": [
+          0.19051473964466914,
+          -0.011343823165219454
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 8.475987259838515e-12,
+        "angular_speed": 1.2355046537169072e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.100000000000001,
+        "xy": [
+          0.19051473964462037,
+          -0.011343823164927125
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 7.633166934356812e-12,
+        "angular_speed": 1.1223031720840863e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.15,
+        "xy": [
+          0.19051473964456994,
+          -0.011343823164623349
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 8.740756259499708e-12,
+        "angular_speed": 1.146923378230026e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.200000000000001,
+        "xy": [
+          0.19051473964451301,
+          -0.011343823164279808
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 9.833740910087763e-12,
+        "angular_speed": 1.3013540532149138e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.25,
+        "xy": [
+          0.19051473964445945,
+          -0.01134382316395862
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.0208837126124085e-11,
+        "angular_speed": 2.088326614797737e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.3,
+        "xy": [
+          0.19051473964440668,
+          -0.01134382316364211
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 9.98724970116685e-12,
+        "angular_speed": 2.7372304315862206e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.350000000000001,
+        "xy": [
+          0.19051473964435298,
+          -0.011343823163318606
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.1374569147523762e-11,
+        "angular_speed": 3.0002396871903417e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.4,
+        "xy": [
+          0.19051473964429783,
+          -0.011343823162985326
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.1783958392464704e-11,
+        "angular_speed": 2.940612678746434e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.450000000000001,
+        "xy": [
+          0.19051473964424176,
+          -0.011343823162647579
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.2938979640984604e-11,
+        "angular_speed": 3.142728753378442e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.5,
+        "xy": [
+          0.19051473964419074,
+          -0.01134382316234229
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.3445523199822483e-11,
+        "angular_speed": 5.131789190176805e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.55,
+        "xy": [
+          0.19051473964413349,
+          -0.01134382316199567
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.5201007723341735e-11,
+        "angular_speed": 5.676787386107769e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.600000000000001,
+        "xy": [
+          0.1905147396440792,
+          -0.011343823161670333
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.577537605201853e-11,
+        "angular_speed": 7.441497807543417e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.65,
+        "xy": [
+          0.1905147396440258,
+          -0.011343823161348686
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.6274029699375872e-11,
+        "angular_speed": 7.508875795532008e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.700000000000001,
+        "xy": [
+          0.1905147396439719,
+          -0.011343823161022722
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.8491431799682913e-11,
+        "angular_speed": 8.413276799593736e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.75,
+        "xy": [
+          0.19051473964391621,
+          -0.011343823160684942
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 1.981124910668727e-11,
+        "angular_speed": 7.344847178349985e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.8,
+        "xy": [
+          0.19051473964386878,
+          -0.01134382316040143
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.0880318900717627e-11,
+        "angular_speed": 1.0844121365200832e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.850000000000001,
+        "xy": [
+          0.19051473964381574,
+          -0.011343823160080976
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.3591927344626708e-11,
+        "angular_speed": 1.203460301083538e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.9,
+        "xy": [
+          0.1905147396437611,
+          -0.011343823159751108
+        ],
+        "yaw": 0.4373994881179853,
+        "linear_speed": 2.550723097394678e-11,
+        "angular_speed": 1.0268998744065771e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 10.950000000000001,
+        "xy": [
+          0.19051473964370588,
+          -0.011343823159418181
+        ],
+        "yaw": 0.43739948811798524,
+        "linear_speed": 2.7938879277619706e-11,
+        "angular_speed": 1.115997965764412e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.0,
+        "xy": [
+          0.190514739643655,
+          -0.011343823159113734
+        ],
+        "yaw": 0.43739948811798507,
+        "linear_speed": 2.931629994259955e-11,
+        "angular_speed": 1.6187434372078508e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.05,
+        "xy": [
+          0.19051473964359888,
+          -0.011343823158773983
+        ],
+        "yaw": 0.4373994881179849,
+        "linear_speed": 3.3103447030113594e-11,
+        "angular_speed": 1.7976157660055657e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.100000000000001,
+        "xy": [
+          0.19051473964354473,
+          -0.011343823158449739
+        ],
+        "yaw": 0.4373994881179847,
+        "linear_speed": 3.473099413107693e-11,
+        "angular_speed": 2.238006726217764e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.15,
+        "xy": [
+          0.19051473964349197,
+          -0.011343823158131981
+        ],
+        "yaw": 0.43739948811798435,
+        "linear_speed": 1.6508624625536317e-12,
+        "angular_speed": 1.4374147791191734e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.200000000000001,
+        "xy": [
+          0.19051473964343904,
+          -0.011343823157814903
+        ],
+        "yaw": 0.4373994881179839,
+        "linear_speed": 2.064104017752482e-12,
+        "angular_speed": 1.795901481792567e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.25,
+        "xy": [
+          0.19051473964337964,
+          -0.011343823157455014
+        ],
+        "yaw": 0.4373994881179832,
+        "linear_speed": 2.31059575602111e-12,
+        "angular_speed": 2.0072601078655738e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.3,
+        "xy": [
+          0.19051473964333263,
+          -0.011343823157172367
+        ],
+        "yaw": 0.43739948811798246,
+        "linear_speed": 1.9002139928894015e-12,
+        "angular_speed": 1.6473191700972643e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.350000000000001,
+        "xy": [
+          0.19051473964328078,
+          -0.011343823156858487
+        ],
+        "yaw": 0.4373994881179815,
+        "linear_speed": 2.174339248355357e-12,
+        "angular_speed": 1.8852095997487863e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.4,
+        "xy": [
+          0.1905147396432221,
+          -0.01134382315650481
+        ],
+        "yaw": 0.4373994881179801,
+        "linear_speed": 2.4457315502209085e-12,
+        "angular_speed": 2.1222016103048347e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.450000000000001,
+        "xy": [
+          0.1905147396431673,
+          -0.011343823156174661
+        ],
+        "yaw": 0.4373994881179784,
+        "linear_speed": 2.8142703340668766e-12,
+        "angular_speed": 2.4384854498016077e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.5,
+        "xy": [
+          0.19051473964311644,
+          -0.011343823155869327
+        ],
+        "yaw": 0.43739948811797635,
+        "linear_speed": 2.1811123718079528e-12,
+        "angular_speed": 1.8804853347933962e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.55,
+        "xy": [
+          0.1905147396430608,
+          -0.011343823155533351
+        ],
+        "yaw": 0.43739948811797363,
+        "linear_speed": 2.5127041721015458e-12,
+        "angular_speed": 2.1649833937124252e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.600000000000001,
+        "xy": [
+          0.19051473964300653,
+          -0.01134382315520822
+        ],
+        "yaw": 0.4373994881179705,
+        "linear_speed": 1.875164858616736e-12,
+        "angular_speed": 1.6037809770347785e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.65,
+        "xy": [
+          0.19051473964294866,
+          -0.011343823154860884
+        ],
+        "yaw": 0.43739948811796714,
+        "linear_speed": 2.0745871033574743e-12,
+        "angular_speed": 1.7763173016059287e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.700000000000001,
+        "xy": [
+          0.19051473964289564,
+          -0.011343823154544373
+        ],
+        "yaw": 0.43739948811796214,
+        "linear_speed": 2.5788321552438e-12,
+        "angular_speed": 2.2106516157349932e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.75,
+        "xy": [
+          0.19051473964283594,
+          -0.011343823154184016
+        ],
+        "yaw": 0.43739948811795537,
+        "linear_speed": 2.8873319005339563e-12,
+        "angular_speed": 2.473723424182877e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.8,
+        "xy": [
+          0.19051473964278845,
+          -0.011343823153899662
+        ],
+        "yaw": 0.4373994881179486,
+        "linear_speed": 2.36265121825094e-12,
+        "angular_speed": 2.0066928252010773e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.850000000000001,
+        "xy": [
+          0.19051473964273669,
+          -0.011343823153585744
+        ],
+        "yaw": 0.43739948811793944,
+        "linear_speed": 2.7052825869486008e-12,
+        "angular_speed": 2.3007499406266445e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.9,
+        "xy": [
+          0.19051473964267837,
+          -0.011343823153232152
+        ],
+        "yaw": 0.437399488117928,
+        "linear_speed": 3.0431221115194594e-12,
+        "angular_speed": 2.5863783006603135e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 11.950000000000001,
+        "xy": [
+          0.19051473964262353,
+          -0.011343823152902216
+        ],
+        "yaw": 0.4373994881179131,
+        "linear_speed": 3.4831305303728097e-12,
+        "angular_speed": 2.963743613865389e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.0,
+        "xy": [
+          0.19051473964257226,
+          -0.011343823152594515
+        ],
+        "yaw": 0.4373994881178961,
+        "linear_speed": 2.697690951278576e-12,
+        "angular_speed": 2.269127671079333e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.05,
+        "xy": [
+          0.19100781240820378,
+          -0.011127296952986431
+        ],
+        "yaw": 0.4317945159016731,
+        "linear_speed": 0.0008127632984029404,
+        "angular_speed": 0.025140617685877033,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.100000000000001,
+        "xy": [
+          0.1927161790939832,
+          -0.010493559117017229
+        ],
+        "yaw": 0.418689131490317,
+        "linear_speed": 0.0019173825805749581,
+        "angular_speed": 0.07938804688610934,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.15,
+        "xy": [
+          0.19409265310689644,
+          -0.009946345143131089
+        ],
+        "yaw": 0.38549134940446184,
+        "linear_speed": 0.0008284656427495772,
+        "angular_speed": 0.02860570630701243,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.200000000000001,
+        "xy": [
+          0.19553019980471717,
+          -0.00857850181865733
+        ],
+        "yaw": 0.35321247773702047,
+        "linear_speed": 0.0004062059642021985,
+        "angular_speed": 0.013264995050814618,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.25,
+        "xy": [
+          0.1964677050760432,
+          -0.0074865476057830935
+        ],
+        "yaw": 0.3312795442569271,
+        "linear_speed": 0.001828478851052449,
+        "angular_speed": 0.06376751583214303,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.3,
+        "xy": [
+          0.19807133133773683,
+          -0.006031155781982389
+        ],
+        "yaw": 0.2829134621992121,
+        "linear_speed": 0.0024157680551125265,
+        "angular_speed": 0.10627461601235205,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.350000000000001,
+        "xy": [
+          0.199119321063694,
+          -0.0049965049218132
+        ],
+        "yaw": 0.2564059011454218,
+        "linear_speed": 0.002512687157509544,
+        "angular_speed": 0.0751238984552491,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.4,
+        "xy": [
+          0.2011980710577716,
+          -0.0027885033125514304
+        ],
+        "yaw": 0.21478275074606096,
+        "linear_speed": 0.01170979326392817,
+        "angular_speed": 0.10695232927912636,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.450000000000001,
+        "xy": [
+          0.20173078009521078,
+          -0.0019805734741833525
+        ],
+        "yaw": 0.19780482110978378,
+        "linear_speed": 0.0014404196027095818,
+        "angular_speed": 0.07170841445015608,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.5,
+        "xy": [
+          0.2040601590258215,
+          -7.540303684736653e-05
+        ],
+        "yaw": 0.1449135064761953,
+        "linear_speed": 0.008442256777110316,
+        "angular_speed": 0.15289136294174535,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.55,
+        "xy": [
+          0.20486500130437602,
+          0.0006384570680256145
+        ],
+        "yaw": 0.11993805799784538,
+        "linear_speed": 0.0012902457280324878,
+        "angular_speed": 0.09784240484215959,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.600000000000001,
+        "xy": [
+          0.20707000835435133,
+          0.0026078895521496315
+        ],
+        "yaw": 0.07821734038256645,
+        "linear_speed": 0.008416452031720598,
+        "angular_speed": 0.14722466257177869,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.65,
+        "xy": [
+          0.2077382456354887,
+          0.003169924114017319
+        ],
+        "yaw": 0.06052700796754491,
+        "linear_speed": 0.0028627320903716466,
+        "angular_speed": 0.1749063876638648,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.700000000000001,
+        "xy": [
+          0.21004473744416113,
+          0.004842415556104164
+        ],
+        "yaw": 0.020462981189290814,
+        "linear_speed": 0.003591151112459969,
+        "angular_speed": 0.5759093076153755,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.75,
+        "xy": [
+          0.21053270711131958,
+          0.005268622938594373
+        ],
+        "yaw": 0.010576765637665013,
+        "linear_speed": 0.0015876707077824876,
+        "angular_speed": 0.030330177429554146,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.8,
+        "xy": [
+          0.21274876477294677,
+          0.006807659392428279
+        ],
+        "yaw": -0.020547484064021713,
+        "linear_speed": 0.002875130892182356,
+        "angular_speed": 0.06998242445467497,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.850000000000001,
+        "xy": [
+          0.21323552589042238,
+          0.007175781048631631
+        ],
+        "yaw": -0.027681236251937115,
+        "linear_speed": 0.0012531582321326498,
+        "angular_speed": 0.06188324856273527,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.9,
+        "xy": [
+          0.21684686062823183,
+          0.008334019102323878
+        ],
+        "yaw": -0.08263064984205222,
+        "linear_speed": 0.011743242056819488,
+        "angular_speed": 0.3714188981225903,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 12.950000000000001,
+        "xy": [
+          0.21687780565247686,
+          0.008362808438658054
+        ],
+        "yaw": -0.08301377288298478,
+        "linear_speed": 3.709436632036874e-05,
+        "angular_speed": 0.0009029914180261622,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.0,
+        "xy": [
+          0.21783172817211593,
+          0.008579802505532504
+        ],
+        "yaw": -0.08948026386809046,
+        "linear_speed": 0.0024558232715858022,
+        "angular_speed": 0.06561542345617304,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.05,
+        "xy": [
+          0.2200391617646135,
+          0.008655549194125013
+        ],
+        "yaw": -0.10510257259056163,
+        "linear_speed": 0.0007821049359683715,
+        "angular_speed": 0.028760121764109515,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.100000000000001,
+        "xy": [
+          0.22091696607813355,
+          0.008504819817109306
+        ],
+        "yaw": -0.09060938280669202,
+        "linear_speed": 0.0013408925243870455,
+        "angular_speed": 0.14074617627924904,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.15,
+        "xy": [
+          0.22237231650164305,
+          0.008406435377122263
+        ],
+        "yaw": -0.08901247763317982,
+        "linear_speed": 0.0006872133623053285,
+        "angular_speed": 0.07268223909731715,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.200000000000001,
+        "xy": [
+          0.2232589728467697,
+          0.009720665339147666
+        ],
+        "yaw": -0.041492921877493004,
+        "linear_speed": 0.0004966683112103311,
+        "angular_speed": 0.02125870216284729,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.25,
+        "xy": [
+          0.22434690580897249,
+          0.011799712463352012
+        ],
+        "yaw": 0.03413090586564606,
+        "linear_speed": 0.0006512504208669304,
+        "angular_speed": 0.039771095577887314,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.3,
+        "xy": [
+          0.22537214189867916,
+          0.01466916748173786
+        ],
+        "yaw": 0.13412624466016737,
+        "linear_speed": 0.02606838410449602,
+        "angular_speed": 0.8386831616026101,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.350000000000001,
+        "xy": [
+          0.2256786318405899,
+          0.01639084897528674
+        ],
+        "yaw": 0.1940781606217155,
+        "linear_speed": 0.002567748014565346,
+        "angular_speed": 0.04958804593200206,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.4,
+        "xy": [
+          0.2260869205580293,
+          0.01819016826522641
+        ],
+        "yaw": 0.25981056710584466,
+        "linear_speed": 0.009021284854449065,
+        "angular_speed": 0.2913249484492335,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.450000000000001,
+        "xy": [
+          0.22612047358247808,
+          0.021767408855292412
+        ],
+        "yaw": 0.38925212717823393,
+        "linear_speed": 0.011025844295700745,
+        "angular_speed": 0.33342571717366526,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.5,
+        "xy": [
+          0.22576720100205194,
+          0.024491175144022704
+        ],
+        "yaw": 0.49432709811573716,
+        "linear_speed": 0.024047720915712383,
+        "angular_speed": 0.8728794094760459,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.55,
+        "xy": [
+          0.22520633439700632,
+          0.026603102528082536
+        ],
+        "yaw": 0.5826668855638496,
+        "linear_speed": 0.0044997564465454444,
+        "angular_speed": 0.15857631456421856,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.600000000000001,
+        "xy": [
+          0.22516092807412283,
+          0.02728294000563158
+        ],
+        "yaw": 0.623720631795846,
+        "linear_speed": 0.0124617761680788,
+        "angular_speed": 0.6394650836260438,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.65,
+        "xy": [
+          0.2251178305220151,
+          0.027657799286925258
+        ],
+        "yaw": 0.6386323683673533,
+        "linear_speed": 0.004334896404380862,
+        "angular_speed": 0.20427613688343843,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.700000000000001,
+        "xy": [
+          0.22509438290909903,
+          0.027842574795298163
+        ],
+        "yaw": 0.6486664358933599,
+        "linear_speed": 0.0009703648706992787,
+        "angular_speed": 0.047746104993850735,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.75,
+        "xy": [
+          0.22505497114351075,
+          0.02800506919859489
+        ],
+        "yaw": 0.658193431066418,
+        "linear_speed": 0.0008702640017406734,
+        "angular_speed": 0.03560088982268186,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.8,
+        "xy": [
+          0.22501252055130197,
+          0.028152909849191915
+        ],
+        "yaw": 0.6670526280398485,
+        "linear_speed": 0.0009188628889330757,
+        "angular_speed": 0.04382797350612966,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.850000000000001,
+        "xy": [
+          0.2249702291104382,
+          0.028300145506275257
+        ],
+        "yaw": 0.6758592339570603,
+        "linear_speed": 0.0009113900805094956,
+        "angular_speed": 0.04346038621617528,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.9,
+        "xy": [
+          0.22492452255314052,
+          0.028451963202128602
+        ],
+        "yaw": 0.6849913633364852,
+        "linear_speed": 0.0010609158168904977,
+        "angular_speed": 0.05327899297994667,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 13.950000000000001,
+        "xy": [
+          0.22487705063212815,
+          0.02861893063297562
+        ],
+        "yaw": 0.6950454673624035,
+        "linear_speed": 0.003240156120051361,
+        "angular_speed": 0.18002561349228732,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.0,
+        "xy": [
+          0.2248562198139042,
+          0.028702245242147616
+        ],
+        "yaw": 0.6998068768986732,
+        "linear_speed": 0.0009641625284528233,
+        "angular_speed": 0.05325310323760384,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.05,
+        "xy": [
+          0.2248390026234279,
+          0.028760018667520208
+        ],
+        "yaw": 0.7031289477877711,
+        "linear_speed": 0.0010322631766289526,
+        "angular_speed": 0.05771663164983744,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.100000000000001,
+        "xy": [
+          0.2248188567076867,
+          0.028818656283686503
+        ],
+        "yaw": 0.7066181647508676,
+        "linear_speed": 0.0011827653364796147,
+        "angular_speed": 0.06607067477670835,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.15,
+        "xy": [
+          0.22479923900318147,
+          0.0288744116925979
+        ],
+        "yaw": 0.7099351049168194,
+        "linear_speed": 0.0010374806950337423,
+        "angular_speed": 0.05826282391916464,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.200000000000001,
+        "xy": [
+          0.22477966894522924,
+          0.028928486041322986
+        ],
+        "yaw": 0.7131699655822725,
+        "linear_speed": 0.000978566186206976,
+        "angular_speed": 0.055104738978984276,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.25,
+        "xy": [
+          0.22476490603235075,
+          0.028970202421237694
+        ],
+        "yaw": 0.7156071496527728,
+        "linear_speed": 0.0004415727780278631,
+        "angular_speed": 0.023430664796141115,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.3,
+        "xy": [
+          0.22475766152472706,
+          0.02898496551149737
+        ],
+        "yaw": 0.716432499321892,
+        "linear_speed": 0.00024614409660474705,
+        "angular_speed": 0.010383394650042095,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.350000000000001,
+        "xy": [
+          0.22475408639345285,
+          0.028993287431962035
+        ],
+        "yaw": 0.7168342832761628,
+        "linear_speed": 0.00016451094097227035,
+        "angular_speed": 0.006995711717397649,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.4,
+        "xy": [
+          0.2247504260481731,
+          0.028999992770105926
+        ],
+        "yaw": 0.7171716146182643,
+        "linear_speed": 0.00014938419281608666,
+        "angular_speed": 0.006439226999152389,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.450000000000001,
+        "xy": [
+          0.2247468809492203,
+          0.029006336741714604
+        ],
+        "yaw": 0.7174897489804385,
+        "linear_speed": 0.00014357635770794757,
+        "angular_speed": 0.006230107566662981,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.5,
+        "xy": [
+          0.22474353262788455,
+          0.029012747827379507
+        ],
+        "yaw": 0.7178106226664901,
+        "linear_speed": 0.00014214623797800932,
+        "angular_speed": 0.006368883321111039,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.55,
+        "xy": [
+          0.22474113987925656,
+          0.029019802554775705
+        ],
+        "yaw": 0.7180992148387527,
+        "linear_speed": 0.00012080269330359711,
+        "angular_speed": 0.0053140075963849925,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.600000000000001,
+        "xy": [
+          0.22473642550468373,
+          0.029034333940756853
+        ],
+        "yaw": 0.7187880302130272,
+        "linear_speed": 0.00014777018282071525,
+        "angular_speed": 0.011488779986764504,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.65,
+        "xy": [
+          0.22469230703199627,
+          0.029119375433226943
+        ],
+        "yaw": 0.7228075099751713,
+        "linear_speed": 0.0004783160569126496,
+        "angular_speed": 0.02867816021200412,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.700000000000001,
+        "xy": [
+          0.2246318559750316,
+          0.029156995330891028
+        ],
+        "yaw": 0.7228135430115786,
+        "linear_speed": 0.0016794868053175169,
+        "angular_speed": 0.06628699724316026,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.75,
+        "xy": [
+          0.22456441283751163,
+          0.029211324596767015
+        ],
+        "yaw": 0.7226759567685996,
+        "linear_speed": 0.0024352053987591418,
+        "angular_speed": 0.09113498628926173,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.8,
+        "xy": [
+          0.22453656935432456,
+          0.029310590108208086
+        ],
+        "yaw": 0.7257422438228098,
+        "linear_speed": 0.002459976770953421,
+        "angular_speed": 0.11133847463831689,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.850000000000001,
+        "xy": [
+          0.22451351763627164,
+          0.02936951808723525
+        ],
+        "yaw": 0.7280802980574633,
+        "linear_speed": 0.0006588595739026542,
+        "angular_speed": 0.028311625671661327,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.9,
+        "xy": [
+          0.22448496459521178,
+          0.02935379371046959
+        ],
+        "yaw": 0.726851264964179,
+        "linear_speed": 0.00021506294237861503,
+        "angular_speed": 0.0047792371050848215,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 14.950000000000001,
+        "xy": [
+          0.22446038273219562,
+          0.029318221068879127
+        ],
+        "yaw": 0.7241876781048977,
+        "linear_speed": 0.00016411938414489095,
+        "angular_speed": 0.002290829214724068,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.0,
+        "xy": [
+          0.224456820711462,
+          0.02932257989583199
+        ],
+        "yaw": 0.724079312282634,
+        "linear_speed": 0.00011715122522443126,
+        "angular_speed": 0.0026873120846685594,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.05,
+        "xy": [
+          0.2244534830508616,
+          0.029326728336080615
+        ],
+        "yaw": 0.7239972353607749,
+        "linear_speed": 0.0001050518042216586,
+        "angular_speed": 0.0018183013274958746,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.100000000000001,
+        "xy": [
+          0.2244506415653521,
+          0.02933108860114495
+        ],
+        "yaw": 0.7239334534857045,
+        "linear_speed": 0.00010051385307185784,
+        "angular_speed": 0.0012914266662688546,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.15,
+        "xy": [
+          0.2244481299364794,
+          0.029335374035454012
+        ],
+        "yaw": 0.7238803231870157,
+        "linear_speed": 9.895132773696443e-05,
+        "angular_speed": 0.00127034633055859,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.200000000000001,
+        "xy": [
+          0.22444628801949407,
+          0.029339783417852587
+        ],
+        "yaw": 0.7238347153311346,
+        "linear_speed": 9.782540038493912e-05,
+        "angular_speed": 0.00053294954602755,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.25,
+        "xy": [
+          0.2244443138023394,
+          0.02934400555224698
+        ],
+        "yaw": 0.72380834061849,
+        "linear_speed": 9.080642445583308e-05,
+        "angular_speed": 0.0004380262058198041,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.3,
+        "xy": [
+          0.2244427264789318,
+          0.02934823170018232
+        ],
+        "yaw": 0.7237791625223744,
+        "linear_speed": 0.00010341668035909008,
+        "angular_speed": 0.0012132840489698109,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.350000000000001,
+        "xy": [
+          0.22444096746530118,
+          0.029352188535770055
+        ],
+        "yaw": 0.7237481368626554,
+        "linear_speed": 8.21590220449116e-05,
+        "angular_speed": 0.00043326804354612927,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.4,
+        "xy": [
+          0.22443968277983184,
+          0.029356482597314208
+        ],
+        "yaw": 0.7237503942008354,
+        "linear_speed": 8.623097738019131e-05,
+        "angular_speed": 0.00028452551764665643,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.450000000000001,
+        "xy": [
+          0.2244380178731814,
+          0.029360418103582617
+        ],
+        "yaw": 0.7237354852542214,
+        "linear_speed": 8.476254448485878e-05,
+        "angular_speed": 0.0004396742806711973,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.5,
+        "xy": [
+          0.22443643079821354,
+          0.02936438579246598
+        ],
+        "yaw": 0.7237443263796547,
+        "linear_speed": 8.235729723162164e-05,
+        "angular_speed": 0.00015962868965448064,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.55,
+        "xy": [
+          0.22443529457977132,
+          0.02936851081061371
+        ],
+        "yaw": 0.7237602355726238,
+        "linear_speed": 9.409573643773772e-05,
+        "angular_speed": 0.0009821464597891496,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.600000000000001,
+        "xy": [
+          0.22443404749400195,
+          0.02937245198667263
+        ],
+        "yaw": 0.7237800384629907,
+        "linear_speed": 8.087875679476849e-05,
+        "angular_speed": 0.0003872240116908502,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.65,
+        "xy": [
+          0.22443294547122705,
+          0.029376365172016833
+        ],
+        "yaw": 0.7238023721577703,
+        "linear_speed": 6.94899328353137e-05,
+        "angular_speed": 0.0029059157776537095,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.700000000000001,
+        "xy": [
+          0.22443142321432638,
+          0.029379839050099773
+        ],
+        "yaw": 0.7238515519225766,
+        "linear_speed": 7.32214594882342e-05,
+        "angular_speed": 0.0007573237167308096,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.75,
+        "xy": [
+          0.2244303683848988,
+          0.029383369543750953
+        ],
+        "yaw": 0.7238985887781942,
+        "linear_speed": 7.156483398904157e-05,
+        "angular_speed": 0.0009111371544865279,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.8,
+        "xy": [
+          0.2244293880087135,
+          0.029386963189115975
+        ],
+        "yaw": 0.7239466764408631,
+        "linear_speed": 6.895763826004372e-05,
+        "angular_speed": 0.0018561258212477737,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.850000000000001,
+        "xy": [
+          0.22442821506803415,
+          0.029390382145318906
+        ],
+        "yaw": 0.7239884817702218,
+        "linear_speed": 6.774345832954454e-05,
+        "angular_speed": 0.0008267703664127668,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.9,
+        "xy": [
+          0.22442739678080423,
+          0.029393796492666224
+        ],
+        "yaw": 0.7240371804014124,
+        "linear_speed": 7.160740895090468e-05,
+        "angular_speed": 0.0015014827759069398,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 15.950000000000001,
+        "xy": [
+          0.22442646478411232,
+          0.029396978095058864
+        ],
+        "yaw": 0.7240958551199498,
+        "linear_speed": 6.894182215843376e-05,
+        "angular_speed": 0.0011730518106676947,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.0,
+        "xy": [
+          0.22442497005240133,
+          0.02940017027478219
+        ],
+        "yaw": 0.7241387184894988,
+        "linear_speed": 6.334013771105184e-05,
+        "angular_speed": 0.0012605964328191391,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.05,
+        "xy": [
+          0.2244240606279456,
+          0.029403433616011988
+        ],
+        "yaw": 0.724192451574647,
+        "linear_speed": 6.630541961677921e-05,
+        "angular_speed": 0.0010134992168066058,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.1,
+        "xy": [
+          0.22442341106310007,
+          0.02940633847702211
+        ],
+        "yaw": 0.7242592376128627,
+        "linear_speed": 5.620928586570411e-05,
+        "angular_speed": 0.0012714078203723445,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.150000000000002,
+        "xy": [
+          0.22442241622078343,
+          0.02940936578593096
+        ],
+        "yaw": 0.7243161646579558,
+        "linear_speed": 7.099074934627964e-05,
+        "angular_speed": 0.001542543612620922,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.2,
+        "xy": [
+          0.22442140082706047,
+          0.029412361346532655
+        ],
+        "yaw": 0.7243668833941186,
+        "linear_speed": 5.9917693661795744e-05,
+        "angular_speed": 0.0010387722432517853,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.25,
+        "xy": [
+          0.22442046181545702,
+          0.02941538449485081
+        ],
+        "yaw": 0.7244254588930963,
+        "linear_speed": 5.885619530880185e-05,
+        "angular_speed": 0.0011621291026163959,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.3,
+        "xy": [
+          0.22441954601930078,
+          0.029418142033831998
+        ],
+        "yaw": 0.7244828940969533,
+        "linear_speed": 5.740244026131373e-05,
+        "angular_speed": 0.001167467585592938,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.35,
+        "xy": [
+          0.22441865819539225,
+          0.029420870357430608
+        ],
+        "yaw": 0.7245420294049606,
+        "linear_speed": 5.701627882205386e-05,
+        "angular_speed": 0.001216968413836489,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.400000000000002,
+        "xy": [
+          0.2244177886825514,
+          0.029423588161289465
+        ],
+        "yaw": 0.7246034599223252,
+        "linear_speed": 5.680722697636057e-05,
+        "angular_speed": 0.00126225655414732,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.45,
+        "xy": [
+          0.22441633677505343,
+          0.02942634580778391
+        ],
+        "yaw": 0.7246894635261872,
+        "linear_speed": 6.283321296674015e-05,
+        "angular_speed": 0.0016712341890336396,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.5,
+        "xy": [
+          0.22441499025566472,
+          0.029429145968605464
+        ],
+        "yaw": 0.7247737907274522,
+        "linear_speed": 5.9204911149115776e-05,
+        "angular_speed": 0.0014971872252021305,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.55,
+        "xy": [
+          0.22440916916629305,
+          0.02943212383539314
+        ],
+        "yaw": 0.7247587953489941,
+        "linear_speed": 7.703589888170575e-05,
+        "angular_speed": 0.0035266950180011625,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.6,
+        "xy": [
+          0.22425614583501122,
+          0.029321085564173874
+        ],
+        "yaw": 0.7066716640951566,
+        "linear_speed": 0.000274428586850956,
+        "angular_speed": 0.01045505665431219,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.650000000000002,
+        "xy": [
+          0.22419674295688793,
+          0.029314502303432945
+        ],
+        "yaw": 0.709958261811643,
+        "linear_speed": 0.0001402900395793475,
+        "angular_speed": 0.0044476102005903085,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.7,
+        "xy": [
+          0.2241968720788538,
+          0.02931410682440517
+        ],
+        "yaw": 0.7099582831526147,
+        "linear_speed": 1.5776958128443506e-06,
+        "angular_speed": 4.7769671540004475e-05,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.75,
+        "xy": [
+          0.22419687350042108,
+          0.029314102565858348
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 1.7084500327339224e-08,
+        "angular_speed": 5.174891286606236e-07,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.8,
+        "xy": [
+          0.22419687351581502,
+          0.02931410251972226
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 1.8497095208796176e-10,
+        "angular_speed": 5.606196632867455e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.85,
+        "xy": [
+          0.2241968735159728,
+          0.029314102519248313
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 5.010629761554683e-12,
+        "angular_speed": 2.4708119439360913e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.900000000000002,
+        "xy": [
+          0.2241968735158473,
+          0.029314102519579322
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 3.273032079491259e-12,
+        "angular_speed": 2.157428055142192e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 16.95,
+        "xy": [
+          0.22419687351571357,
+          0.0293141025198885
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 3.762161443039261e-12,
+        "angular_speed": 2.4555453454283783e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.0,
+        "xy": [
+          0.2241968735155874,
+          0.029314102520170023
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 4.374143314291527e-12,
+        "angular_speed": 2.896966052611882e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.05,
+        "xy": [
+          0.22419687351544101,
+          0.0293141025204906
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 4.915930274750722e-12,
+        "angular_speed": 3.2500316501286266e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.1,
+        "xy": [
+          0.2241968735153033,
+          0.029314102520788206
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 5.446144494105595e-12,
+        "angular_speed": 3.6162498381842214e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.150000000000002,
+        "xy": [
+          0.22419687351517031,
+          0.02931410252107382
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 4.305139458390411e-12,
+        "angular_speed": 2.556669607216531e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.2,
+        "xy": [
+          0.2241968735150294,
+          0.029314102521376294
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 4.962436338490576e-12,
+        "angular_speed": 2.97423111407161e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.25,
+        "xy": [
+          0.22419687351488815,
+          0.02931410252167959
+        ],
+        "yaw": 0.7099582831526605,
+        "linear_speed": 4.011260240497397e-12,
+        "angular_speed": 2.0621892700375488e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.3,
+        "xy": [
+          0.22418265055685616,
+          0.029344887038375265
+        ],
+        "yaw": 0.709671724070609,
+        "linear_speed": 0.00017169180914840723,
+        "angular_speed": 0.007254977647602223,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.35,
+        "xy": [
+          0.22382743348168463,
+          0.030119461401345745
+        ],
+        "yaw": 0.7595116128346454,
+        "linear_speed": 0.001737127609897137,
+        "angular_speed": 0.039052881777240034,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.400000000000002,
+        "xy": [
+          0.22384115270606625,
+          0.030227336863743265
+        ],
+        "yaw": 0.7729442525356118,
+        "linear_speed": 0.0026524790631649,
+        "angular_speed": 0.11136891353167819,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.45,
+        "xy": [
+          0.22372597556105558,
+          0.030913921067022967
+        ],
+        "yaw": 0.849673096632514,
+        "linear_speed": 0.0016154483735351848,
+        "angular_speed": 0.10618074588726906,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.5,
+        "xy": [
+          0.22372157468243956,
+          0.031159997356655707
+        ],
+        "yaw": 0.872798550691161,
+        "linear_speed": 0.006322698870141504,
+        "angular_speed": 0.21600505625177388,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.55,
+        "xy": [
+          0.2236138798884964,
+          0.031905673239783425
+        ],
+        "yaw": 0.9483626278117397,
+        "linear_speed": 0.0032081812271093787,
+        "angular_speed": 0.11424717786829792,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.6,
+        "xy": [
+          0.22361787943651015,
+          0.031968794896583864
+        ],
+        "yaw": 0.9506228966166835,
+        "linear_speed": 0.00124199730196649,
+        "angular_speed": 0.022755679995377327,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.650000000000002,
+        "xy": [
+          0.2234437707271879,
+          0.03266326656540388
+        ],
+        "yaw": 1.0185410514616344,
+        "linear_speed": 0.0005684636206281156,
+        "angular_speed": 0.04466614101947453,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.7,
+        "xy": [
+          0.2231924686672311,
+          0.03347428832671821
+        ],
+        "yaw": 1.086028973853362,
+        "linear_speed": 0.000635990491861242,
+        "angular_speed": 0.04022612579980486,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.75,
+        "xy": [
+          0.22270979267469412,
+          0.03453021749237415
+        ],
+        "yaw": 1.1724492926159948,
+        "linear_speed": 0.0009630211142814267,
+        "angular_speed": 0.21387342694255965,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.8,
+        "xy": [
+          0.2221599504965846,
+          0.035492808860142194
+        ],
+        "yaw": 1.2493448389598205,
+        "linear_speed": 0.0005093519455082381,
+        "angular_speed": 0.02300916834043107,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.85,
+        "xy": [
+          0.22139392817286652,
+          0.03658016362508716
+        ],
+        "yaw": 1.3396721081285288,
+        "linear_speed": 0.00045080684117922436,
+        "angular_speed": 0.01211677688341338,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.900000000000002,
+        "xy": [
+          0.2203627871963771,
+          0.03765089912554871
+        ],
+        "yaw": 1.432225207848761,
+        "linear_speed": 0.00395540814756199,
+        "angular_speed": 0.2662915950307711,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 17.95,
+        "xy": [
+          0.21880163622319462,
+          0.03890259613289076
+        ],
+        "yaw": 1.5524850354219795,
+        "linear_speed": 0.002381061208684093,
+        "angular_speed": 0.050776014319983985,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.0,
+        "xy": [
+          0.2186316282076494,
+          0.039060929781946085
+        ],
+        "yaw": 1.5764520796751331,
+        "linear_speed": 0.001160496966171866,
+        "angular_speed": 0.0776254592361572,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.05,
+        "xy": [
+          0.21910082077301266,
+          0.03902032903690393
+        ],
+        "yaw": 1.5909145805346339,
+        "linear_speed": 0.0011117378881647755,
+        "angular_speed": 0.05015262270473815,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.1,
+        "xy": [
+          0.21985722115787876,
+          0.039051415531163224
+        ],
+        "yaw": 1.615904016296129,
+        "linear_speed": 0.0066843479340427435,
+        "angular_speed": 0.3714304377535218,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.150000000000002,
+        "xy": [
+          0.22046553246620545,
+          0.03906841867407375
+        ],
+        "yaw": 1.6364275266549984,
+        "linear_speed": 0.0011812881949752625,
+        "angular_speed": 0.013090195275508107,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.2,
+        "xy": [
+          0.22125060526890397,
+          0.03917436372628558
+        ],
+        "yaw": 1.6624536911772025,
+        "linear_speed": 0.000963248410611332,
+        "angular_speed": 0.02581060208116616,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.25,
+        "xy": [
+          0.2219575224380969,
+          0.039313901947949086
+        ],
+        "yaw": 1.68616503784166,
+        "linear_speed": 0.0010170526886228361,
+        "angular_speed": 0.06693672545523323,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.3,
+        "xy": [
+          0.2226625130959593,
+          0.03945132472382421
+        ],
+        "yaw": 1.709178490368528,
+        "linear_speed": 0.0008767613655715127,
+        "angular_speed": 0.0646877244432818,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.35,
+        "xy": [
+          0.22296654901473406,
+          0.03956497538667358
+        ],
+        "yaw": 1.7204737740843072,
+        "linear_speed": 0.0004120968518617585,
+        "angular_speed": 0.023731793569158628,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.400000000000002,
+        "xy": [
+          0.22314911804445434,
+          0.039599839998056524
+        ],
+        "yaw": 1.7257241136540804,
+        "linear_speed": 0.0005161361459849267,
+        "angular_speed": 0.007071528724041897,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.45,
+        "xy": [
+          0.22323705704892569,
+          0.039631301939391746
+        ],
+        "yaw": 1.72920905477251,
+        "linear_speed": 0.00023101911877797327,
+        "angular_speed": 0.0029467089101317834,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.5,
+        "xy": [
+          0.22326843638330376,
+          0.03963457384210626
+        ],
+        "yaw": 1.7300790379360813,
+        "linear_speed": 0.00017913088982469776,
+        "angular_speed": 0.004197560810544789,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.55,
+        "xy": [
+          0.22329778433345152,
+          0.039641623782865634
+        ],
+        "yaw": 1.7309912933610905,
+        "linear_speed": 0.00018291945860341244,
+        "angular_speed": 0.004803454615484942,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.6,
+        "xy": [
+          0.22331288761427118,
+          0.039645566094057845
+        ],
+        "yaw": 1.7314863290000981,
+        "linear_speed": 0.00014924811206277374,
+        "angular_speed": 0.004100215796741459,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.650000000000002,
+        "xy": [
+          0.2233218480481704,
+          0.0396488998371156
+        ],
+        "yaw": 1.7317864177448719,
+        "linear_speed": 0.0001380559023813102,
+        "angular_speed": 0.004147172666721435,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.7,
+        "xy": [
+          0.22332974309738643,
+          0.03965205371282425
+        ],
+        "yaw": 1.7320425299563758,
+        "linear_speed": 0.00013703946501392403,
+        "angular_speed": 0.003838712071371503,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.75,
+        "xy": [
+          0.22333671907779776,
+          0.03965501795766278
+        ],
+        "yaw": 1.732270922333606,
+        "linear_speed": 0.00013709398562425902,
+        "angular_speed": 0.0037418983654136278,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.8,
+        "xy": [
+          0.2236977628301671,
+          0.03977341241019068
+        ],
+        "yaw": 1.7439847802050332,
+        "linear_speed": 0.0006775693534605974,
+        "angular_speed": 0.004087941169100823,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.85,
+        "xy": [
+          0.22422756416561085,
+          0.03998591001649594
+        ],
+        "yaw": 1.7630001849548411,
+        "linear_speed": 0.000966174045534182,
+        "angular_speed": 0.06230258740733557,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.900000000000002,
+        "xy": [
+          0.22504548997598142,
+          0.040346513158582696
+        ],
+        "yaw": 1.7886810788395313,
+        "linear_speed": 0.0005154254971032519,
+        "angular_speed": 0.07987334372503856,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 18.95,
+        "xy": [
+          0.22614351515342507,
+          0.04087060610593163
+        ],
+        "yaw": 1.8200365853811047,
+        "linear_speed": 0.0016151513898943022,
+        "angular_speed": 0.13466342075671445,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.0,
+        "xy": [
+          0.2271290942055653,
+          0.04148157908149032
+        ],
+        "yaw": 1.8525981361545056,
+        "linear_speed": 0.0022202251750358397,
+        "angular_speed": 0.21283849919124068,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.05,
+        "xy": [
+          0.22825235326330945,
+          0.04226967404730897
+        ],
+        "yaw": 1.8931435750345327,
+        "linear_speed": 0.003867181604180353,
+        "angular_speed": 0.45215843669468203,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.1,
+        "xy": [
+          0.22875575590982872,
+          0.042769871660333365
+        ],
+        "yaw": 1.9138096230239978,
+        "linear_speed": 0.0049393684060268905,
+        "angular_speed": 0.32692766791121325,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.150000000000002,
+        "xy": [
+          0.22969744328635974,
+          0.04357021781291856
+        ],
+        "yaw": 1.9418248509609073,
+        "linear_speed": 0.004152291257826478,
+        "angular_speed": 0.3381187933308744,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.200000000000003,
+        "xy": [
+          0.2302564645703522,
+          0.04415171172711421
+        ],
+        "yaw": 1.9632597377747065,
+        "linear_speed": 0.0009396347226126269,
+        "angular_speed": 0.023778914673788717,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.25,
+        "xy": [
+          0.23029667803598752,
+          0.04401994284695351
+        ],
+        "yaw": 1.963397708523995,
+        "linear_speed": 0.0017939891928314042,
+        "angular_speed": 0.18395834559488589,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.3,
+        "xy": [
+          0.23018248934655355,
+          0.04397682095501142
+        ],
+        "yaw": 1.9611318740703596,
+        "linear_speed": 0.001075161420866427,
+        "angular_speed": 0.07916987254293723,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.35,
+        "xy": [
+          0.23017492168466186,
+          0.0439768828865154
+        ],
+        "yaw": 1.9611319646256555,
+        "linear_speed": 1.1979367814993823e-05,
+        "angular_speed": 0.000883603990799153,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.400000000000002,
+        "xy": [
+          0.2301748386351087,
+          0.04397688358085822
+        ],
+        "yaw": 1.9611319646375072,
+        "linear_speed": 1.2967165430247887e-07,
+        "angular_speed": 9.573838488817806e-06,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.450000000000003,
+        "xy": [
+          0.23017483773533667,
+          0.0439768835885271
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.4035002799511053e-09,
+        "angular_speed": 1.0371854500813605e-07,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.5,
+        "xy": [
+          0.23017483772558894,
+          0.043976883588611744
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.5190754457672322e-11,
+        "angular_speed": 1.1236379559814409e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.55,
+        "xy": [
+          0.2301748377256977,
+          0.043976883588614984
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 6.966957902603813e-12,
+        "angular_speed": 2.638847234563432e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.6,
+        "xy": [
+          0.23017483772601158,
+          0.043976883588636606
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 6.183004132403959e-12,
+        "angular_speed": 1.6794078649907412e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.650000000000002,
+        "xy": [
+          0.23017483772633476,
+          0.043976883588666964
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 6.870077696227177e-12,
+        "angular_speed": 1.9353601357977118e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.700000000000003,
+        "xy": [
+          0.23017483772664865,
+          0.043976883588700215
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 5.9736615854881795e-12,
+        "angular_speed": 9.053104613168168e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.75,
+        "xy": [
+          0.23017483772697478,
+          0.04397688358873652
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 6.8566576897536215e-12,
+        "angular_speed": 1.1200203960200899e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.8,
+        "xy": [
+          0.2301748377273071,
+          0.043976883588774246
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 6.391165203668466e-12,
+        "angular_speed": 4.631271268221577e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.85,
+        "xy": [
+          0.2301748377276472,
+          0.04397688358881361
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 7.056265921112648e-12,
+        "angular_speed": 5.687310771585452e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.900000000000002,
+        "xy": [
+          0.23017483772795377,
+          0.04397688358885003
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 7.444658855666964e-12,
+        "angular_speed": 7.981214641830565e-12,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 19.950000000000003,
+        "xy": [
+          0.23017483772830405,
+          0.04397688358889104
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 8.401958838812808e-12,
+        "angular_speed": 1.2204685533949774e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.0,
+        "xy": [
+          0.2301748377286302,
+          0.043976883588929726
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 8.750093575055672e-12,
+        "angular_speed": 3.444249824947074e-11,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.05,
+        "xy": [
+          0.23017483772895111,
+          0.04397688358896777
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 8.269244530264485e-12,
+        "angular_speed": 1.1839741621185965e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.1,
+        "xy": [
+          0.2301748377292811,
+          0.0439768835890066
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 9.438461462114511e-12,
+        "angular_speed": 1.239922107012208e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.150000000000002,
+        "xy": [
+          0.23017483772961989,
+          0.04397688358904647
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 9.501660914958366e-12,
+        "angular_speed": 1.5019745563459934e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.200000000000003,
+        "xy": [
+          0.23017483772990424,
+          0.043976883589080355
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 9.978509347757096e-12,
+        "angular_speed": 2.7012514502090286e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.25,
+        "xy": [
+          0.2301748377302293,
+          0.0439768835891187
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.1277270130567634e-11,
+        "angular_speed": 2.98100951006534e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.3,
+        "xy": [
+          0.23017483773056213,
+          0.04397688358915792
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.1702125739048702e-11,
+        "angular_speed": 2.920338180310494e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.35,
+        "xy": [
+          0.23017483773089972,
+          0.04397688358919786
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.285389373569659e-11,
+        "angular_speed": 3.1213131241831715e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.400000000000002,
+        "xy": [
+          0.23017483773120517,
+          0.0439768835892344
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.3362576759907505e-11,
+        "angular_speed": 5.099367948539019e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.450000000000003,
+        "xy": [
+          0.2301748377315521,
+          0.04397688358927519
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.5110364240368954e-11,
+        "angular_speed": 5.639229214138154e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.5,
+        "xy": [
+          0.2301748377318777,
+          0.04397688358931382
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.5694997318331817e-11,
+        "angular_speed": 7.40171230629689e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.55,
+        "xy": [
+          0.2301748377321996,
+          0.04397688358935197
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.6167552610287826e-11,
+        "angular_speed": 7.466195910728439e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.6,
+        "xy": [
+          0.2301748377325257,
+          0.0439768835893907
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.8367512485947706e-11,
+        "angular_speed": 8.350702251470932e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.650000000000002,
+        "xy": [
+          0.23017483773286337,
+          0.04397688358943048
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.9713377709742818e-11,
+        "angular_speed": 7.313386593628343e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.700000000000003,
+        "xy": [
+          0.23017483773314715,
+          0.04397688358946428
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 2.0757666233892363e-11,
+        "angular_speed": 1.0768645314919355e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.75,
+        "xy": [
+          0.2301748377334678,
+          0.043976883589501914
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 2.3423346159333337e-11,
+        "angular_speed": 1.1974520373129613e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.8,
+        "xy": [
+          0.23017483773379824,
+          0.04397688358954065
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 2.543084810257817e-11,
+        "angular_speed": 1.0239286873768475e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.85,
+        "xy": [
+          0.2301748377341323,
+          0.043976883589579976
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 2.7839750560970367e-11,
+        "angular_speed": 1.1124284898155333e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.900000000000002,
+        "xy": [
+          0.23017483773443762,
+          0.04397688358961618
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 2.91946170055915e-11,
+        "angular_speed": 1.6113931062093447e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 20.950000000000003,
+        "xy": [
+          0.23017483773477806,
+          0.04397688358965609
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 3.296166727576337e-11,
+        "angular_speed": 1.7905509048519067e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 21.0,
+        "xy": [
+          0.2301748377351033,
+          0.0439768835896945
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 3.4608197683726275e-11,
+        "angular_speed": 2.230885701752415e-09,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 0,
+        "passed_gate": false
+      },
+      {
+        "seconds": 21.05,
+        "xy": [
+          0.2301748377354222,
+          0.04397688358973206
+        ],
+        "yaw": 1.9611319646375078,
+        "linear_speed": 1.6461724162719977e-12,
+        "angular_speed": 1.4331782616612548e-10,
+        "stationary_hold_seconds": 0.0,
+        "failure_flags": 16,
+        "passed_gate": false
+      }
+    ]
+  ],
+  "input_sha256": "e0d2330db50f65e2083119fbf267ceae90e07b37cd7aa0b2957f5391e70c1538",
+  "source_sha256": {
+    "src/so101_m1/scene.py": "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167",
+    "src/so101_m1/env.py": "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+    "src/so101_m1/rules.py": "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec",
+    "scripts/replay_sensitivity.py": "ff8e5ce66bf7a0852566ca4a3995c2460006b3ecccdcdb7b6560a8a0a59025ed"
+  }
+}

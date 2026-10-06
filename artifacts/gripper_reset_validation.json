@@ -1,0 +1,32 @@
+{
+  "scope": "Geometric reset randomization; no physics randomization or policy success-rate claim.",
+  "resets": [
+    {
+      "backend": "native",
+      "resets": 500,
+      "max_initial_overlap_m": 0.0,
+      "sampled_center_ik_error_m": 2.1043421593369157e-13,
+      "subset_reset_pass": null,
+      "state_roundtrip_pass": true,
+      "one_second_settling_episodes": 20
+    },
+    {
+      "backend": "warp",
+      "resets": 5120,
+      "max_initial_overlap_m": 0.0,
+      "sampled_center_ik_error_m": 1.2425041096921443e-11,
+      "subset_reset_pass": true,
+      "state_roundtrip_pass": true,
+      "one_second_settling_episodes": 128
+    }
+  ],
+  "demonstration_replays": [],
+  "pass": true,
+  "source_sha256": {
+    "src/so101_m1/scene.py": "5ed67c641a4c9e06708daf15e17fa478f6199e25d3d5cb581f5c38763942544c",
+    "src/so101_m1/env.py": "53825585ec942859db8155e6ae7c383ddd7d77a22be1244328e14d286b0096c2",
+    "src/so101_m1/rules.py": "038e08d13d2c5cf6afac2b309a7c52b1fa3d6bd098663534217c374569a981c1",
+    "scripts/validate_layout.py": "da286b6cab8f5345d740a791aa43a25833fb60ed127def5a58042991fe330516"
+  },
+  "full_path_tested": false
+}

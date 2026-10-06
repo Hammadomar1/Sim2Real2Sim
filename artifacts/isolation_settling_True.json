@@ -1,0 +1,125 @@
+{
+  "results": [
+    {
+      "case": "start_block",
+      "plane_table_diagnostic_only": false,
+      "shared_stream": true,
+      "initial_world_qpos_spread": 0.0,
+      "finite": true,
+      "last_5s_max_linear": [
+        2.8478487479333126e-07,
+        2.8478487479333126e-07,
+        2.8478487479333126e-07
+      ],
+      "last_5s_max_angular": [
+        2.097536144773926e-09,
+        2.097536144773926e-09,
+        2.097536144773926e-09
+      ],
+      "longest_velocity_hold_seconds": [
+        5.0,
+        5.0,
+        5.0
+      ],
+      "max_world_qpos_spread": 0.0
+    },
+    {
+      "case": "park_block_arm_away",
+      "plane_table_diagnostic_only": false,
+      "shared_stream": true,
+      "initial_world_qpos_spread": 0.0,
+      "finite": true,
+      "last_5s_max_linear": [
+        3.2143351091917793e-08,
+        3.2143351091917793e-08,
+        3.2143351091917793e-08
+      ],
+      "last_5s_max_angular": [
+        1.7446420486066927e-07,
+        1.7446420486066927e-07,
+        1.7446420486066927e-07
+      ],
+      "longest_velocity_hold_seconds": [
+        5.0,
+        5.0,
+        5.0
+      ],
+      "max_world_qpos_spread": 0.0
+    },
+    {
+      "case": "park_block_gripper_present",
+      "plane_table_diagnostic_only": false,
+      "shared_stream": true,
+      "initial_world_qpos_spread": 0.0,
+      "finite": true,
+      "last_5s_max_linear": [
+        3.2143972816811583e-08,
+        3.2143972816811583e-08,
+        3.2143972816811583e-08
+      ],
+      "last_5s_max_angular": [
+        1.7447783307034115e-07,
+        1.7447783307034115e-07,
+        1.7447783307034115e-07
+      ],
+      "longest_velocity_hold_seconds": [
+        5.0,
+        5.0,
+        5.0
+      ],
+      "max_world_qpos_spread": 0.0
+    },
+    {
+      "case": "gpu_terminal_gripper_present",
+      "plane_table_diagnostic_only": false,
+      "shared_stream": true,
+      "initial_world_qpos_spread": 0.0,
+      "finite": true,
+      "last_5s_max_linear": [
+        0.019646866247057915,
+        0.019745880737900734,
+        0.0196289774030447
+      ],
+      "last_5s_max_angular": [
+        0.40711280703544617,
+        0.4100286364555359,
+        0.4788764417171478
+      ],
+      "longest_velocity_hold_seconds": [
+        0.042,
+        0.06,
+        0.045
+      ],
+      "max_world_qpos_spread": 0.0007434854051098228
+    },
+    {
+      "case": "gpu_terminal_arm_away",
+      "plane_table_diagnostic_only": false,
+      "shared_stream": true,
+      "initial_world_qpos_spread": 0.0,
+      "finite": true,
+      "last_5s_max_linear": [
+        0.019613495096564293,
+        0.019642561674118042,
+        0.01955031044781208
+      ],
+      "last_5s_max_angular": [
+        0.4739967882633209,
+        0.40766796469688416,
+        0.47910815477371216
+      ],
+      "longest_velocity_hold_seconds": [
+        0.05,
+        0.046,
+        0.039
+      ],
+      "max_world_qpos_spread": 0.0007228052709251642
+    }
+  ],
+  "scope": "10 s frozen actuator targets; every 1 ms sampled. Hold checks speeds only, not full task success.",
+  "source_sha256": {
+    "scripts/isolate_gpu.py": "eb5da3205d3025641629a246e11cb676fc513fee673450d13a918de6e5148895",
+    "src/so101_m1/env.py": "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+    "src/so101_m1/scene.py": "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167"
+  }
+}

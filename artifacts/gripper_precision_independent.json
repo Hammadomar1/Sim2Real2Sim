@@ -1,0 +1,77 @@
+{
+  "physically_valid_complete_path": true,
+  "within_30_seconds": true,
+  "completion_seconds": 27.967000000011197,
+  "seconds": 30.150000000013865,
+  "gate_x": 0.215,
+  "goal_xy": [
+    0.27,
+    0.0
+  ],
+  "goal_yaw_deg": 90.0,
+  "passed_gate": true,
+  "gate_passage_seconds": 14.375999999997472,
+  "all_vertices_crossed": true,
+  "position_error_m": 0.0018872322354254291,
+  "yaw_error_deg": 0.4832210883951681,
+  "final_stationary_hold_seconds": 3.1829999999997605,
+  "max_penetration_m": 0.0006544177988080753,
+  "minimum_upright": 0.9993259115792061,
+  "invalid": [],
+  "contacts": [
+    [
+      "block_0",
+      "fixed_jaw_mesh_0"
+    ],
+    [
+      "block_0",
+      "gate_south"
+    ],
+    [
+      "block_0",
+      "moving_jaw_mesh_1"
+    ],
+    [
+      "block_0",
+      "table"
+    ],
+    [
+      "block_1",
+      "fixed_jaw_mesh_0"
+    ],
+    [
+      "block_1",
+      "gate_north"
+    ],
+    [
+      "block_1",
+      "gate_south"
+    ],
+    [
+      "block_1",
+      "moving_jaw_mesh_1"
+    ],
+    [
+      "block_1",
+      "table"
+    ],
+    [
+      "gate_north",
+      "moving_jaw_mesh_0"
+    ]
+  ],
+  "max_command_speed": 0.04000000000000001,
+  "max_command_acceleration": 0.20000000000000007,
+  "timestep": 0.001,
+  "input_artifact": "gripper_precision_path.npz",
+  "input_sha256": "4388d3035e22a18d103c62ba75701287543ccce75a0a6155636c0b14efd8587f",
+  "source_sha256": {
+    "src/so101_m1/scene.py": "5ed67c641a4c9e06708daf15e17fa478f6199e25d3d5cb581f5c38763942544c",
+    "src/so101_m1/env.py": "53825585ec942859db8155e6ae7c383ddd7d77a22be1244328e14d286b0096c2",
+    "scripts/validate_path.py": "217d8ba7e1ff49c7c16d181c08cda3e2c439aecac123fd38f25b985fbf811530"
+  },
+  "invalid_contact_tolerance_m": 5e-05,
+  "max_disallowed_contact_penetration_m": 3.097111780098419e-05,
+  "gate_stationary_hold_seconds": 3.1829999999997605,
+  "gate_checkpoint_pass": true
+}

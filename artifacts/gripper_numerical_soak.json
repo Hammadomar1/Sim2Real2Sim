@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "stage": 1,
+      "randomized": false,
+      "transitions": 76800,
+      "episodes": 149,
+      "failures": {
+        "invalid_robot_contact": 71,
+        "outside_workspace": 5
+      },
+      "finite": true
+    },
+    {
+      "stage": 2,
+      "randomized": false,
+      "transitions": 76800,
+      "episodes": 182,
+      "failures": {
+        "invalid_robot_contact": 116,
+        "joint_limit": 1,
+        "outside_workspace": 4
+      },
+      "finite": true
+    },
+    {
+      "stage": 3,
+      "randomized": false,
+      "transitions": 76800,
+      "episodes": 154,
+      "failures": {
+        "invalid_robot_contact": 61,
+        "outside_workspace": 4
+      },
+      "finite": true
+    },
+    {
+      "stage": 4,
+      "randomized": false,
+      "transitions": 76800,
+      "episodes": 253,
+      "failures": {
+        "invalid_robot_contact": 228,
+        "joint_limit": 6,
+        "outside_workspace": 4
+      },
+      "finite": true
+    },
+    {
+      "stage": 5,
+      "randomized": false,
+      "transitions": 76800,
+      "episodes": 257,
+      "failures": {
+        "invalid_robot_contact": 235,
+        "joint_limit": 12,
+        "outside_workspace": 1,
+        "excessive_penetration": 1
+      },
+      "finite": true
+    },
+    {
+      "stage": 5,
+      "randomized": true,
+      "transitions": 76800,
+      "episodes": 257,
+      "failures": {
+        "invalid_robot_contact": 241,
+        "joint_limit": 8,
+        "outside_workspace": 2
+      },
+      "finite": true
+    }
+  ],
+  "transitions": 460800,
+  "wall_seconds": 179.16489028930664,
+  "scope": "Zero actions then correlated random actions with real terminations/resets; failures of random behavior are expected, NaNs and capacity overflows are not.",
+  "source_sha256": {
+    "src/so101_m1/scene.py": "5ed67c641a4c9e06708daf15e17fa478f6199e25d3d5cb581f5c38763942544c",
+    "src/so101_m1/env.py": "53825585ec942859db8155e6ae7c383ddd7d77a22be1244328e14d286b0096c2",
+    "src/so101_m1/rules.py": "038e08d13d2c5cf6afac2b309a7c52b1fa3d6bd098663534217c374569a981c1",
+    "scripts/numerical_soak.py": "50ccc404cc7ecf0a28cb57927bc57e01947213f9d12bc3af737e73e786938774"
+  }
+}

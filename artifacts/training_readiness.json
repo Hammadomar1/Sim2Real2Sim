@@ -1,0 +1,52 @@
+{
+  "full_path_feasible": true,
+  "gpu_feedback_path_pass": true,
+  "reset_tests_pass": true,
+  "success_detector_tests_pass": true,
+  "numerical_soak_pass": true,
+  "ppo_resume_smoke_pass": true,
+  "evidence": {
+    "full_path_feasible": {
+      "path": "artifacts/gripper_precision_independent.json",
+      "sha256": "1cde69391c2d1a513fa88bbf8813b77dc361c7937821f12e4f1cdd8a5141bf31"
+    },
+    "gpu_feedback_path_pass": {
+      "path": "artifacts/gripper_mpc_precision.json",
+      "sha256": "421bea2ef8f4ecbc98e45d52595f7812049e65103f09dcbbb38ee4d037c67779"
+    },
+    "reset_tests_pass": {
+      "path": "artifacts/gripper_reset_validation.json",
+      "sha256": "2282b46ae1da116cb271ae486dc2fb0c0a2d12fb134e26aca6f088f5046d8803"
+    },
+    "success_detector_tests_pass": {
+      "path": "artifacts/gripper_final_rules_tests.xml",
+      "sha256": "304f654697a9af958f5653966e255f031635bd1a2e875728c0d09133ce85a065"
+    },
+    "numerical_soak_pass": {
+      "path": "artifacts/gripper_numerical_soak.json",
+      "sha256": "a9c67d2a3fdac5af6e9d55f980b1c63a3c1de980001980de70df77064346c19d"
+    },
+    "ppo_resume_smoke_pass": {
+      "path": "artifacts/gripper_ppo_resume_smoke.json",
+      "sha256": "f9b37f3f36b5102ae2dd29cb7a279ff6d2451062940f7d678b60cbb24866aa47"
+    }
+  },
+  "source_sha256": {
+    "src/so101_m1/benchmark.py": "d03230ddbc8677ae4ff707afe1c21a73a1c95c923952d96d708473feda23349c",
+    "src/so101_m1/cli.py": "11deb312eaaf413a62efb5f57d7e9957c8248c8664eb0a8c267c433d91915be0",
+    "src/so101_m1/diagnostics.py": "d575718bbfee873085ef89160ea56257fc3ca1b97b1f75e0994419f2f4ef6db0",
+    "src/so101_m1/env.py": "53825585ec942859db8155e6ae7c383ddd7d77a22be1244328e14d286b0096c2",
+    "src/so101_m1/preflight.py": "c5610dedeb71b17203a83e6a4899191d76b4a68eeae57a8199d63bf26ad77789",
+    "src/so101_m1/render.py": "7135e8b15bf0d23d36a1e6795af4979cd06b6165fcaf194db70313fa8669b30a",
+    "src/so101_m1/rules.py": "038e08d13d2c5cf6afac2b309a7c52b1fa3d6bd098663534217c374569a981c1",
+    "src/so101_m1/scene.py": "5ed67c641a4c9e06708daf15e17fa478f6199e25d3d5cb581f5c38763942544c",
+    "src/so101_m1/training.py": "c5ab1e15febd5e6d3fa85f39509e12b06164bcc51729ea31e83d482f3593880b",
+    "src/so101_m1/__init__.py": "4b734f55785ddf47825979871edb01bfdd46ddb6c2cb9bcce23e25f9d2035187",
+    "tests/test_preflight.py": "f6117733500f7500b2dacfe3a1b3c35d0a6032b3cbe7559b4901a052a277f06f",
+    "tests/test_rules_gpu.py": "8e230111ffe9e876997c5e90d6134db5b84298f2f74638bb28902c13a07fc495",
+    "tests/test_task_rules.py": "4a06864de0b7baefabbbdd75ea5ca90a7f124b983b79ade7367ca76141e62fc4",
+    "uv.lock": "c44b3b1ce2661795b8e0ac5553c09db8e979d62cb5a894c601082b86ffd9a7b1",
+    "scripts/finalize_gripper_readiness.py": "83cf320f34507d4cd26ca8955bbf2708f5872bd4f18dc543e0d2023b9b85d173"
+  },
+  "scope": "Ready to START curriculum RL. Diagnostic controllers are not learned policies. No trained success-rate or robustness claim. Table edges enforced as task termination boundaries."
+}

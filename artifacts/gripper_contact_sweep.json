@@ -1,0 +1,38 @@
+[
+  {
+    "profile": "jaw_3d",
+    "comparison": {
+      "position_m": 0.0005678392835799258,
+      "angle_deg": 1.567978596413974
+    },
+    "penetration": 0.0005059892695795636,
+    "upright": 0.9998042697696723
+  },
+  {
+    "profile": "stiffer",
+    "comparison": {
+      "position_m": 0.006381236231748909,
+      "angle_deg": 15.806288954255448
+    },
+    "penetration": 0.00035721662067365705,
+    "upright": 0.9999766036289499
+  },
+  {
+    "profile": "softer",
+    "comparison": {
+      "position_m": 0.0009724784896957891,
+      "angle_deg": 0.9691998842736811
+    },
+    "penetration": 0.0006819789979333129,
+    "upright": 0.9997031479380232
+  },
+  {
+    "profile": "solver",
+    "comparison": {
+      "position_m": 0.002463352369926701,
+      "angle_deg": 6.730240719667984
+    },
+    "penetration": 0.00041899725324193865,
+    "upright": 0.9999268375940176
+  }
+]

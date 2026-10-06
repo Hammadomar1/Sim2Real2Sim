@@ -1,0 +1,10 @@
+{
+  "physics_preflight_pass": true,
+  "original_curriculum_compatible": true,
+  "trained_reward_sources_match": true,
+  "filter_preserves_actor_weights": true,
+  "source_early_sha256": "f8aa3f8e166422e9a4d06884b08bedb9f54c318e31a36e07bbc41e04e0a60c55",
+  "selected_checkpoint_sha256": "77165ddff1230f5ef90f34ebbdb36a4b99051a832cd4517ad303c7dfb21f215d",
+  "filtered_checkpoint": "runs/push_efficiency/efficient/filtered.pt",
+  "reliability_target_met": false
+}

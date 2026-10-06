@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "iterations": [
+    2,
+    4
+  ],
+  "transitions": [
+    1024,
+    2048
+  ],
+  "optimizer_resumed": true,
+  "validation_episodes": 64,
+  "source_hash": "6857a63489fc03e38dc4cd071718b5096257b1d39bd51d6546c32616e19a3947",
+  "checkpoints": {
+    "runs/gripper_smoke_final/latest.pt": "f3d979a91f67032d7528293c2ee01292470a289d709b4f565c6450b19ad43357",
+    "runs/gripper_resume_final/latest.pt": "fce6c6b2f9af781ba286bfef13c2e29d78bdb1e22050429a50b5ff8becf6bef9"
+  }
+}

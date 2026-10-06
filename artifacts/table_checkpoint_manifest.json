@@ -1,0 +1,18 @@
+{
+  "table_candidate_pass": true,
+  "ready_for_rl": false,
+  "nonfinite_root_cause_resolved": false,
+  "sha256": {
+    "scripts/table_candidate.py": "9807cf5dd5c5235a8ee1dddd8a0b838f1ef123dc71b1a92db69a9345db00c46a",
+    "scripts/validate_table_candidate.py": "8a0f6f4f86ded17fbf19cb14009daba6e2e1c5a222977fa058b139ee9304263c",
+    "scripts/trace_moving_contacts.py": "16453c3107f0626ab4798d101486ce11e5e8825c42e0086592db9770a0773ca2",
+    "scripts/report_table_checkpoint.py": "4e6b8943f9390eff58832e85a58bb2e32171baa52d09531b4c44bf250403c941",
+    "artifacts/moving_trace_plane.json": "9a3b857b9daf4ab0a4e7c20d82836b81f4d56f349441261c07785ee044ad0290",
+    "artifacts/moving_trace_plane_repeat.json": "c363f03f1bbcdb57eca4da562efc98bda64395f64de0e7fc6e4c5c2c111652a8",
+    "artifacts/moving_trace_box.json": "99510e7c8893bf174f95bdc3802c5280877e63492f06634502620667e87cca24",
+    "artifacts/moving_trace_plane_resets.json": "e383d3c80ae66f698b4582bcad81de9caf5f8396036f4b2e61fb884d1fab9529",
+    "artifacts/moving_trace_box_resets.json": "0bda73988d01aa69e27e20d3735acfbe567fce98edac7791e9f4f204babda2a2",
+    "artifacts/table_candidate_validation.json": "c44223ef0a7aadf44753048d988a64fa745b41ba6b9af0197cf6898d3f3680a9",
+    "artifacts/gripper_complete_path.npz": "e0d2330db50f65e2083119fbf267ceae90e07b37cd7aa0b2957f5391e70c1538"
+  }
+}

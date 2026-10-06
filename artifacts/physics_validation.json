@@ -1,0 +1,1655 @@
+{
+  "thresholds": {
+    "max_penetration_m": 0.001,
+    "max_position_difference_m": 0.002,
+    "max_angle_difference_deg": 2.0,
+    "max_hold_error_m": 0.0005
+  },
+  "results": [
+    {
+      "case": 0,
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005505227690882578,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 2.495773327362838e-05,
+      "min_upright": 0.9997982862034218,
+      "min_height_m": 0.008941134660327619,
+      "max_height_m": 0.009516532017089201,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.040000000000000015,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.05234015845811112,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1724819964072242,
+          0.00826294947669455
+        ],
+        "yaw": 0.9772593692336898,
+        "tip": [
+          0.17424603050015042,
+          0.02000440904904911,
+          0.009934619414131984
+        ],
+        "upright": 1.0000000000000009,
+        "height": 0.008999200866986806,
+        "qvel": [
+          -6.443301187352153e-07,
+          -5.523844551923534e-07,
+          4.5808366652694004e-07,
+          2.7242558343232437e-08,
+          8.604084477298618e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 6.0444798807756025e-12,
+        "angular_speed": 6.705806554899425e-10
+      }
+    },
+    {
+      "case": 0,
+      "backend": "native",
+      "timestep": 0.0005,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005409128285808733,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 5.4502574633935597e-05,
+      "min_upright": 0.9997236100622027,
+      "min_height_m": 0.008957807799939085,
+      "max_height_m": 0.00964621422464373,
+      "hold_error_m": 9.6892202274064e-05,
+      "max_command_speed": 0.040000000000000015,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.05040894980107101,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1728097723823679,
+          0.00871608138335542
+        ],
+        "yaw": 0.9774101259083542,
+        "tip": [
+          0.17424603148179027,
+          0.02000440838147527,
+          0.009934619711200535
+        ],
+        "upright": 0.9999999999999991,
+        "height": 0.008999200866946165,
+        "qvel": [
+          -6.388085726634434e-07,
+          -5.463290671767948e-07,
+          4.533531983012647e-07,
+          2.7592967374700844e-08,
+          8.454817959738957e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 6.551674163352584e-12,
+        "angular_speed": 1.0687111056513623e-10
+      }
+    },
+    {
+      "case": 0,
+      "backend": "native",
+      "timestep": 0.00025,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0006211673200216365,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0003922825837958943,
+      "min_upright": 0.9996821844935542,
+      "min_height_m": 0.00897076578403117,
+      "max_height_m": 0.009705878351058895,
+      "hold_error_m": 9.68922120983658e-05,
+      "max_command_speed": 0.040000000000000015,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.056527001421261595,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17290756171196514,
+          0.008449607357659265
+        ],
+        "yaw": 0.9894100254044312,
+        "tip": [
+          0.17424603276285328,
+          0.020004407507905084,
+          0.009934620097179991
+        ],
+        "upright": 0.9999999999999993,
+        "height": 0.0089992008670053,
+        "qvel": [
+          -6.361277817287453e-07,
+          -5.435191902037473e-07,
+          4.5115756108925956e-07,
+          2.7773427272637086e-08,
+          8.382357603448142e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 2.311951092217888e-12,
+        "angular_speed": 1.7469182870887454e-10
+      }
+    },
+    {
+      "case": 1,
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "push",
+      "offset": [
+        -0.003,
+        0.0,
+        -0.08
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.00044908325193754144,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9998021110365023,
+      "min_height_m": 0.00892357383059916,
+      "max_height_m": 0.009549105952212054,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.052375773448529464,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17503371796553596,
+          0.01370886377008359
+        ],
+        "yaw": 0.911459807876537,
+        "tip": [
+          0.17425047486526016,
+          0.02000637166324152,
+          0.009934615633503716
+        ],
+        "upright": 0.9999999999999981,
+        "height": 0.008999200866986731,
+        "qvel": [
+          -6.438774812337204e-07,
+          -5.515396040115634e-07,
+          4.57411098718311e-07,
+          2.717664282269861e-08,
+          8.596043765980342e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 3.071703619910977e-10,
+        "angular_speed": 3.407771745867156e-08
+      }
+    },
+    {
+      "case": 1,
+      "backend": "native",
+      "timestep": 0.0005,
+      "kind": "push",
+      "offset": [
+        -0.003,
+        0.0,
+        -0.08
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.000427432154156639,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.999871588055817,
+      "min_height_m": 0.008845329041408544,
+      "max_height_m": 0.009411109672936792,
+      "hold_error_m": 9.6892202274064e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.0506519102971058,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17508459688870318,
+          0.01399976077603401
+        ],
+        "yaw": 0.9024662701990608,
+        "tip": [
+          0.1742504774900588,
+          0.020006369872375064,
+          0.009934616424404324
+        ],
+        "upright": 0.9999999999999992,
+        "height": 0.008999200866949289,
+        "qvel": [
+          -6.385333180982335e-07,
+          -5.459451978442043e-07,
+          4.530569081013291e-07,
+          2.755478754973134e-08,
+          8.450706890095221e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 4.844966859996954e-12,
+        "angular_speed": 8.202601557258026e-11
+      }
+    },
+    {
+      "case": 1,
+      "backend": "native",
+      "timestep": 0.00025,
+      "kind": "push",
+      "offset": [
+        -0.003,
+        0.0,
+        -0.08
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.00047262677011956737,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00012191674556233378,
+      "min_upright": 0.9998752647451759,
+      "min_height_m": 0.008896708073822715,
+      "max_height_m": 0.009419565857752459,
+      "hold_error_m": 9.68922120983658e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.05079820285404892,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17462584958795888,
+          0.013067217494971549
+        ],
+        "yaw": 0.9167176948481512,
+        "tip": [
+          0.17425047669224897,
+          0.020006370419137408,
+          0.009934616185720974
+        ],
+        "upright": 0.9999999999999998,
+        "height": 0.00899920086700751,
+        "qvel": [
+          -6.35636041757563e-07,
+          -5.425692510276949e-07,
+          4.503989869525331e-07,
+          2.7700508895543712e-08,
+          8.37353242315033e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 7.80927717506475e-12,
+        "angular_speed": 4.673184907736866e-10
+      }
+    },
+    {
+      "case": 2,
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "push",
+      "offset": [
+        0.003,
+        0.0,
+        0.08
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0003506400609992141,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00010760026590148075,
+      "min_upright": 0.9999978524708072,
+      "min_height_m": 0.008976560148273995,
+      "max_height_m": 0.009002189308465162,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.05233829710297331,
+      "contacts": [
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17337612830414256,
+          0.007121693695357819
+        ],
+        "yaw": 1.0412745757215311,
+        "tip": [
+          0.17425014752161863,
+          0.02000340405157401,
+          0.009934617795332626
+        ],
+        "upright": 1.0000000000000016,
+        "height": 0.00899920086698681,
+        "qvel": [
+          -6.444981070203862e-07,
+          -5.531080064946973e-07,
+          4.5868926214211504e-07,
+          2.7273633050280096e-08,
+          8.60943134378742e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 3.88690395280239e-11,
+        "angular_speed": 4.311835049770473e-09
+      }
+    },
+    {
+      "case": 2,
+      "backend": "native",
+      "timestep": 0.0005,
+      "kind": "push",
+      "offset": [
+        0.003,
+        0.0,
+        0.08
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.00035434067960691585,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00016303530993760917,
+      "min_upright": 0.9999992904933911,
+      "min_height_m": 0.008978468091208685,
+      "max_height_m": 0.009000336002458106,
+      "hold_error_m": 9.6892202274064e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.05081920089177271,
+      "contacts": [
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17317107211212815,
+          0.006782957876487931
+        ],
+        "yaw": 1.0411030840798083,
+        "tip": [
+          0.1742501505921985,
+          0.0200034019583526,
+          0.009934618720064348
+        ],
+        "upright": 0.9999999999999996,
+        "height": 0.008999200866962919,
+        "qvel": [
+          -6.391940781300914e-07,
+          -5.476191900282777e-07,
+          4.5442094474814614e-07,
+          2.7659195385069574e-08,
+          8.464885915310174e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 3.0482460870345863e-12,
+        "angular_speed": 2.392628502114214e-10
+      }
+    },
+    {
+      "case": 2,
+      "backend": "native",
+      "timestep": 0.00025,
+      "kind": "push",
+      "offset": [
+        0.003,
+        0.0,
+        0.08
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0003457777525631971,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00011540543084245791,
+      "min_upright": 0.9999981202810424,
+      "min_height_m": 0.008966456423420043,
+      "max_height_m": 0.008999200867022352,
+      "hold_error_m": 9.68922120983658e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.050346017065022244,
+      "contacts": [
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17401899797259304,
+          0.007417248250478712
+        ],
+        "yaw": 1.0623705800970276,
+        "tip": [
+          0.17425015410171968,
+          0.020003399565430707,
+          0.009934619775550699
+        ],
+        "upright": 0.9999999999999983,
+        "height": 0.008999200867011227,
+        "qvel": [
+          -6.367434863057827e-07,
+          -5.454120491120614e-07,
+          4.527170194407548e-07,
+          2.7877091841843277e-08,
+          8.397426182769859e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 5.732357645894754e-12,
+        "angular_speed": 2.5504390878382806e-10
+      }
+    },
+    {
+      "case": 3,
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "push",
+      "offset": [
+        0.0,
+        -0.003,
+        0.04
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005471878496414919,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9997479852942415,
+      "min_height_m": 0.00895430557683398,
+      "max_height_m": 0.009608975968795192,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.05237012364928813,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1699058773441601,
+          0.004476600105862185
+        ],
+        "yaw": 0.9764189048533881,
+        "tip": [
+          0.17424901590862701,
+          0.02000580595118606,
+          0.009934616923591641
+        ],
+        "upright": 0.9999999999999996,
+        "height": 0.008999200866986726,
+        "qvel": [
+          -6.440455643547025e-07,
+          -5.518685714170792e-07,
+          4.576741039202639e-07,
+          2.7201346682253107e-08,
+          8.599117418341058e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 6.288421030901521e-10,
+        "angular_speed": 6.976428584880341e-08
+      }
+    },
+    {
+      "case": 3,
+      "backend": "native",
+      "timestep": 0.0005,
+      "kind": "push",
+      "offset": [
+        0.0,
+        -0.003,
+        0.04
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005207147238854119,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0002963737007996847,
+      "min_upright": 0.9997619656819237,
+      "min_height_m": 0.008854850629332901,
+      "max_height_m": 0.009595732713398704,
+      "hold_error_m": 9.6892202274064e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.05043004487041695,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.170055254590187,
+          0.0041960481567067135
+        ],
+        "yaw": 0.9873916344849668,
+        "tip": [
+          0.1742490191873444,
+          0.020005803713947688,
+          0.0099346179109404
+        ],
+        "upright": 0.9999999999999989,
+        "height": 0.008999200866970473,
+        "qvel": [
+          -6.387685069159578e-07,
+          -5.464503928084603e-07,
+          4.5346382445108426e-07,
+          2.7590379132734086e-08,
+          8.455234416320496e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 2.249485354810167e-12,
+        "angular_speed": 1.9075343965693057e-10
+      }
+    },
+    {
+      "case": 3,
+      "backend": "native",
+      "timestep": 0.00025,
+      "kind": "push",
+      "offset": [
+        0.0,
+        -0.003,
+        0.04
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0006495996625823647,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00023697091436603035,
+      "min_upright": 0.9996701938626906,
+      "min_height_m": 0.008885130795736643,
+      "max_height_m": 0.00971630941357784,
+      "hold_error_m": 9.68922120983658e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.05040717879889831,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17046797792528326,
+          0.004636049834517074
+        ],
+        "yaw": 0.9915996092582158,
+        "tip": [
+          0.17424902131136621,
+          0.020005802264918125,
+          0.009934618550220972
+        ],
+        "upright": 0.9999999999999981,
+        "height": 0.008999200866965014,
+        "qvel": [
+          -6.361759862564044e-07,
+          -5.438703142894494e-07,
+          4.514556565275242e-07,
+          2.7784975614124174e-08,
+          8.384696001160596e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 2.5878852978927743e-12,
+        "angular_speed": 1.67745486001707e-10
+      }
+    },
+    {
+      "case": 4,
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.003,
+        -0.04
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005830506144442124,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9997310320919042,
+      "min_height_m": 0.008925760505263471,
+      "max_height_m": 0.009639461187804484,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.05234757720286397,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17465195809931328,
+          0.012234551854266496
+        ],
+        "yaw": 0.9517812827062049,
+        "tip": [
+          0.17424534309336617,
+          0.020005368645850008,
+          0.00993462034079963
+        ],
+        "upright": 1.0000000000000013,
+        "height": 0.008999200866986773,
+        "qvel": [
+          -6.445556410147617e-07,
+          -5.529355169896537e-07,
+          4.585317116145858e-07,
+          2.7277526562050825e-08,
+          8.60884044031627e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 4.846538518813329e-13,
+        "angular_speed": 5.3683003808254743e-11
+      }
+    },
+    {
+      "case": 4,
+      "backend": "native",
+      "timestep": 0.0005,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.003,
+        -0.04
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0004426558672201656,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00037933947432955417,
+      "min_upright": 0.9998694655779484,
+      "min_height_m": 0.008888065093559534,
+      "max_height_m": 0.009434118057723847,
+      "hold_error_m": 9.6892202274064e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.0504235397530246,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17480299613847214,
+          0.012165908551895489
+        ],
+        "yaw": 0.9618270917684255,
+        "tip": [
+          0.1742453423220948,
+          0.020005369175901913,
+          0.00993462011117792
+        ],
+        "upright": 1.0,
+        "height": 0.008999200867018284,
+        "qvel": [
+          -6.388474300417219e-07,
+          -5.463918979468338e-07,
+          4.5340252339279656e-07,
+          2.7598509480317262e-08,
+          8.455447865916016e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 3.837481533555413e-12,
+        "angular_speed": 2.6470620723961613e-10
+      }
+    },
+    {
+      "case": 4,
+      "backend": "native",
+      "timestep": 0.00025,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.003,
+        -0.04
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005826168146314484,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.00014302373333377472,
+      "min_upright": 0.9997106748271947,
+      "min_height_m": 0.00897611666999404,
+      "max_height_m": 0.009667939116803064,
+      "hold_error_m": 9.68922120983658e-05,
+      "max_command_speed": 0.04000000000000001,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.050252796988883644,
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.17510891160879868,
+          0.012365798885648984
+        ],
+        "yaw": 0.9693506722635694,
+        "tip": [
+          0.17424534322469226,
+          0.020005368560879862,
+          0.009934620383437842
+        ],
+        "upright": 0.9999999999999994,
+        "height": 0.008999200866965953,
+        "qvel": [
+          -6.361268373140624e-07,
+          -5.434781904911359e-07,
+          4.5112210150958617e-07,
+          2.7772585563581293e-08,
+          8.382116977824227e-06
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 7.81981739602435e-12,
+        "angular_speed": 4.679856288596217e-10
+      }
+    },
+    {
+      "case": 5,
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "gate",
+      "offset": [
+        0.005,
+        0.055,
+        -1.5707963267948966
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005613129913685377,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9997526631941678,
+      "min_height_m": 0.008953920715500135,
+      "max_height_m": 0.009385447593073809,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.040000000000000015,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.04704133710832129,
+      "contacts": [
+        [
+          "block_0",
+          "fixed_jaw_mesh_0"
+        ],
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "gate_north"
+        ],
+        [
+          "block_1",
+          "table"
+        ],
+        [
+          "fixed_jaw_box1",
+          "robot_geom_7"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1831607385085245,
+          0.04472485262618492
+        ],
+        "yaw": -0.44552016697253094,
+        "tip": [
+          0.14777720164179978,
+          0.05549167872805555,
+          0.00829727448661409
+        ],
+        "upright": 0.9999999836854664,
+        "height": 0.008981106243688593,
+        "qvel": [
+          0.00015881847983802806,
+          0.00012267689871904943,
+          0.0011924055301084657,
+          -0.002670697317476456,
+          0.0008033415425678661
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 0.00019217994216977357,
+        "angular_speed": 0.005543410543157482
+      }
+    },
+    {
+      "case": 5,
+      "backend": "native",
+      "timestep": 0.0005,
+      "kind": "gate",
+      "offset": [
+        0.005,
+        0.055,
+        -1.5707963267948966
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0006051974045695202,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 1.5309267652974246e-05,
+      "min_upright": 0.9999958113681531,
+      "min_height_m": 0.008958445494696867,
+      "max_height_m": 0.009022209413642492,
+      "hold_error_m": 9.6892202274064e-05,
+      "max_command_speed": 0.040000000000000015,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.046572487447490325,
+      "contacts": [
+        [
+          "block_0",
+          "fixed_jaw_mesh_0"
+        ],
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "gate_north"
+        ],
+        [
+          "block_1",
+          "table"
+        ],
+        [
+          "fixed_jaw_box1",
+          "robot_geom_7"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.18309548264903,
+          0.045106222440555864
+        ],
+        "yaw": -0.4412394206485303,
+        "tip": [
+          0.14751205069474765,
+          0.055438959172848384,
+          0.008238655754449167
+        ],
+        "upright": 0.9999999820966157,
+        "height": 0.008980710048895295,
+        "qvel": [
+          0.00014638138762389878,
+          0.00011241274642552966,
+          0.0012118508422008338,
+          -0.0026082001102064943,
+          0.0006491673718553234
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 0.00018318449256250226,
+        "angular_speed": 0.0052232149117274265
+      }
+    },
+    {
+      "case": 5,
+      "backend": "native",
+      "timestep": 0.00025,
+      "kind": "gate",
+      "offset": [
+        0.005,
+        0.055,
+        -1.5707963267948966
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0005861575150714707,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 2.0057640956944178e-05,
+      "min_upright": 0.9999972725340924,
+      "min_height_m": 0.008949538330090162,
+      "max_height_m": 0.009020854477578003,
+      "hold_error_m": 9.68922120983658e-05,
+      "max_command_speed": 0.040000000000000015,
+      "max_command_acceleration": 0.20000000000000007,
+      "max_measured_tool_speed": 0.046168536357177756,
+      "contacts": [
+        [
+          "block_0",
+          "fixed_jaw_mesh_0"
+        ],
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "gate_north"
+        ],
+        [
+          "block_1",
+          "table"
+        ],
+        [
+          "fixed_jaw_box1",
+          "robot_geom_7"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1830544678099058,
+          0.0454835358390797
+        ],
+        "yaw": -0.4384983341438147,
+        "tip": [
+          0.14728768843155365,
+          0.05540092664193602,
+          0.00823936264391513
+        ],
+        "upright": 0.9999999854821149,
+        "height": 0.008980869530446661,
+        "qvel": [
+          0.0001396040764759332,
+          0.00010633728494588973,
+          0.001216301495757772,
+          -0.002563891259489254,
+          0.0005641472795390231
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 0.00018042926127774962,
+        "angular_speed": 0.0050507082710994616
+      }
+    },
+    {
+      "case": "hold",
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "hold",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frames": 600,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.00013806630320199222,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9999999999996161,
+      "min_height_m": 0.008990217317046871,
+      "max_height_m": 0.008999200867095256,
+      "hold_error_m": 9.689218314249357e-05,
+      "max_command_speed": 0.0,
+      "max_command_acceleration": 0.0,
+      "max_measured_tool_speed": 7.168761111528876e-05,
+      "contacts": [
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1499998402300564,
+          5.217777813422365e-08
+        ],
+        "yaw": 1.570796093438887,
+        "tip": [
+          0.11993003082614334,
+          -0.05995395917276977,
+          0.009951308834522776
+        ],
+        "upright": 0.9999999999999996,
+        "height": 0.008999200866986757,
+        "qvel": [
+          -3.4263243238942004e-06,
+          -3.0438352631181896e-06,
+          1.6598894428651669e-06,
+          8.935686041055304e-07,
+          3.4492502359168134e-05
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 5.461349220006178e-13,
+        "angular_speed": 6.055696858971711e-11
+      }
+    },
+    {
+      "case": "random",
+      "backend": "native",
+      "timestep": 0.001,
+      "kind": "random",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frames": 600,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.00013806630320199222,
+      "penetration_sampling": "every physics step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9999999999996161,
+      "min_height_m": 0.008990217317046871,
+      "max_height_m": 0.008999200867095256,
+      "hold_error_m": null,
+      "max_command_speed": 0.033821382184409464,
+      "max_command_acceleration": 0.2000000000000001,
+      "max_measured_tool_speed": 0.032690533441415766,
+      "contacts": [
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "table"
+        ],
+        [
+          "fixed_jaw_box1",
+          "robot_geom_7"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1499998402300564,
+          5.217777813422365e-08
+        ],
+        "yaw": 1.570796093438887,
+        "tip": [
+          0.11651213474765638,
+          -0.05077546461232444,
+          0.009943488398648975
+        ],
+        "upright": 0.9999999999999996,
+        "height": 0.008999200866986757,
+        "qvel": [
+          0.06667959077878656,
+          0.027511696041154457,
+          -0.016325939324183556,
+          -0.012567790868762111,
+          0.0036609139333660307
+        ],
+        "velocity": [
+          -0.0012328354520516165,
+          -0.009845535161315843
+        ],
+        "object_speed": 5.461349220006178e-13,
+        "angular_speed": 6.055696858971711e-11
+      }
+    },
+    {
+      "case": "gpu_0",
+      "backend": "warp",
+      "timestep": 0.001,
+      "kind": "push",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 9.779124257182185e-05,
+      "penetration_sampling": "every control step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9997984257673003,
+      "min_height_m": 0.008965973742306232,
+      "max_height_m": 0.009516303427517414,
+      "hold_error_m": 9.634158996323516e-05,
+      "max_command_speed": 0.04000000312815563,
+      "max_command_acceleration": 0.20000001302877587,
+      "max_measured_tool_speed": 0.05234263982986851,
+      "contacts": [
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.1720728874206543,
+          0.008105800487101078
+        ],
+        "yaw": 0.9658110737800598,
+        "tip": [
+          0.17424611666648834,
+          0.020004440643242468,
+          0.009934630336050548
+        ],
+        "upright": 1.0000000000000002,
+        "height": 0.008999195881187916,
+        "qvel": [
+          -2.8099370865675155e-06,
+          -7.149852535803802e-06,
+          1.0657677194103599e-05,
+          6.454261892940849e-06,
+          2.9716567951254547e-05
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 2.2710300176157267e-07,
+        "angular_speed": 1.6202095479464646e-09
+      }
+    },
+    {
+      "case": "gpu_5",
+      "backend": "warp",
+      "timestep": 0.001,
+      "kind": "gate",
+      "offset": [
+        0.005,
+        0.055,
+        -1.5707963267948966
+      ],
+      "frames": 440,
+      "finite": true,
+      "warnings": 0,
+      "max_penetration_m": 0.0003021054584876006,
+      "penetration_sampling": "every control step",
+      "base_drift_m": 0.0,
+      "joint_limit_violation_rad": 0.0,
+      "min_upright": 0.9999905769404895,
+      "min_height_m": 0.008903993293642998,
+      "max_height_m": 0.009019739925861359,
+      "hold_error_m": 9.634158996323516e-05,
+      "max_command_speed": 0.040000004292353314,
+      "max_command_acceleration": 0.20000003113481404,
+      "max_measured_tool_speed": 0.04704158171115578,
+      "contacts": [
+        [
+          "block_0",
+          "fixed_jaw_mesh_0"
+        ],
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "gate_north"
+        ],
+        [
+          "block_1",
+          "table"
+        ],
+        [
+          "fixed_jaw_box1",
+          "robot_geom_7"
+        ]
+      ],
+      "final": {
+        "block": [
+          0.18291620910167694,
+          0.046396106481552124
+        ],
+        "yaw": -0.42925024032592773,
+        "tip": [
+          0.14678595876967274,
+          0.055326692779341206,
+          0.008453142183025744
+        ],
+        "upright": 0.9999999882562749,
+        "height": 0.00898110680282116,
+        "qvel": [
+          0.00013122697419021279,
+          0.00010202374687651172,
+          0.0012041956651955843,
+          -0.0024526696652173996,
+          0.0004086919652763754
+        ],
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "object_speed": 0.00017192028825205191,
+        "angular_speed": 0.004815753461561014
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "case": 0,
+      "a": 0.001,
+      "b": 0.0005,
+      "position_m": 0.0005592545169379616,
+      "angle_deg": 0.008637721191694314
+    },
+    {
+      "case": 0,
+      "a": 0.001,
+      "b": 0.00025,
+      "position_m": 0.0004647009717285833,
+      "angle_deg": 0.6961813168980725
+    },
+    {
+      "case": 1,
+      "a": 0.001,
+      "b": 0.0005,
+      "position_m": 0.0002953129406131288,
+      "angle_deg": 0.515291751811277
+    },
+    {
+      "case": 1,
+      "a": 0.001,
+      "b": 0.00025,
+      "position_m": 0.0007603068826418203,
+      "angle_deg": 0.30125473263031666
+    },
+    {
+      "case": 2,
+      "a": 0.001,
+      "b": 0.0005,
+      "position_m": 0.0003959671664026018,
+      "angle_deg": 0.009825747292486609
+    },
+    {
+      "case": 2,
+      "a": 0.001,
+      "b": 0.00025,
+      "position_m": 0.0007075548782012167,
+      "angle_deg": 1.2087120153054625
+    },
+    {
+      "case": 3,
+      "a": 0.001,
+      "b": 0.0005,
+      "position_m": 0.00031784108891947115,
+      "angle_deg": 0.6286910976275977
+    },
+    {
+      "case": 3,
+      "a": 0.001,
+      "b": 0.00025,
+      "position_m": 0.0005842784261523877,
+      "angle_deg": 0.8697902924322832
+    },
+    {
+      "case": 4,
+      "a": 0.001,
+      "b": 0.0005,
+      "position_m": 0.0001659047685672466,
+      "angle_deg": 0.5755824610595177
+    },
+    {
+      "case": 4,
+      "a": 0.001,
+      "b": 0.00025,
+      "position_m": 0.0004754285362467706,
+      "angle_deg": 1.0066518702582095
+    },
+    {
+      "case": 5,
+      "a": 0.001,
+      "b": 0.0005,
+      "position_m": 0.0003869124739675547,
+      "angle_deg": 0.24526869753137956
+    },
+    {
+      "case": 5,
+      "a": 0.001,
+      "b": 0.00025,
+      "position_m": 0.0007660898634711536,
+      "angle_deg": 0.40232138553184726
+    },
+    {
+      "case": "native_vs_warp",
+      "position_m": 0.00043825331467371736,
+      "angle_deg": 0.6559390121118085
+    },
+    {
+      "case": "gate_native_vs_warp",
+      "position_m": 0.0016890482763654096,
+      "angle_deg": 0.9321981298378001
+    }
+  ],
+  "training_ready": false,
+  "full_path_validated": false,
+  "contact_checks_pass": true,
+  "source_sha256": {
+    "src/so101_m1/scene.py": "5ed67c641a4c9e06708daf15e17fa478f6199e25d3d5cb581f5c38763942544c",
+    "src/so101_m1/env.py": "53825585ec942859db8155e6ae7c383ddd7d77a22be1244328e14d286b0096c2",
+    "src/so101_m1/rules.py": "038e08d13d2c5cf6afac2b309a7c52b1fa3d6bd098663534217c374569a981c1",
+    "scripts/validate_physics.py": "4a2588221a3530dc6ecf9e8f13a6675637cd0a543e68c74a1a2ad65c054d7508"
+  }
+}

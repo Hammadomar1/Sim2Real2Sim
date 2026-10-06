@@ -1,0 +1,22 @@
+{
+  "fixed": {
+    "fixed_minus_adaptive_success_pp": 6.25,
+    "paired_bootstrap_95ci_pp": [
+      1.5625,
+      10.9375
+    ],
+    "adaptive_only": 1.0,
+    "fixed_only": 9.0,
+    "both": 3.0
+  },
+  "fresh": {
+    "fixed_minus_adaptive_success_pp": 15.625,
+    "paired_bootstrap_95ci_pp": [
+      9.375,
+      21.875
+    ],
+    "adaptive_only": 0.0,
+    "fixed_only": 20.0,
+    "both": 3.0
+  }
+}

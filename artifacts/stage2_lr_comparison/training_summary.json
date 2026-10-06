@@ -1,0 +1,42 @@
+{
+  "adaptive": {
+    "updates": 25,
+    "mean_post_update_kl": 0.016829322520643474,
+    "mean_clip_fraction": 0.1918768310546875,
+    "min_lr_after": 0.0008649755859375004,
+    "max_lr_after": 0.004378938903808595,
+    "final_sha256": "12f3cae429d565ea4cc72bf83c9106956a0b870255ca3d56019d706bb1b5008b",
+    "training_outcomes": {
+      "1": {
+        "episodes": 565,
+        "successes": 0.0,
+        "rule_failures": 0.0
+      },
+      "2": {
+        "episodes": 2076,
+        "successes": 431.0,
+        "rule_failures": 14.0
+      }
+    }
+  },
+  "fixed": {
+    "updates": 25,
+    "mean_post_update_kl": 0.006542501449584961,
+    "mean_clip_fraction": 0.0800726318359375,
+    "min_lr_after": 0.0003,
+    "max_lr_after": 0.0003,
+    "final_sha256": "e5e2f5489fd4aff842e416fdf9e403d7055099de0ee5f6f7e3b23b7b31733bda",
+    "training_outcomes": {
+      "1": {
+        "episodes": 550,
+        "successes": 0.0,
+        "rule_failures": 12.0
+      },
+      "2": {
+        "episodes": 2125,
+        "successes": 471.0,
+        "rule_failures": 0.0
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "checkpoint": "runs/stage2_lr_comparison/fixed/final.pt",
+  "checkpoint_sha256": "e5e2f5489fd4aff842e416fdf9e403d7055099de0ee5f6f7e3b23b7b31733bda",
+  "reward_variant": "directional",
+  "distance_level": 0,
+  "stage": 2,
+  "seed": 3000000,
+  "backend": "warp",
+  "episodes": [
+    {
+      "env": 0.0,
+      "stage": 2.0,
+      "success": 1.0,
+      "failed": 0.0,
+      "timeout": 0.0,
+      "position_error_m": 0.009960809722542763,
+      "orientation_error_rad": 0.015470348298549652,
+      "seconds": 18.600000381469727,
+      "return": 8.489103080704808,
+      "joint_jerk_integral": 73.3816146850586,
+      "passed_gate": 0.0,
+      "failure_flags": 0,
+      "failure_categories": [],
+      "distance_level": 0,
+      "initial_goal_distance_m": 0.016215136274695396
+    }
+  ],
+  "scope": "One consecutive deterministic learned-policy rollout; not an aggregate evaluation."
+}

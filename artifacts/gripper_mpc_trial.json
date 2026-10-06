@@ -1,0 +1,92 @@
+{
+  "terminal": [
+    {
+      "env": 0.0,
+      "stage": 5.0,
+      "success": 0.0,
+      "failed": 1.0,
+      "timeout": 0.0,
+      "position_error_m": 0.09805699437856674,
+      "orientation_error_rad": 0.7234135270118713,
+      "seconds": 4.599999904632568,
+      "return": -0.3286881446838379,
+      "joint_jerk_integral": 6475.998046875,
+      "passed_gate": 0.0,
+      "failure_flags": 16,
+      "failure_categories": [
+        "invalid_robot_contact"
+      ]
+    }
+  ],
+  "logs": [
+    {
+      "seconds": 1.0,
+      "xy": [
+        0.15532279014587402,
+        0.00646729301661253
+      ],
+      "yaw": 1.512332797050476,
+      "reference_error": 0.00031644973205402493,
+      "score": 0.21811842918395996,
+      "flags": 0,
+      "wall": 5.322902202606201
+    },
+    {
+      "seconds": 2.0,
+      "xy": [
+        0.15937182307243347,
+        0.010022103786468506
+      ],
+      "yaw": 1.4468835592269897,
+      "reference_error": 0.00032622378785163164,
+      "score": 0.10771320015192032,
+      "flags": 0,
+      "wall": 10.370202779769897
+    },
+    {
+      "seconds": 3.0,
+      "xy": [
+        0.15937182307243347,
+        0.010022103786468506
+      ],
+      "yaw": 1.4468835592269897,
+      "reference_error": 0.00032622378785163164,
+      "score": 0.050555549561977386,
+      "flags": 0,
+      "wall": 13.878712892532349
+    },
+    {
+      "seconds": 4.0,
+      "xy": [
+        0.16516071557998657,
+        0.005851163063198328
+      ],
+      "yaw": 1.1905012130737305,
+      "reference_error": 0.00016216744552366436,
+      "score": 0.0440053716301918,
+      "flags": 0,
+      "wall": 19.47832155227661
+    },
+    {
+      "seconds": 4.6000000000000005,
+      "xy": [
+        0.17194370925426483,
+        -0.0003686034760903567
+      ],
+      "yaw": 0.8473828434944153,
+      "reference_error": 0.00012193166912766173,
+      "score": 0.019955312833189964,
+      "flags": 16,
+      "wall": 21.377749919891357
+    }
+  ],
+  "config": {
+    "worlds": 48,
+    "horizon": 8,
+    "execute": 2,
+    "iterations": 2,
+    "reference": "gripper_complete_path",
+    "tag": "trial"
+  },
+  "scope": "Offline receding-horizon diagnostic, not RL; chosen actions executed continuously on GPU."
+}

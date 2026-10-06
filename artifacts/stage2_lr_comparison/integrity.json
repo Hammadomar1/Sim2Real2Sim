@@ -1,0 +1,19 @@
+{
+  "production_physics_preflight_pass": true,
+  "original_curriculum_source_compatible": true,
+  "source_sha256": "f8aa3f8e166422e9a4d06884b08bedb9f54c318e31a36e07bbc41e04e0a60c55",
+  "branches": {
+    "adaptive": {
+      "final_iteration": 50,
+      "learning_rate": 0.004378938903808595,
+      "schedule": "adaptive",
+      "sha256": "12f3cae429d565ea4cc72bf83c9106956a0b870255ca3d56019d706bb1b5008b"
+    },
+    "fixed": {
+      "final_iteration": 50,
+      "learning_rate": 0.0003,
+      "schedule": "fixed",
+      "sha256": "e5e2f5489fd4aff842e416fdf9e403d7055099de0ee5f6f7e3b23b7b31733bda"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "settling": {
+    "cases": 216,
+    "passed": 216,
+    "finite": true,
+    "max_last_second_linear": 2.872909306006477e-07,
+    "max_last_second_angular": 3.5577321000346274e-07,
+    "failures": []
+  },
+  "boundary_poses": [
+    [
+      0.1,
+      0
+    ],
+    [
+      0.3,
+      0
+    ],
+    [
+      0.2,
+      -0.13
+    ],
+    [
+      0.2,
+      0.13
+    ],
+    [
+      -0.2,
+      0
+    ],
+    [
+      0.48,
+      0
+    ],
+    [
+      0.2,
+      -0.29
+    ],
+    [
+      0.2,
+      0.29
+    ]
+  ],
+  "gpu_boundary_flags": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "native_boundary_flags": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "boundary_pass": true,
+  "scope": "Candidate only: finite visual slab, infinite contact plane, existing stricter finite task boundary enforced. No physical edge-fall model.",
+  "ready_for_rl": false,
+  "source_sha256": {
+    "scripts/table_candidate.py": "00ca52fc745916c98b28a9739b00b6e52acbc40b7c02cd39bb04dd6135ea5970",
+    "scripts/validate_table_candidate.py": "8a0f6f4f86ded17fbf19cb14009daba6e2e1c5a222977fa058b139ee9304263c",
+    "src/so101_m1/scene.py": "5ed67c641a4c9e06708daf15e17fa478f6199e25d3d5cb581f5c38763942544c",
+    "src/so101_m1/rules.py": "038e08d13d2c5cf6afac2b309a7c52b1fa3d6bd098663534217c374569a981c1"
+  }
+}

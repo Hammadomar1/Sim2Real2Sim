@@ -1,0 +1,42 @@
+{
+  "runs": [
+    {
+      "num_envs": 256,
+      "steps": 60,
+      "elapsed_seconds": 1.41402662400003,
+      "transitions_per_second": 10862.596035532406,
+      "headroom": 0.8983250332578084,
+      "finite": true,
+      "memory_used_gib": 1.61871337890625
+    },
+    {
+      "num_envs": 512,
+      "steps": 60,
+      "elapsed_seconds": 1.5014410699999416,
+      "transitions_per_second": 20460.34347521957,
+      "headroom": 0.8845848620423936,
+      "finite": true,
+      "memory_used_gib": 1.83746337890625
+    },
+    {
+      "num_envs": 1024,
+      "steps": 60,
+      "elapsed_seconds": 1.6359419100000423,
+      "transitions_per_second": 37556.34575068647,
+      "headroom": 0.8609076027158307,
+      "finite": true,
+      "memory_used_gib": 2.21441650390625
+    },
+    {
+      "num_envs": 2048,
+      "steps": 60,
+      "elapsed_seconds": 2.100718530999984,
+      "transitions_per_second": 58494.27145363766,
+      "headroom": 0.8136757641628425,
+      "finite": true,
+      "memory_used_gib": 2.96636962890625
+    }
+  ],
+  "recommended_num_envs": 2048,
+  "scope": "Current gripper model, zero-action simulation throughput; not end-to-end PPO learning throughput."
+}

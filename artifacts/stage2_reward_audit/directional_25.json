@@ -1,0 +1,25 @@
+{
+  "checkpoint": "artifacts/stage2_reward_audit/directional_25_checkpoint.pt",
+  "checkpoint_sha256": "6e26728534e5805a46025ce700ce5978af0d0bdd42f1e23e7b739fdc6feb0079",
+  "stage": 2,
+  "seed": 3000000,
+  "backend": "warp",
+  "episodes": [
+    {
+      "env": 0.0,
+      "stage": 2.0,
+      "success": 0.0,
+      "failed": 0.0,
+      "timeout": 1.0,
+      "position_error_m": 0.03978859633207321,
+      "orientation_error_rad": 0.0,
+      "seconds": 30.0,
+      "return": 5.669281005859375,
+      "joint_jerk_integral": 5.521242141723633,
+      "passed_gate": 0.0,
+      "failure_flags": 0,
+      "failure_categories": []
+    }
+  ],
+  "scope": "One consecutive deterministic learned-policy rollout; not an aggregate evaluation."
+}

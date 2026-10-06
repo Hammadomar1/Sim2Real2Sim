@@ -1,0 +1,59 @@
+{
+  "physically_valid_complete_path": true,
+  "within_30_seconds": true,
+  "completion_seconds": 25.07200000000766,
+  "seconds": 29.800000000013437,
+  "gate_x": 0.215,
+  "goal_xy": [
+    0.27,
+    0.0
+  ],
+  "goal_yaw_deg": 90.0,
+  "passed_gate": true,
+  "gate_passage_seconds": 15.806999999996679,
+  "all_vertices_crossed": true,
+  "position_error_m": 0.0017429429108799862,
+  "yaw_error_deg": 2.6241621643528443,
+  "final_stationary_hold_seconds": 3.4259999999997337,
+  "max_penetration_m": 0.000792187788485838,
+  "minimum_upright": 0.9999255984294692,
+  "invalid": [],
+  "contacts": [
+    [
+      "block_0",
+      "gate_south"
+    ],
+    [
+      "block_0",
+      "pusher"
+    ],
+    [
+      "block_0",
+      "table"
+    ],
+    [
+      "block_1",
+      "gate_south"
+    ],
+    [
+      "block_1",
+      "pusher"
+    ],
+    [
+      "block_1",
+      "table"
+    ]
+  ],
+  "max_command_speed": 0.04000000000000001,
+  "max_command_acceleration": 0.20000000000000012,
+  "timestep": 0.001,
+  "input_artifact": "feedback_path_1ms.npz",
+  "input_sha256": "e35c2b187da5226069aeae7aff1b0118608ea2bfeaa9ca1230c32862eb472499",
+  "source_sha256": {
+    "src/so101_m1/scene.py": "b6eb9f67c0c05a47df89b5fa54d79a6c1d82f0c2ee3c033d0b1bd734a95fe3b8",
+    "src/so101_m1/env.py": "61c68406ad2a59053b2f329526a455740fda54d5ac35c1a87a4899efe1e1b70b",
+    "scripts/validate_path.py": "a03da37fce6500e560872a8a8dd526c62f36e2054f4a4c7ad24d13d4241b0818"
+  },
+  "invalid_contact_tolerance_m": 5e-05,
+  "max_disallowed_contact_penetration_m": 0.0
+}

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "so101-m1"
+version = "0.1.0"
+description = "Fixed-base SO-101 Push-Turn-Park reinforcement learning"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mjlab==1.6.0", "mujoco==3.11.0", "mujoco-warp==3.11.0",
+  "torch==2.11.0", "warp-lang==1.14.0", "numpy", "scipy",
+  "matplotlib", "tensorboard", "imageio", "imageio-ffmpeg",
+  "pyyaml", "pytest", "gymnasium", "pillow",
+]
+
+[project.scripts]
+so101-m1 = "so101_m1.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+

@@ -1,0 +1,66 @@
+{
+  "scope": "Geometric reset randomization; no physics randomization or policy success-rate claim.",
+  "resets": [
+    {
+      "backend": "native",
+      "resets": 500,
+      "max_initial_overlap_m": 0.0,
+      "sampled_center_ik_error_m": 6.114739867144622e-11,
+      "subset_reset_pass": null,
+      "state_roundtrip_pass": true,
+      "one_second_settling_episodes": 20
+    },
+    {
+      "backend": "warp",
+      "resets": 5120,
+      "max_initial_overlap_m": 0.0,
+      "sampled_center_ik_error_m": 7.482489816522302e-10,
+      "subset_reset_pass": true,
+      "state_roundtrip_pass": true,
+      "one_second_settling_episodes": 128
+    }
+  ],
+  "demonstration_replays": [
+    {
+      "timestep": 0.002,
+      "input": "feedback_path_2ms",
+      "env": 0.0,
+      "stage": 5.0,
+      "success": 1.0,
+      "failed": 0.0,
+      "timeout": 0.0,
+      "position_error_m": 0.0014147613985807902,
+      "orientation_error_rad": 0.06741429366382867,
+      "seconds": 26.600000381469727,
+      "return": 38.549289906763875,
+      "joint_jerk_integral": 47338.01000572023,
+      "passed_gate": 1.0,
+      "failure_flags": 0,
+      "failure_categories": []
+    },
+    {
+      "timestep": 0.001,
+      "input": "feedback_path_1ms",
+      "env": 0.0,
+      "stage": 5.0,
+      "success": 1.0,
+      "failed": 0.0,
+      "timeout": 0.0,
+      "position_error_m": 0.00579081744874571,
+      "orientation_error_rad": 0.06310451317804323,
+      "seconds": 25.100000381469727,
+      "return": 37.64513333586342,
+      "joint_jerk_integral": 30609.707737703066,
+      "passed_gate": 1.0,
+      "failure_flags": 0,
+      "failure_categories": []
+    }
+  ],
+  "pass": true,
+  "source_sha256": {
+    "src/so101_m1/scene.py": "8ae31ae34aeba6653a9717dd37b8ff0740cdae1ff2d29e7ed0cca77cd72f7034",
+    "src/so101_m1/env.py": "6cdc34513e7e424642177a669460524125313aae12915510e26bd1f421cebcaf",
+    "src/so101_m1/rules.py": "8591cfda0f2d251420b7a9a14b8980e0c3b00881b75f844b0c163cb3b4508c93",
+    "scripts/validate_layout.py": "40e6793d567556330312aafa86e01855c1396916fd25e90b40beb91964049835"
+  }
+}

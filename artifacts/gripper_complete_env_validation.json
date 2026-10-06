@@ -1,0 +1,28 @@
+{
+  "backend": "native",
+  "nominal": {
+    "episode_limit": 30.0,
+    "env": 0.0,
+    "stage": 5.0,
+    "success": 1.0,
+    "failed": 0.0,
+    "timeout": 0.0,
+    "position_error_m": 0.009315655023873522,
+    "orientation_error_rad": 0.12302489262342896,
+    "seconds": 27.25,
+    "return": 34.24999769513087,
+    "joint_jerk_integral": 32759.028323769566,
+    "passed_gate": 1.0,
+    "failure_flags": 0,
+    "failure_categories": []
+  },
+  "within_30_seconds": true,
+  "physically_valid_complete_path": true,
+  "input_sha256": "e0d2330db50f65e2083119fbf267ceae90e07b37cd7aa0b2957f5391e70c1538",
+  "source_sha256": {
+    "src/so101_m1/scene.py": "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167",
+    "src/so101_m1/env.py": "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+    "src/so101_m1/rules.py": "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec",
+    "scripts/validate_complete_env.py": "e19c1f1a2744bb977c8c1322de8a2826785f625dc22f487c3dcad59e70b7286f"
+  }
+}

@@ -1,0 +1,21 @@
+﻿{
+    "scope":  "One nominal native MuJoCo diagnostic; no RL or robustness claim",
+    "files":  {
+                  "src/so101_m1/scene.py":  "61591e77de721d8cfa169983efc56096380e77bea360c9ad43ed759c52379167",
+                  "src/so101_m1/env.py":  "b7cee5a211c709f87cc93276baa9563262881b1c58fae26b242662df306f74bc",
+                  "src/so101_m1/rules.py":  "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec",
+                  "scripts/plan_path.py":  "dff64120be88655d85e29cf739d64bfaeecca44d362a113f0bd7c104aa31856d",
+                  "scripts/feedback_path.py":  "cddb4d0affb368d68293a7d6ed948df0fa87f917c3ffce9e3152d247ec8aeda0",
+                  "scripts/park_gripper.py":  "b624d6307c9240d64c46ac5c73e681d85c066477da4594e93c02081a5497a799",
+                  "scripts/finish_parking.py":  "f6aca9dc9d2f5726b610bb6054ea2aac17ceaf571fd6f38bc7b5ade6043c8792",
+                  "scripts/validate_path.py":  "e790e30fbe67e3362f1eb515c23cb34a3ac219dc8884533480023f5ba0383fe4",
+                  "scripts/validate_complete_env.py":  "e19c1f1a2744bb977c8c1322de8a2826785f625dc22f487c3dcad59e70b7286f",
+                  "scripts/park-gripper.ps1":  "19d6762f0d2debabe66e9e2917d8de8280cd5c7e314a43260939debcae45adf1",
+                  "artifacts/gripper_parking_prefix.npz":  "a0f4ca64011ea79125491bffde19f3487f8c98c63820cc1abfd1d8de018683a9",
+                  "artifacts/gripper_complete_path.npz":  "e0d2330db50f65e2083119fbf267ceae90e07b37cd7aa0b2957f5391e70c1538",
+                  "artifacts/gripper_complete_path.json":  "8900724aa0807ea34539be536d76b5fd2f4a0f83226551dccedfe2ab7921f591",
+                  "artifacts/gripper_complete_path_audit.npz":  "982970f57b92dcbe1a8212c130e1972c08dfd95171a39dcacdd3ee3eb02d2276",
+                  "artifacts/gripper_complete_path_audit.json":  "94d7f0a4e07888b9193d8e677d9ff6adf242b07bf7b8664c0a69bdb9f0230826",
+                  "artifacts/gripper_complete_env_validation.json":  "1426106f8cd3de2be29c875f7d88d659ec379ce6289729c814fd471882ac7431"
+              }
+}

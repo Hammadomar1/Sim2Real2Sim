@@ -1,0 +1,65 @@
+{
+  "early_fresh": {
+    "common_successes": 4,
+    "old_successes": 4.0,
+    "new_successes": 7.0,
+    "seconds": {
+      "old": 10.225000143051147,
+      "new": 6.7375001311302185
+    },
+    "contact_bouts": {
+      "old": 2.25,
+      "new": 1.25
+    },
+    "position_error_m": {
+      "old": 0.00960001815110445,
+      "new": 0.008489497937262058
+    },
+    "jerk_per_second": {
+      "old": 3.36076073690967,
+      "new": 14.903047500241161
+    }
+  },
+  "control_fresh": {
+    "common_successes": 4,
+    "old_successes": 4.0,
+    "new_successes": 7.0,
+    "seconds": {
+      "old": 4.5000001192092896,
+      "new": 6.7375001311302185
+    },
+    "contact_bouts": {
+      "old": 1.0,
+      "new": 1.25
+    },
+    "position_error_m": {
+      "old": 0.008805402321740985,
+      "new": 0.008489497937262058
+    },
+    "jerk_per_second": {
+      "old": 69.08419833042106,
+      "new": 14.903047500241161
+    }
+  },
+  "efficient_fresh": {
+    "common_successes": 7,
+    "old_successes": 7.0,
+    "new_successes": 7.0,
+    "seconds": {
+      "old": 7.821428605488369,
+      "new": 7.650000197546823
+    },
+    "contact_bouts": {
+      "old": 2.5714285714285716,
+      "new": 1.4285714285714286
+    },
+    "position_error_m": {
+      "old": 0.009190381837210484,
+      "new": 0.009057481507105487
+    },
+    "jerk_per_second": {
+      "old": 17.21626943447189,
+      "new": 10.302744924187452
+    }
+  }
+}

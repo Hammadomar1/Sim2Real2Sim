@@ -1,0 +1,19 @@
+﻿{
+    "checkpoint_date":  "2026-10-04",
+    "training_started":  false,
+    "sha256":  {
+                   "scripts/feedback_path.py":  "9f780357ee9ae13985d9e17889cb45998c56f3160ecfbfb80abfee2f25298f64",
+                   "scripts/plan_path.py":  "2e3676a156a14287be3e1639d7fd8d85ce6ae5b08711a8343bb62c26780094de",
+                   "scripts/validate_path.py":  "a03da37fce6500e560872a8a8dd526c62f36e2054f4a4c7ad24d13d4241b0818",
+                   "src/so101_m1/scene.py":  "b6eb9f67c0c05a47df89b5fa54d79a6c1d82f0c2ee3c033d0b1bd734a95fe3b8",
+                   "src/so101_m1/env.py":  "61c68406ad2a59053b2f329526a455740fda54d5ac35c1a87a4899efe1e1b70b",
+                   "artifacts/feedback_path_2ms.npz":  "dfe191f7a6f9e4178be47888d95ae47e54416b0ed64f374c2c64be0f69b1d4e3",
+                   "artifacts/feedback_path_1ms.npz":  "e35c2b187da5226069aeae7aff1b0118608ea2bfeaa9ca1230c32862eb472499",
+                   "artifacts/feedback_path_2ms.json":  "4cbfe85cd553cb31946ccc7d20c7b57b264ca59d279872b25aa6a6b03199e098",
+                   "artifacts/feedback_path_1ms.json":  "0631e6867db1067fd55225f86dac00331dc2ec64bbd8bb8814426a1b78179e31",
+                   "artifacts/feedback_validation_2ms.json":  "50b43e80e10bd3c1ae79ddb6dfbe4d6b10e47d8473c95dfd9999d70a4524f2ad",
+                   "artifacts/feedback_validation_1ms.json":  "d67bb83bb4226474fa3c0b945a95208da81364ce2a55f7644439f9499e4bee42",
+                   "artifacts/feedback_validation_2ms.npz":  "15d7a1441598adcab88858b105d5a6a61c1d83576ff1ab7a1c5ca2be8bb02d96",
+                   "artifacts/feedback_validation_1ms.npz":  "f9260a0ed08002f28c68a71b20bd2f346a9ab689e3c94a23165bf59c31b044c7"
+               }
+}

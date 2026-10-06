@@ -1,0 +1,85 @@
+{
+  "trials": [
+    {
+      "timestep": 0.002,
+      "seconds": 16.00000000000201,
+      "failure_flags": 0,
+      "max_penetration_m": 0.00037018693777154395,
+      "hold_error_m": 9.689290365091765e-05,
+      "block_displacement_m": 0.03705111647654447,
+      "final_block": [
+        0.186878587783583,
+        0.0035714136202669865
+      ],
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "gate_north"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "gripper_angle": -0.17492547695162725,
+      "gripper_target": -0.174,
+      "pass": true
+    },
+    {
+      "timestep": 0.001,
+      "seconds": 15.999999999996572,
+      "failure_flags": 0,
+      "max_penetration_m": 0.00045853412335802,
+      "hold_error_m": 9.689293434189526e-05,
+      "block_displacement_m": 0.040191638012638,
+      "final_block": [
+        0.19002358647700807,
+        0.003671551668761311
+      ],
+      "contacts": [
+        [
+          "block_0",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_0",
+          "table"
+        ],
+        [
+          "block_1",
+          "gate_north"
+        ],
+        [
+          "block_1",
+          "moving_jaw_mesh_1"
+        ],
+        [
+          "block_1",
+          "table"
+        ]
+      ],
+      "gripper_angle": -0.17497576828815953,
+      "gripper_target": -0.174,
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "source_sha256": {
+    "src/so101_m1/scene.py": "3057cdf3d106c47328c03372e46b53e6620da503aeed22db5b774af774506807",
+    "src/so101_m1/env.py": "f5bd2c0f6a4d2a68a72d334ee7b6a013f2b411f4643830cb48c7a4144ac6e7db",
+    "src/so101_m1/rules.py": "a9e2218176e7ef05e93b1eeffe05b4db57f582f3be0824214ead09b7fd9f15ec",
+    "scripts/validate_gripper.py": "233e204c63e44f935c53c81595169b7dc46ffb0108f5e8d6562fe872fd3c3075"
+  }
+}
