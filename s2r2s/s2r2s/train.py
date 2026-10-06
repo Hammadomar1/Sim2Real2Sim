@@ -1,6 +1,7 @@
 """Train a pushing policy with PPO.
 
     python -m s2r2s.train --run tee_v1 --minutes 90
+    python -m s2r2s.train --run gate_v1 --gate --init runs/tee_v1/best.pt --minutes 120
 
 Writes runs/<run>/: config.json, progress.jsonl, eval.jsonl, latest.pt,
 best.pt and TensorBoard logs (tb/). Resume with --resume runs/<run>/latest.pt.
@@ -17,9 +18,10 @@ import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
-from .env import EnvConfig, PushEnv, TaskConfig
+from .env import EnvConfig, TaskConfig
 from .evaluation import policy_agent, run_episodes, summarize as episode_summary
 from .ppo import PPO, PPOConfig, ActorCritic
+from .tasks import make_env
 
 PROJECT = Path(__file__).resolve().parents[1]
 
@@ -47,6 +49,29 @@ def load_policy(path, device="cpu"):
     return policy, env_cfg, ck
 
 
+def warm_start(policy: ActorCritic, source: dict, init_std: float = 0.0):
+    """Copy a trained policy into a network whose inputs were extended by appending features.
+
+    Old weights are copied; weights from new inputs start at zero, so the new network initially
+    behaves exactly like the old one. Normaliser statistics are copied for the old inputs.
+    """
+    own = policy.state_dict()
+    for key, value in source.items():
+        target = own[key]
+        if target.shape == value.shape:
+            target.copy_(value)
+        elif target.dim() == 2 and value.dim() == 2 and target.shape[0] == value.shape[0]:   # first layers
+            target.zero_()
+            target[:, :value.shape[1]] = value
+        elif target.dim() == 1 and value.dim() == 1 and target.shape[0] > value.shape[0]:      # normalisers
+            target[:value.shape[0]] = value
+        else:
+            raise ValueError(f"cannot warm-start {key}: {tuple(value.shape)} -> {tuple(target.shape)}")
+    if init_std > 0:
+        with torch.no_grad():
+            policy.log_std.fill_(math.log(init_std))
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--run", required=True)
@@ -62,6 +87,10 @@ def main(argv=None):
     p.add_argument("--eval-every", type=int, default=50)
     p.add_argument("--eval-episodes", type=int, default=512)
     p.add_argument("--resume", default="")
+    p.add_argument("--gate", action="store_true", help="Level 1: push through a gate, then to the goal")
+    p.add_argument("--episode-seconds", type=float, default=0.0, help="default 20 s (30 s with --gate)")
+    p.add_argument("--init", default="", help="warm-start the policy from a checkpoint (inputs may be extended)")
+    p.add_argument("--init-std", type=float, default=0.25, help="action noise after --init")
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = p.parse_args(argv)
 
@@ -78,14 +107,15 @@ def main(argv=None):
         env_cfg.task.difficulty = ck["difficulty"]
     else:
         env_cfg = EnvConfig(num_envs=args.num_envs, seed=args.seed,
-                            task=TaskConfig(objects=tuple(args.objects.split(",")),
+                            task=TaskConfig(objects=tuple(args.objects.split(",")), gate=args.gate,
+                                            episode_seconds=args.episode_seconds or (30.0 if args.gate else 20.0),
                                             difficulty=1.0 if args.no_curriculum else args.difficulty))
         env_cfg.scene.timestep = args.timestep
         env_cfg.rand.enabled = not args.no_randomization
         ppo_cfg = PPOConfig()
     (run_dir / "config.json").write_text(json.dumps({"env": env_cfg.to_dict(), "ppo": ppo_cfg.to_dict(),
                                                     "args": vars(args)}, indent=2))
-    env = PushEnv(env_cfg)
+    env = make_env(env_cfg)
     # Desynchronise episode boundaries so resets spread evenly over training.
     env.step_count[:] = env.rng.integers(0, env.max_steps, env.n)
     dims = (env.num_obs, env.num_critic_obs, env.num_actions)
@@ -94,6 +124,10 @@ def main(argv=None):
     if ck is not None:
         ppo.load_state_dict(ck["ppo"])
         it, samples, best = ck["iteration"], ck["samples"], ck["best"]
+    elif args.init:
+        source = torch.load(args.init, map_location=device, weights_only=False)
+        warm_start(ppo.policy, source["ppo"]["policy"], args.init_std)
+        print(f"warm start from {args.init} (inputs {tuple(source['dims'][:2])} -> {dims[:2]})", flush=True)
     writer = SummaryWriter(str(run_dir / "tb"))
     eval_seed = 10_000_019            # fixed held-out evaluation scenarios
     obs = env.obs

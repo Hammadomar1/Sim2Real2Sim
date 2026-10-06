@@ -13,6 +13,7 @@ import torch
 
 from .env import EnvConfig, PushEnv
 from .scripted import KeypointPusher
+from .tasks import make_env
 
 AgentFactory = Callable[[PushEnv], Callable[[dict], np.ndarray]]
 
@@ -57,6 +58,7 @@ def summarize(eps: dict) -> dict:
         "reached": float(reached.mean()),
         "time_to_goal_s_median": float(np.median(s["first_success"][reached]) * 0.05) if reached.any() else float("nan"),
         "difficulty_mean": float(s["difficulty"].mean()),
+        **({"passed_gate": float(s["passed"].mean())} if "passed" in s else {}),
     }
 
 
@@ -66,7 +68,7 @@ def run_episodes(env_cfg: EnvConfig, agent: AgentFactory, episodes: int, seed: i
     cfg = copy.deepcopy(env_cfg)
     cfg.num_envs, cfg.seed = episodes, seed
     cfg.task.difficulty, cfg.task.easy_fraction = difficulty, 0.0
-    env = PushEnv(cfg)
+    env = make_env(cfg)
     act = agent(env)
     goals, starts = env.goal.copy(), env.object_pose().copy()
     params = env.params.copy()

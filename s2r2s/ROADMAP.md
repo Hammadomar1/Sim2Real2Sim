@@ -127,6 +127,10 @@ camera now sits at the recommended pose. `videos/camera_study/camera_views.png` 
 
 ## 6. Immediate next actions
 
+**Done (simulation):** Milestone 1 (96.6 %) and Level 1, the gate (95.3 % through a 64–70 mm opening; see README).
+Next, in simulation: Level 2 (two blocks) and Level 3 (connect blocks: retrain the pusher with other blocks around,
+then add a planner). The gate is also the natural first version of the proposal's *clutter* factor.
+
 - [ ] Run `.\scripts\setup.ps1`, then `.\scripts\play.ps1 runs\tee_v1\best.pt`. Press K to kick the T mid-push and watch it recover.
 - [ ] (Simulation) Train the six-object generalist; add one anchored obstacle (clutter) to the scene and the sampler.
 - [ ] (Hardware) Print the rod and the T; build the LeRobot â†” MuJoCo joint mapping (Milestone 2, step 2).

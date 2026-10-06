@@ -21,10 +21,11 @@ import mujoco
 import numpy as np
 import torch
 
-from .env import EnvConfig, PushEnv, TaskConfig
+from .env import EnvConfig, TaskConfig
 from .evaluation import policy_agent, scripted_agent
 from .objects import OBJECTS
 from .scene import _look_at_quat, build_spec, set_marker
+from .tasks import make_env
 from .train import load_policy
 
 TARGET = (0.20, 0.0, 0.0)
@@ -87,7 +88,7 @@ def main(argv=None):
         cfg, agent = EnvConfig(task=TaskConfig(objects=("tee",))), scripted_agent()
     cfg.num_envs, cfg.num_threads, cfg.seed = args.episodes, 8, 77
     cfg.task.difficulty, cfg.task.easy_fraction = 1.0, 0.0
-    env = PushEnv(cfg)
+    env = make_env(cfg)
     act = agent(env)
     shape = OBJECTS[cfg.task.objects[0]]
     model = build_study_model(cfg, shape.name)

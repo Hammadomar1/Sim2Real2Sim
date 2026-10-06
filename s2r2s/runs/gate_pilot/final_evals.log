@@ -1,0 +1,8 @@
+trained (best)         passed  98.5% | success  95.3% | median   1.4 mm /  2.1 deg | p90   3.8 mm /   5.9 deg | failures  1.9% | time  8.7 s | rate 0.0383
+trained (final)        passed  98.6% | success  93.8% | median   1.2 mm /  1.7 deg | p90   3.5 mm /   6.0 deg | failures  3.0% | time  8.2 s | rate 0.0364
+zero-shot warm start   passed  46.5% | success  39.9% | median  71.6 mm / 30.5 deg | p90 173.4 mm / 149.6 deg | failures  5.6% | time 13.4 s | rate 0.0224
+scripted (true state)  passed  30.6% | success  12.1% | median  98.8 mm / 72.9 deg | p90 147.1 mm / 159.0 deg | failures  0.0% | time 16.1 s | rate 1.1919
+trained (best), 2 ms   passed  98.1% | success  93.1% | median   1.4 mm /  2.1 deg | failures  2.6%
+   opening 64-66 mm: success 94.8% (307 scenes)
+   opening 66-68 mm: success 95.2% (332 scenes)
+   opening 68-70 mm: success 95.8% (361 scenes)

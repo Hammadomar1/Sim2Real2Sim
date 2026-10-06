@@ -17,3 +17,11 @@ runs/tee_v1/*
 # Videos are regenerable (python -m s2r2s.record). Keep the camera-placement figure that ROADMAP.md cites.
 videos/*
 !videos/camera_study/
+# Level 1 deliverable: the gate policy and its evaluation results.
+!runs/gate_pilot/
+runs/gate_pilot/*
+!runs/gate_pilot/best.pt
+!runs/gate_pilot/*.json
+!runs/gate_pilot/*.jsonl
+!runs/gate_pilot/train.log
+!runs/gate_pilot/final_evals.log

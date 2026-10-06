@@ -69,6 +69,17 @@ class TaskConfig:
     w_action: float = 0.01
     w_action_rate: float = 0.05
     failure_penalty: float = 10.0
+    # Level 1 puzzle (GateEnv only): push the object through an opening in a wall, then to the goal.
+    gate: bool = False
+    gate_az: float = math.radians(6)              # wall azimuth uniformly within +-gate_az
+    gate_r: tuple[float, float] = (0.195, 0.205)  # opening centre radius (m)
+    gate_width: tuple[float, float] = (0.064, 0.070)  # opening width at full difficulty (m)
+    gate_width_easy: float = 0.080                # opening width at difficulty 0 (any orientation passes)
+    gate_clear_az: float = math.radians(17)       # start/goal centres at least this far (azimuth) from the wall
+    gate_pre: float = 0.05                        # aligned waypoint this far before the wall (m)
+    gate_post: float = 0.05                       # ... and this far after it
+    gate_align_tol: float = 0.012                 # keypoint distance to the pre-gate pose that starts the passage
+    gate_cross: float = 0.035                     # object centre this far past the wall: head for the goal
 
 
 @dataclass
@@ -88,6 +99,7 @@ class RandomizationConfig:
     obs_yaw_noise: float = math.radians(1.0)
     obs_dropout: float = 0.03
     tool_noise: float = 0.0005
+    gate_friction: tuple[float, float] = (0.20, 0.50)
 
 
 @dataclass
@@ -230,11 +242,16 @@ class PushEnv:
     def reset(self, ids):
         if len(ids) == 0:
             return
-        t, r = self.cfg.task, self.cfg.rand
-        n = len(ids)
         for i in ids:
             self._randomize(i)
-        # Object start pose.
+        start, start_yaw = self._sample_scene(ids)
+        tool = self._sample_tool(ids, start, start_yaw)
+        self._place(ids, start, start_yaw, tool)
+
+    def _sample_scene(self, ids):
+        """Object start pose and goal (written to self.goal) for new episodes."""
+        t = self.cfg.task
+        n = len(ids)
         start = self._sample_region(n, t.obj_r, t.obj_az)
         start_yaw = self.rng.uniform(-math.pi, math.pi, n)
         # Goal pose relative to the start, limited by the curriculum difficulty.
@@ -257,19 +274,34 @@ class PushEnv:
             todo = todo[~ok]
         goal_yaw = wrap(start_yaw + self.rng.uniform(-1, 1, n) * turn)
         self.goal[ids] = np.c_[goal, goal_yaw]
-        # Tool start: reachable, clear of the object footprint.
+        return start, start_yaw
+
+    def _tool_clear(self, ids, cand, start, start_yaw):
+        """Which candidate tool positions are free (base: clear of the object)."""
+        clear = self.obj.radius[self.obj_id[ids]] + self.cfg.scene.pusher_radius + 0.01
+        return np.linalg.norm(cand - start, axis=-1) > clear
+
+    def _sample_tool(self, ids, start, start_yaw):
+        """Tool start: reachable and clear of the object (and of obstacles, in subclasses)."""
+        t = self.cfg.task
+        n = len(ids)
         tool = np.zeros((n, 2))
         todo = np.arange(n)
-        clear = self.obj.radius[self.obj_id[ids]] + self.cfg.scene.pusher_radius + 0.01
-        for _ in range(100):
+        for _ in range(200):
             if len(todo) == 0:
                 break
             cand = self._sample_region(len(todo), (t.tool_r[0] + 0.01, t.tool_r[1] - 0.01), t.tool_az - 0.1)
-            ok = np.linalg.norm(cand - start[todo], axis=-1) > clear[todo]
+            ok = self._tool_clear(ids[todo], cand, start[todo], start_yaw[todo])
             tool[todo[ok]] = cand[ok]
             todo = todo[~ok]
         if len(todo):
             raise RuntimeError("could not place the tool clear of the object")
+        return tool
+
+    def _place(self, ids, start, start_yaw, tool):
+        """Write the physics state and per-episode bookkeeping for new episodes."""
+        t, r = self.cfg.task, self.cfg.rand
+        n = len(ids)
         # Calibration error in tool height (the IK believes the nominal height).
         self.tool_z_cmd[ids] = t.tool_height + self.param_rng.uniform(-1, 1, n) * r.tool_height_error * r.enabled
         q, err, _ = self.kin.solve(np.c_[tool, self.tool_z_cmd[ids]], self.kin.seed(tool), iterations=30)
@@ -302,7 +334,27 @@ class PushEnv:
         self.pose_hist[ids] = pose[:, None, :]
         self.obs_pose[ids] = pose
         self.prev_obs_pose[ids] = pose
-        self.prev_dist[ids] = self._keypoint_distance(pose, self.goal[ids], self.obj_id[ids])
+        self.prev_dist[ids] = self._task_distance(pose, ids)
+
+    # --------------------------------------------------------- task hooks
+    def _task_distance(self, pose, ids=None, dist=None):
+        """Distance that drives the reward (base: keypoint distance to the goal)."""
+        if dist is not None:
+            return dist
+        ids = np.arange(self.n) if ids is None else ids
+        return self._keypoint_distance(pose, self.goal[ids], self.obj_id[ids])
+
+    def _feature_goal(self, ids):
+        """Goal pose shown in the observation (base: the goal; subclasses may show a subgoal)."""
+        return self.goal[ids]
+
+    def _extra_obs(self, ids, pose, tool_xy):
+        """Task-specific features appended to actor and critic observations (base: none)."""
+        return np.zeros((len(ids), 0))
+
+    def _episode_extras(self, ids):
+        """Task-specific per-episode statistics (base: none)."""
+        return {}
 
     # ------------------------------------------------------------- geometry
     def _symmetric_goal_yaw(self, yaw, goal_yaw, obj_id):
@@ -379,6 +431,7 @@ class PushEnv:
         self._update_tool()
         tip = self.tip
         dist = self._keypoint_distance(pose, self.goal, self.obj_id)
+        task_dist = self._task_distance(pose, dist=dist)
         surf = self._surface_distance(tip[:, :2], pose, self.obj_id)
         pos_err = np.linalg.norm(pose[:, :2] - self.goal[:, :2], axis=-1)
         yaw_err = np.abs(wrap(pose[:, 2] - self._symmetric_goal_yaw(pose[:, 2], self.goal[:, 2], self.obj_id)))
@@ -391,13 +444,13 @@ class PushEnv:
         failed = tipped | outside | ~finite
         timeout = self.step_count >= self.max_steps
 
-        reward = (t.w_coarse * np.exp(-dist / t.sigma_coarse) + t.w_fine * np.exp(-dist / t.sigma_fine)
-                  + t.w_progress * (self.prev_dist - dist) / 0.01
+        reward = (t.w_coarse * np.exp(-task_dist / t.sigma_coarse) + t.w_fine * np.exp(-task_dist / t.sigma_fine)
+                  + t.w_progress * (self.prev_dist - task_dist) / 0.01
                   + t.w_reach * np.exp(-np.maximum(surf, 0) / t.sigma_reach)
                   - t.w_action * (a ** 2).sum(-1) - t.w_action_rate * ((a - self.prev_action) ** 2).sum(-1)
                   - t.failure_penalty * failed)
         reward = np.where(finite, reward, -t.failure_penalty)
-        self.prev_dist = dist
+        self.prev_dist = task_dist
         self.prev_action = a
 
         # Camera model: delayed, noisy, sometimes missing object pose estimates.
@@ -429,6 +482,7 @@ class PushEnv:
                 "first_success": self.first_success[ids], "difficulty": self.difficulty_ep[ids],
                 "tipped": tipped[ids], "outside": outside[ids], "nonfinite": ~finite[ids],
                 "obj_id": self.obj_id[ids].copy(),
+                **self._episode_extras(ids),
             }
             self.state[ids[~finite[ids]]] = 0.0
             self.reset(ids)
@@ -439,7 +493,7 @@ class PushEnv:
     def _features(self, tool_xy, cmd_xy, pose, prev_pose, q, ids):
         """Shared actor/critic features in the robot base frame, roughly unit scale."""
         centre = np.array([0.2, 0.0])
-        goal = self.goal[ids]
+        goal = self._feature_goal(ids)
         obj_id = self.obj_id[ids]
         g = goal.copy()
         g[:, 2] = self._symmetric_goal_yaw(pose[:, 2], goal[:, 2], obj_id)
@@ -467,6 +521,7 @@ class PushEnv:
         tip, q = self.tip[ids], self.qarm[ids]
         tool_meas = tip[:, :2] + (self.noise_rng.normal(0, r.tool_noise, (len(ids), 2)) if r.enabled else 0)
         actor = self._features(tool_meas, self.cmd_xy[ids], self.obs_pose[ids], self.prev_obs_pose[ids], q, ids)
+        actor = np.concatenate([actor, self._extra_obs(ids, self.obs_pose[ids], tool_meas)], -1)
         pose, _, _ = self._object_pose()
         pose = pose[ids]
         true_feat = self._features(tip[:, :2], self.cmd_xy[ids], pose, self.pose_hist[ids, 1], q, ids)
@@ -481,6 +536,7 @@ class PushEnv:
             (self.tool_z_cmd[ids, None] - self.cfg.task.tool_height) / 0.002,
             self.latency[ids, None] / 2.0, self.delay[ids, None] / 5.0,
             np.clip(surf, -0.01, 0.05)[:, None] / 0.02, dist[:, None] / 0.05,
+            self._extra_obs(ids, pose, tip[:, :2]),
         ], -1)
         return {"actor": actor.astype(np.float32), "critic": critic.astype(np.float32)}
 
@@ -502,7 +558,7 @@ class PushEnv:
         self.state[i, o:o + 2] = new[:2]
         self.state[i, o + 3:o + 7] = [math.cos(new[2] / 2), 0, 0, math.sin(new[2] / 2)]
         self.state[i, self.qvel_adr:] = 0.0
-        self.prev_dist[i] = self._keypoint_distance(new[None], self.goal[i:i + 1], self.obj_id[i:i + 1])[0]
+        self.prev_dist[i] = self._task_distance(new[None], np.array([i]))[0]
         # The camera history is left alone: the policy sees the jump only after its latency.
 
     def object_pose(self):

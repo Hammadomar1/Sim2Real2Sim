@@ -48,6 +48,46 @@ model on. The scripted baseline runs on the *same* scenes but with the *true* ob
 - **Videos** (`videos/`): `tee_policy_grid.mp4` (four random scenes), `tee_policy_kicks.mp4` (the object is knocked away
   every 5 s and the policy recovers), `tee_d435i_view.mp4` (the view from the planned real camera).
 
+## Level 1: through the gate (`gate.py`)
+
+A wall crosses the work band with an opening **64–70 mm** wide. The T starts on one side, and its goal (a random
+pose) is on the other side. The wall reaches beyond the workspace, so the opening is the only way through. The T is 56–71 mm
+wide depending on its orientation, so it only fits when turned so the bar runs along the wall (about ±25° of
+slack) and centred to within a few millimetres. The policy must line it up, push it through straight, and then
+place it.
+
+- **Guidance, not a script.** Three waypoints: an aligned pose before the wall, the same pose past it, then the goal.
+  The reward is the remaining path length *through the opening*, so pushing straight at the wall never pays.
+  The observation shows the current waypoint in the same slots as the Milestone 1 goal, plus 17 gate features.
+- **Warm start.** The Milestone 1 network is copied, and the new inputs get zero weights, so training starts from a
+  policy that already follows waypoints. The curriculum narrows the opening from 80 mm to 64–70 mm.
+- **Feasibility first.** A scripted controller with a dedicated "push straight through" mode gets about 40 % of T's
+  through the narrowest openings, with no failures. Its jams are steering errors, not physics problems.
+
+Held-out results: 1,000 unseen scenes at full difficulty, with randomisation and the camera model on
+(`runs/gate_pilot/final_eval.json`):
+
+| | trained (`runs/gate_pilot/best.pt`) | Milestone 1 policy, untrained on gates | scripted (true pose) |
+|---|---|---|---|
+| passed the gate | **98.5 %** | 46.5 % | 30.6 % |
+| solved (≤10 mm, ≤10° at the goal) | **95.3 %** | 39.9 % | 12.1 % |
+| final error, median | **1.4 mm / 2.1°** | 72 mm / 31° | 99 mm / 73° |
+| failures (object left the band) | 1.9 % | 5.6 % | 0.0 % |
+| time to the goal, median | 8.7 s | 13.4 s | 16.1 s |
+
+Training time on this laptop: the best checkpoint came after **9 minutes** (29M samples) of a 30-minute run. Longer
+training did not help: the final checkpoint scores 93.8 %. Success is flat across opening widths (94.8 % at 64–66 mm,
+95.8 % at 68–70 mm). With 2 ms physics instead of 5 ms it scores 93.1 %. That small drop, which Milestone 1 did not
+show, suggests wall contacts are somewhat sensitive to the physics step. Check this on hardware.
+
+```powershell
+python -m s2r2s.play --checkpoint runs\gate_pilot\best.pt          # watch it (or: --scripted --gate)
+python -m s2r2s.evaluate runs\gate_pilot\best.pt --baseline         # held-out evaluation
+python -m s2r2s.train --run gate_v2 --gate --init runs\tee_v1\best.pt --minutes 30   # retrain (warm start)
+```
+
+Videos: `videos/gate_policy_grid.mp4` (four scenes) and `videos/gate_policy_top.mp4` (top view).
+
 ## Quick start (Windows, PowerShell)
 
 ```powershell
@@ -121,13 +161,15 @@ and value normalisation, time-outs bootstrapped from the true terminal state, KL
 The automatic curriculum raises goal difficulty by 0.1 whenever 80 % of episodes at the current level succeed.
 Every 50 updates, the policy is scored on 512 fixed held-out scenes at full difficulty, and `best.pt` is kept.
 
-## What was verified before any RL (`pytest`, 12 tests)
+## What was verified before any RL (`pytest`, 17 tests)
 
 - Stripped training model has exactly the Menagerie masses, inertias and servo gains
 - FK and Jacobian match MuJoCo; IK solves >99.9 % of the workspace; one IK step per control tick tracks to <0.3 mm (p99)
 - Physics state layout, reset validity (object, goal and tool placement), zero-action stillness, stability under random actions,
   and scenes that depend only on the seed (so evaluations are paired across settings)
 - Symmetry-aware pose error; the reward prefers progress over idling
+- Gate (Level 1): walls block where they are placed, scenes start and end on opposite sides, the object cannot pass
+  through a wall, the waypoint stage advances and falls back, and warm start reproduces the old policy exactly
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -153,6 +195,7 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/objects.py` | Object library: footprints, keypoints, symmetry |
 | `s2r2s/kinematics.py` | Batched FK/IK, shared by simulation and hardware |
 | `s2r2s/env.py` | Batched environment: control, observations, camera model, reward, randomisation, resets |
+| `s2r2s/gate.py`, `tasks.py` | Level 1 gate puzzle (waypoints, path-length reward, gate features); environment factory |
 | `s2r2s/ppo.py`, `train.py` | PPO and the training loop (logs, curriculum, evaluation, checkpoints) |
 | `s2r2s/evaluation.py`, `evaluate.py` | Held-out evaluation (policy and baseline on identical scenes) |
 | `s2r2s/scripted.py` | Heuristic pusher: feasibility check and baseline |

@@ -37,7 +37,7 @@ def apply_overrides(cfg, items):
         setattr(target, field, new)
     return cfg
 
-ROWS = [("success", "success rate", "{:.1%}"), ("pos_err_mm_median", "position error median (mm)", "{:.1f}"),
+ROWS = [("passed_gate", "passed the gate", "{:.1%}"), ("success", "success rate", "{:.1%}"), ("pos_err_mm_median", "position error median (mm)", "{:.1f}"),
         ("pos_err_mm_p90", "position error p90 (mm)", "{:.1f}"), ("yaw_err_deg_median", "yaw error median (deg)", "{:.1f}"),
         ("yaw_err_deg_p90", "yaw error p90 (deg)", "{:.1f}"), ("E_mean", "mean E = pos/20mm + yaw/10deg", "{:.2f}"),
         ("reached", "ever within tolerance", "{:.1%}"), ("time_to_goal_s_median", "time to tolerance median (s)", "{:.1f}"),
@@ -75,6 +75,8 @@ def main(argv=None):
           f"{cfg.scene.timestep * 1e3:.0f} ms, randomization {'on' if cfg.rand.enabled else 'off'}")
     print(f"{'':44s}" + "".join(f"{n:>12s}" for n in names))
     for key, label, fmt in ROWS:
+        if all(key not in results[n] for n in names):
+            continue
         print(f"{label:44s}" + "".join(f"{fmt.format(results[n].get(key, float('nan'))):>12s}" for n in names))
     out = Path(args.out) if args.out else Path(args.checkpoint).with_name(
         f"eval_{Path(args.checkpoint).stem}_s{args.seed}_d{args.difficulty}"

@@ -27,8 +27,12 @@ ROOT = Path(__file__).resolve().parents[2]
 MENAGERIE_SO101 = ROOT / "assets" / "menagerie" / "robotstudio_so101" / "so101.xml"
 ARM_JOINTS = ("shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll")
 
-# Collision bit masks: table / objects / pusher.
-_TABLE, _OBJECT, _PUSHER = 1, 2, 4
+# Collision bit masks: table / objects / pusher / static obstacles (gate walls).
+_TABLE, _OBJECT, _PUSHER, _STATIC = 1, 2, 4, 8
+# Gate walls: 10 mm thick, 25 mm tall (taller than the 20 mm objects, below the 35 mm jaw tips).
+GATE_WALL_HALF_THICKNESS = 0.005
+GATE_WALL_HALF_HEIGHT = 0.0125
+GATE_WALL_LENGTH = (0.09, 0.11)     # inner / outer wall length from the opening edge (m)
 
 
 @dataclass
@@ -53,6 +57,9 @@ class SceneConfig:
     camera_pos: tuple[float, float, float] = (0.62, 0.0, 0.38)
     camera_target: tuple[float, float, float] = (0.20, 0.0, 0.0)
     camera_fovy: float = 42.5
+    # Level 1 puzzle: a wall with an opening across the work band (placed per episode, see set_gate).
+    gate: bool = False
+    gate_friction: float = 0.35
 
     def to_dict(self):
         return asdict(self)
@@ -125,7 +132,7 @@ def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual:
     r = cfg.pusher_radius
     grip.add_geom(name="pusher", type=mujoco.mjtGeom.mjGEOM_CAPSULE, size=[r, 0, 0],
                   fromto=[px, py, cfg.pusher_top_z, px, py, cfg.pusher_tip_z + r],
-                  contype=_PUSHER, conaffinity=_TABLE, condim=3, priority=1,
+                  contype=_PUSHER, conaffinity=_TABLE | _STATIC, condim=3, priority=1,
                   friction=[cfg.pusher_friction, 0.005, 0.0001], mass=0, rgba=[0.15, 0.15, 0.15, 1], group=1)
     grip.add_site(name="tool_tip", pos=[px, py, cfg.pusher_tip_z], size=[0.002, 0, 0], rgba=[1, 0, 0, 1], group=3)
 
@@ -160,7 +167,7 @@ def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual:
     h = shape.height / 2
     if shape.disk_radius > 0:
         obj.add_geom(name="object_0", type=mujoco.mjtGeom.mjGEOM_CYLINDER, size=[shape.disk_radius, h, 0],
-                     mass=shape.mass, contype=_OBJECT, conaffinity=_TABLE | _OBJECT | _PUSHER, condim=3,
+                     mass=shape.mass, contype=_OBJECT, conaffinity=_TABLE | _OBJECT | _PUSHER | _STATIC, condim=3,
                      friction=[0.1, 0.005, 0.0001], rgba=shape.rgba)
     else:
         boxes = shape.centred_boxes
@@ -168,9 +175,16 @@ def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual:
         for i, (cx, cy, hx, hy) in enumerate(boxes):
             obj.add_geom(name=f"object_{i}", type=mujoco.mjtGeom.mjGEOM_BOX, size=[hx, hy, h], pos=[cx, cy, 0],
                          mass=float(shape.mass * areas[i] / areas.sum()), contype=_OBJECT,
-                         conaffinity=_TABLE | _OBJECT | _PUSHER, condim=3,
+                         conaffinity=_TABLE | _OBJECT | _PUSHER | _STATIC, condim=3,
                          friction=[0.1, 0.005, 0.0001], rgba=shape.rgba)
     obj.add_site(name="object_top", pos=[0, 0, h], size=[0.003, 0, 0], rgba=[1, 1, 1, 0], group=3)
+
+    if cfg.gate:
+        gate = world.add_body(name="gate", pos=[0.2, 0.0, 0.0])
+        for name, length in zip(("gate_inner", "gate_outer"), GATE_WALL_LENGTH):
+            gate.add_geom(name=name, type=mujoco.mjtGeom.mjGEOM_BOX, size=[length / 2, GATE_WALL_HALF_THICKNESS, GATE_WALL_HALF_HEIGHT],
+                          pos=[0, 0, GATE_WALL_HALF_HEIGHT], contype=_STATIC, conaffinity=0, condim=3, priority=1,
+                          friction=[cfg.gate_friction, 0.005, 0.0001], rgba=[0.80, 0.55, 0.30, 1], group=0)
 
     # Goal marker: mocap body with a thin, non-colliding copy of the footprint.
     goal = world.add_body(name="goal", mocap=True, pos=[0.2, 0.05, 0.0])
@@ -233,6 +247,20 @@ class SceneIndex:
         self.table_geom = model.geom("table").id
         self.object_geoms = np.array([i for i in range(model.ngeom) if model.geom(i).name.startswith("object_")])
         self.nq, self.nv, self.nu = model.nq, model.nv, model.nu
+
+
+def set_gate(model: mujoco.MjModel, centre, angle: float, width: float):
+    """Place the gate (in a model copy): opening centre (x, y), wall direction ``angle`` (rad), opening width (m).
+
+    The walls run along the gate's local x axis on either side of the opening; the passage is local y.
+    Only positions change (sizes are fixed at build time), so MuJoCo's cached bounding volumes stay valid;
+    world poses of static bodies are recomputed every step.
+    """
+    b = model.body("gate").id
+    model.body_pos[b] = [centre[0], centre[1], 0.0]
+    model.body_quat[b] = [math.cos(angle / 2), 0.0, 0.0, math.sin(angle / 2)]
+    for name, sign, length in (("gate_inner", -1, GATE_WALL_LENGTH[0]), ("gate_outer", 1, GATE_WALL_LENGTH[1])):
+        model.geom_pos[model.geom(name).id, 0] = sign * (width / 2 + length / 2)
 
 
 def set_marker(model: mujoco.MjModel, data: mujoco.MjData, body: str, pose):

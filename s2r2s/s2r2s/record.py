@@ -15,8 +15,9 @@ import mujoco
 import numpy as np
 import torch
 
-from .env import EnvConfig, PushEnv, TaskConfig
+from .env import EnvConfig, TaskConfig
 from .evaluation import policy_agent, scripted_agent
+from .tasks import make_env
 from .train import load_policy
 from .visual import SceneMirror
 
@@ -35,6 +36,7 @@ def main(argv=None):
     p.add_argument("--difficulty", type=float, default=1.0)
     p.add_argument("--seed", type=int, default=3)
     p.add_argument("--no-randomization", action="store_true")
+    p.add_argument("--gate", action="store_true", help="with --scripted: the Level 1 gate puzzle")
     p.add_argument("--kick-every", type=float, default=0.0,
                    help="seconds between random displacements of the object (disturbance demo)")
     args = p.parse_args(argv)
@@ -43,14 +45,15 @@ def main(argv=None):
         policy, cfg, _ = load_policy(args.checkpoint, "cpu")
         agent = policy_agent(policy, "cpu")
     else:
-        cfg = EnvConfig(task=TaskConfig(objects=(args.object,)))
+        cfg = EnvConfig(task=TaskConfig(objects=(args.object,), gate=args.gate,
+                                        episode_seconds=30.0 if args.gate else 20.0))
         agent = scripted_agent()
     tiles = args.grid ** 2
     cfg.num_envs, cfg.num_threads, cfg.seed = tiles, min(tiles, 8), args.seed
     cfg.task.difficulty, cfg.task.easy_fraction = args.difficulty, 0.0
     if args.no_randomization:
         cfg.rand.enabled = False
-    env = PushEnv(cfg)
+    env = make_env(cfg)
     act = agent(env)
     # The real camera cannot see the policy's estimate marker, so hide it in that view.
     mirrors = [SceneMirror(env, i, show_estimate=args.camera != "d435i") for i in range(tiles)]

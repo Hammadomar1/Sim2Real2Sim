@@ -7,7 +7,7 @@ import mujoco
 import numpy as np
 
 from .env import PushEnv
-from .scene import build_model, set_marker
+from .scene import build_model, set_gate, set_marker
 
 
 class SceneMirror:
@@ -26,6 +26,8 @@ class SceneMirror:
         self.data.qpos[:] = e.state[i, 1:1 + nq]
         self.data.qvel[:] = e.state[i, 1 + nq:1 + nq + nv]
         self.data.time = e.step_count[i] * e.cfg.task.control_dt
+        if hasattr(e, "gate_centre"):
+            set_gate(self.model, e.gate_centre[i], e.gate_angle[i], e.gate_width[i])
         set_marker(self.model, self.data, "goal", e.goal[i])
         set_marker(self.model, self.data, "estimate", e.obs_pose[i] if self.show_estimate else (5.0, 5.0, 0.0))
         mujoco.mj_forward(self.model, self.data)
@@ -38,5 +40,6 @@ class SceneMirror:
         pos = np.linalg.norm(pose[:2] - g[:2]) * 1e3
         yaw = abs((pose[2] - sym_goal + math.pi) % (2 * math.pi) - math.pi)
         ok = pos <= e.cfg.task.success_pos * 1e3 and yaw <= e.cfg.task.success_yaw
+        stage = f"  [{('align', 'pass', 'goal')[e.stage[i]]}]" if hasattr(e, "stage") else ""
         return (f"t {e.step_count[i] * e.cfg.task.control_dt:4.1f}s  pos err {pos:5.1f} mm  "
-                f"yaw err {math.degrees(yaw):5.1f} deg  {'AT GOAL' if ok else ''}")
+                f"yaw err {math.degrees(yaw):5.1f} deg{stage}  {'AT GOAL' if ok else ''}")

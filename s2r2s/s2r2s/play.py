@@ -2,6 +2,7 @@
 
     python -m s2r2s.play --checkpoint runs/tee_v1/best.pt
     python -m s2r2s.play --scripted
+    python -m s2r2s.play --scripted --gate        # Level 1: push the T through a gate
 
 Keys: P pause/resume | N new episode | K kick the object (disturbance) | F faster/slower
 Green outline = goal. Yellow outline = the policy's camera estimate (delayed and noisy).
@@ -16,8 +17,9 @@ import mujoco.viewer
 import numpy as np
 import torch
 
-from .env import EnvConfig, PushEnv, TaskConfig
+from .env import EnvConfig, TaskConfig
 from .evaluation import policy_agent, scripted_agent
+from .tasks import make_env as build_env
 from .train import load_policy
 from .visual import SceneMirror
 
@@ -27,7 +29,8 @@ def make_env(args):
         policy, cfg, _ = load_policy(args.checkpoint, "cpu")
         agent = policy_agent(policy, "cpu", deterministic=not args.stochastic)
     else:
-        cfg = EnvConfig(task=TaskConfig(objects=(args.object,)))
+        cfg = EnvConfig(task=TaskConfig(objects=(args.object,), gate=args.gate,
+                                        episode_seconds=30.0 if args.gate else 20.0))
         agent = scripted_agent()
     cfg.num_envs, cfg.num_threads, cfg.seed = 1, 1, args.seed
     cfg.task.difficulty, cfg.task.easy_fraction = args.difficulty, 0.0
@@ -35,7 +38,7 @@ def make_env(args):
         cfg.task.objects = (args.object,)
     if args.no_randomization:
         cfg.rand.enabled = False
-    env = PushEnv(cfg)
+    env = build_env(cfg)
     return env, agent(env)
 
 
@@ -48,6 +51,7 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--stochastic", action="store_true")
     p.add_argument("--no-randomization", action="store_true")
+    p.add_argument("--gate", action="store_true", help="with --scripted: the Level 1 gate puzzle")
     args = p.parse_args(argv)
     if not args.checkpoint and not args.scripted:
         p.error("give --checkpoint or --scripted")
