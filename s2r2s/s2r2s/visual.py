@@ -43,5 +43,11 @@ class SceneMirror:
         yaw = abs((pose[2] - sym_goal + math.pi) % (2 * math.pi) - math.pi)
         ok = pos <= e.cfg.task.success_pos * 1e3 and yaw <= e.cfg.task.success_yaw
         stage = f"  [{('align', 'pass', 'goal')[e.stage[i]]}]" if hasattr(e, "stage") else ""
+        block = ""
+        if hasattr(e, "disturbance"):
+            moved, turned = (v[0] for v in e.disturbance(np.array([i])))
+            kept = moved <= e.cfg.task.clutter_tol and turned <= e.cfg.task.clutter_yaw_tol
+            ok = ok and kept
+            block = f"  block moved {moved * 1e3:4.1f} mm{'' if kept else ' (DISTURBED)'}"
         return (f"t {e.step_count[i] * e.cfg.task.control_dt:4.1f}s  pos err {pos:5.1f} mm  "
-                f"yaw err {math.degrees(yaw):5.1f} deg{stage}  {'AT GOAL' if ok else ''}")
+                f"yaw err {math.degrees(yaw):5.1f} deg{stage}{block}  {'AT GOAL' if ok else ''}")

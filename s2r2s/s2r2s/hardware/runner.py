@@ -61,19 +61,33 @@ class PolicyRunner:
         self.max_pose_age, self.realtime = max_pose_age, realtime
         self.dt = cfg.task.control_dt
 
-    def start(self, goal, gate: dict | None = None, timeout: float = 2.0):
-        """Begin a trial: goal (x, y, yaw) and, for gate policies, the gate (centre, angle, width, side)."""
-        self.twin.set_goal(np.asarray(goal, float))
+    @property
+    def clutter(self) -> bool:
+        """A clutter policy: it also needs the camera's pose of the block that must stay in place."""
+        return hasattr(self.twin, "clutter_home")
+
+    @staticmethod
+    def _first_pose(read, what, timeout):
         deadline = time.monotonic() + timeout
-        pose, _ = self.poses.read()
+        pose, _ = read()
         while pose is None and time.monotonic() < deadline:
-            pose, _ = self.poses.read()
+            pose, _ = read()
         if pose is None:
-            raise RuntimeError("no object pose from the camera")
+            raise RuntimeError(f"no {what} pose from the camera")
+        return pose
+
+    def start(self, goal, gate: dict | None = None, timeout: float = 2.0):
+        """Begin a trial: goal (x, y, yaw) and, for gate policies, the gate (centre, angle, width, side).
+
+        Clutter policies: where the block is now is where it must still be at the end.
+        """
+        self.twin.set_goal(np.asarray(goal, float))
+        pose = self._first_pose(self.poses.read, "object", timeout)
+        extra = {"block": self._first_pose(self.poses.read_block, "block", timeout)[None]} if self.clutter else {}
         if gate is not None:
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=pose[2])
         q = self.jmap.to_sim(self.robot.read_joints())
-        self.twin.sync_measurements(q[None], pose[None], first=True)
+        self.twin.sync_measurements(q[None], pose[None], first=True, **extra)
         self.last_seen = time.monotonic()
         self.log = []
 
@@ -84,7 +98,11 @@ class PolicyRunner:
         if pose is not None:
             self.last_seen = t0
         stale = (t0 - self.last_seen) > self.max_pose_age
-        obs = self.twin.sync_measurements(q[None], None if pose is None else pose[None])
+        extra = {}
+        if self.clutter:                 # a missing block estimate keeps the last one
+            block, _ = self.poses.read_block()
+            extra["block"] = None if block is None else block[None]
+        obs = self.twin.sync_measurements(q[None], None if pose is None else pose[None], **extra)
         if stale:                        # object lost: hold still
             a, target = np.zeros(2), q
         else:
@@ -97,7 +115,9 @@ class PolicyRunner:
         self.log.append(dict(t=t0, q=q.tolist(), target=target.tolist(), tip=self.twin.tip[0].tolist(),
                              cmd=self.twin.cmd_xy[0].tolist(), pose=None if pose is None else pose.tolist(),
                              action=np.asarray(a).tolist(), stale=bool(stale),
-                             stage=int(self.twin.stage[0]) if hasattr(self.twin, "stage") else -1))
+                             stage=int(self.twin.stage[0]) if hasattr(self.twin, "stage") else -1,
+                             **({"block": None if extra["block"] is None else extra["block"][0].tolist()}
+                                if self.clutter else {})))
         if self.realtime:
             time.sleep(max(0.0, self.dt - (time.monotonic() - t0)))
 
@@ -106,6 +126,13 @@ class PolicyRunner:
         g = self.twin.goal[0]
         yaw_goal = self.twin._symmetric_goal_yaw(np.array([pose[2]]), np.array([g[2]]), self.twin.obj_id[:1])[0]
         return float(np.linalg.norm(pose[:2] - g[:2])), float(abs(wrap(pose[2] - yaw_goal)))
+
+    def block_moved(self, block, home=None):
+        """Clutter policies: how far the block at ``block`` is from ``home``, by default where the camera saw it
+        at the start (m, rad). In simulation, pass the true start pose: the camera's start estimate is noisy."""
+        home = self.twin.clutter_home[0] if home is None else np.asarray(home)
+        return (float(np.linalg.norm(block[:2] - home[:2])),
+                float(self.twin._clutter_yaw_err(np.array([block[2]]), np.array([home[2]]))[0]))
 
 
 def save_trial(path: Path, runner: PolicyRunner, meta: dict):
@@ -123,7 +150,7 @@ def dry_run(args):
     hidden = JointMap.load(args.hidden_map) if args.hidden_map else JointMap()
     jmap = JointMap.load(args.map) if args.map else JointMap()
     robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
-    gate_task = hasattr(scenes, "gate_centre")
+    gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
     runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False)
     stats = []
     for i in range(args.episodes):
@@ -133,24 +160,33 @@ def dry_run(args):
             gate = dict(centre=scenes.gate_centre[i], angle=scenes.gate_angle[i], width=scenes.gate_width[i],
                         side=scenes.gate_side[i])
             robot.place_gate(gate["centre"], gate["angle"], gate["width"])
+        if clutter_task:
+            robot.place_block(scenes.clutter_home[i])
         runner.poses = SimPoseSource(robot, latency_steps=1, seed=args.seed + i)
         runner.start(scenes.goal[i], gate)
         for _ in range(scenes.max_steps):
             runner.tick()
         pos, yaw = runner.errors(robot.object_pose())
         ok = pos <= cfg.task.success_pos and yaw <= cfg.task.success_yaw
-        stats.append((ok, pos, yaw, runner.twin.stage[0] == 2 if gate_task else True))
+        moved, turned = runner.block_moved(robot.block_pose(), scenes.clutter_home[i]) if clutter_task else (0.0, 0.0)
+        kept = moved <= cfg.task.clutter_tol and turned <= cfg.task.clutter_yaw_tol
+        ok = ok and kept
+        stats.append((ok, pos, yaw, runner.twin.stage[0] == 2 if gate_task else kept))
         if args.log_dir:
             save_trial(Path(args.log_dir) / f"sim_{i:03d}", runner, dict(
                 checkpoint=args.checkpoint, goal=scenes.goal[i].tolist(), start=scenes.object_pose()[i].tolist(),
+                tool_start=scenes.tip[i, :2].tolist(),
                 gate=None if gate is None else {k: np.asarray(v).tolist() for k, v in gate.items()},
-                final=robot.object_pose().tolist(), pos_err=pos, yaw_err=yaw, success=bool(ok)))
+                final=robot.object_pose().tolist(), pos_err=pos, yaw_err=yaw, success=bool(ok),
+                **({"block_home": scenes.clutter_home[i].tolist(), "block_moved": moved} if clutter_task else {})))
         print(f"episode {i + 1:3d}: {'success' if ok else 'miss   '} pos {pos * 1e3:5.1f} mm  yaw {math.degrees(yaw):5.1f} deg"
-              + (f"  passed gate {bool(stats[-1][3])}" if gate_task else ""), flush=True)
+              + (f"  passed gate {bool(stats[-1][3])}" if gate_task else "")
+              + (f"  block moved {moved * 1e3:4.1f} mm" if clutter_task else ""), flush=True)
     s = np.array(stats, dtype=float)
     print(f"\n{args.episodes} episodes through the hardware path: success {s[:, 0].mean():.1%}, "
           f"median {np.median(s[:, 1]) * 1e3:.1f} mm / {math.degrees(np.median(s[:, 2])):.1f} deg"
-          + (f", passed gate {s[:, 3].mean():.1%}" if gate_task else ""))
+          + (f", passed gate {s[:, 3].mean():.1%}" if gate_task else "")
+          + (f", block kept in place {s[:, 3].mean():.1%}" if clutter_task else ""))
 
 
 def real_run(args):

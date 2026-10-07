@@ -24,8 +24,9 @@ That requires five working parts, in this order:
   with Stein Variational Inference*, arXiv:2509.01746 (2025). Both are relevant: cite both and fix the sentence.
 - **Trial budget.** The proposal implies about 330 real trials (150 for collection plus 60 × 3 for evaluation). The earlier
   `PLAN.md` proposes 750 (every condition evaluated after every cycle). Choose one and state it.
-- **Undefined scene factors.** Define "approach direction" and "clutter" precisely in the scene specification.
-  Milestone 1 has no clutter yet; one anchored obstacle is the natural first version.
+- **Undefined scene factors.** Define "approach direction" precisely in the scene specification. "Clutter" now has a
+  working definition in simulation (README, *Clutter*): one 40 mm block, 15–30 mm beside the T's straight path in
+  about three quarters of the scenes, never closer; success needs it left within 10 mm / 10°.
 
 ## 2. Why the earlier attempt stalled, and what changed
 
@@ -130,12 +131,15 @@ The software for steps 2, 3 and 6 is ready and rehearsed on a simulated, miscali
 
 ## 6. Immediate next actions
 
-**Done (simulation):** Milestone 1 (96.6 %) and Level 1, the gate (95.3 % through a 64�70 mm opening; see README).
-Next, in simulation: Level 2 (two blocks) and Level 3 (connect blocks: retrain the pusher with other blocks around,
-then add a planner). The gate is also the natural first version of the proposal's *clutter* factor.
+**Done (simulation):** Milestone 1 (96.6 %), Level 1, the gate (95.3 % through a 64–70 mm opening), and clutter:
+place the T without disturbing a second block (94.9 %; the T reaches its goal in 96.7 %, the block is disturbed in
+1.9 %). See README. The hardware runner already carries the block's camera pose and the controller's rod guard.
+Next, in simulation: Level 2 (two blocks) and Level 3 (connect blocks: the clutter policy is the "don't knock the
+other piece" skill; add a planner). The clutter task's remaining failures, where the rod must detour around the
+block, are a ready-made test case for the failure-guided sampler.
 
 - [ ] Run `.\scripts\setup.ps1`, then `.\scripts\play.ps1 runs\tee_v1\best.pt`. Press K to kick the T mid-push and watch it recover.
-- [ ] (Simulation) Train the six-object generalist; add one anchored obstacle (clutter) to the scene and the sampler.
+- [ ] (Simulation) Train the six-object generalist. Add the clutter block to the scene specification and the sampler.
 - [ ] (Hardware) Print the rod and the T; build the LeRobot ↔ MuJoCo joint mapping (Milestone 2, step 2).
 - [ ] (Perception) Mount the D435i where the occlusion study suggests; prototype the markerless T pose estimator.
 - [ ] (Paper) Fix reference [2] and the trial budget.

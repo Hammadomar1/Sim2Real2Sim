@@ -3,6 +3,7 @@
     python -m s2r2s.evaluate runs/tee_v1/best.pt --episodes 1000 --baseline
     python -m s2r2s.evaluate runs/tee_v1/best.pt --timestep 0.002     # physics-step robustness
     python -m s2r2s.evaluate runs/tee_v1/best.pt --no-randomization   # nominal physics, clean camera
+    python -m s2r2s.evaluate runs/clutter_v7/best.pt --baseline --compare runs/tee_v1/best.pt   # + a policy blind to the block
 
 The test seed differs from the seed used for checkpoint selection during training.
 """
@@ -14,28 +15,12 @@ from pathlib import Path
 
 import torch
 
-from .evaluation import policy_agent, run_episodes, scripted_agent
+from .env import apply_overrides
+from .evaluation import clutter_breakdown, policy_agent, run_episodes, scripted_agent
 from .train import load_policy
 
 TEST_SEED = 20_000_003
 
-
-def apply_overrides(cfg, items):
-    """Apply ``section.field=value`` overrides, e.g. ``rand.obs_pos_noise=0.003`` or ``rand.obs_latency_steps=2,4``."""
-    for item in items:
-        key, value = item.split("=", 1)
-        section, field = key.split(".")
-        target = getattr(cfg, section)
-        old = getattr(target, field)
-        parse = type(old[0]) if isinstance(old, tuple) else type(old)
-        if parse is bool:
-            new = value.lower() in ("1", "true", "yes")
-        elif isinstance(old, tuple):
-            new = tuple(parse(v) for v in value.split(","))
-        else:
-            new = parse(value)
-        setattr(target, field, new)
-    return cfg
 
 ROWS = [("passed_gate", "passed the gate", "{:.1%}"), ("success", "success rate", "{:.1%}"), ("pos_err_mm_median", "position error median (mm)", "{:.1f}"),
         ("pos_err_mm_p90", "position error p90 (mm)", "{:.1f}"), ("yaw_err_deg_median", "yaw error median (deg)", "{:.1f}"),
@@ -43,7 +28,9 @@ ROWS = [("passed_gate", "passed the gate", "{:.1%}"), ("success", "success rate"
         ("reached", "ever within tolerance", "{:.1%}"), ("time_to_goal_s_median", "time to tolerance median (s)", "{:.1f}"),
         ("failure", "failures (tipped/escaped)", "{:.1%}"),
         ("disturbed", "clutter block disturbed (>10 mm or >10 deg)", "{:.1%}"),
-        ("disturbed_when_in_way", "  ... when it was on the path", "{:.1%}"), ("action_rate_mean", "action rate (smoothness, lower=smoother)", "{:.4f}")]
+        ("disturbed_when_in_way", "  ... when it sat close beside the path", "{:.1%}"),
+        ("touched", "clutter block touched (moved >2 mm)", "{:.1%}"), ("touched_by_rod", "  ... first by the rod", "{:.1%}"),
+        ("action_rate_mean", "action rate (smoothness, lower=smoother)", "{:.4f}")]
 
 
 def main(argv=None):
@@ -58,6 +45,9 @@ def main(argv=None):
     p.add_argument("--baseline", action="store_true", help="also run the scripted pusher on the same scenes")
     p.add_argument("--set", nargs="*", default=[], metavar="SECTION.FIELD=VALUE",
                    help="config overrides, e.g. rand.obs_pos_noise=0.003 task.max_speed=0.06")
+    p.add_argument("--compare", nargs="*", default=[], metavar="CHECKPOINT",
+                   help="also run these policies on the same scenes; inputs they were not trained with get zero "
+                        "weights, e.g. the Milestone 1 policy on the clutter task is blind to the block")
     p.add_argument("--out", default="")
     args = p.parse_args(argv)
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -69,6 +59,10 @@ def main(argv=None):
     apply_overrides(cfg, args.set)
     results = {"policy": run_episodes(cfg, policy_agent(policy, device, not args.stochastic),
                                       args.episodes, args.seed, args.difficulty, record=True)}
+    for path in args.compare:
+        other, _, _ = load_policy(path, device, dims=ck["dims"])
+        results[Path(path).parent.name] = run_episodes(cfg, policy_agent(other, device, not args.stochastic),
+                                                       args.episodes, args.seed, args.difficulty, record=True)
     if args.baseline:
         results["scripted"] = run_episodes(cfg, scripted_agent(), args.episodes, args.seed, args.difficulty, record=True)
     names = list(results)
@@ -80,6 +74,14 @@ def main(argv=None):
         if all(key not in results[n] for n in names):
             continue
         print(f"{label:44s}" + "".join(f"{fmt.format(results[n].get(key, float('nan'))):>12s}" for n in names))
+    if "sweep_gap_mm" in results["policy"]["per_episode"][0]:
+        print("\nby the block's clearance from the T's straight path: success / disturbed / first touched by the rod")
+        for n in names:
+            results[n]["by_clearance"] = clutter_breakdown(results[n]["per_episode"])
+        for k, row in enumerate(results["policy"]["by_clearance"]):
+            print(f"  {row['clearance_mm'] + ' mm':>10s} ({row['scenes']:4d} scenes)" + "".join(
+                f"   {n}: {r['success']:5.1%} / {r['disturbed']:5.1%} / {r['touched_by_rod']:5.1%}"
+                for n in names for r in [results[n]["by_clearance"][k]]))
     out = Path(args.out) if args.out else Path(args.checkpoint).with_name(
         f"eval_{Path(args.checkpoint).stem}_s{args.seed}_d{args.difficulty}"
         f"{'_dt' + str(args.timestep) if args.timestep else ''}{'_norand' if args.no_randomization else ''}.json")

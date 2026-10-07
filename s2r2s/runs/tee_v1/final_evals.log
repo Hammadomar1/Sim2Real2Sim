@@ -61,3 +61,7 @@ dropout (fraction of frames)
 
 wrote runs\tee_v1\sensitivity_best.json
 ALL_EVALS_DONE
+
+2026-10-07 re-run with the current code (1000 scenes, seed 20000003): the policy is unchanged (96.6 %); the scripted
+baseline moved slightly after its routing changes for the gate task: success 88.8 %, median 4.5 mm / 3.8 deg,
+p90 6.6 mm / 10.3 deg, failures 0.0 %, time 8.6 s. README.md quotes these numbers.

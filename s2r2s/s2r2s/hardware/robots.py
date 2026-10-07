@@ -39,6 +39,7 @@ class SimRobot:
         self.noise = encoder_noise_deg
         self.rng = np.random.default_rng(seed)
         self.torque = True
+        self.block_height = OBJECTS[self.scene.clutter].height if self.scene.clutter else 0.0
         self.place((0.15, -0.10), (0.2, 0.0, 0.0))
 
     # -- scene setup (things a person does by hand on the real table)
@@ -54,6 +55,16 @@ class SimRobot:
         self.data.qpos[o:o + 7] = [x, y, self.object_height / 2, math.cos(yaw / 2), 0, 0, math.sin(yaw / 2)]
         self.data.ctrl[self.idx.arm_act] = q[0]
         self.data.ctrl[self.idx.gripper_act] = self.scene.gripper_hold
+        if self.scene.clutter:          # a clutter scene: the block waits out of reach until place_block()
+            self.place_block((0.31, -0.22, 0.0))
+        mujoco.mj_forward(self.model, self.data)
+
+    def place_block(self, pose):
+        """Clutter scenes: put the block that must not be disturbed at (x, y, yaw)."""
+        o = self.idx.clutter_qpos
+        x, y, yaw = pose
+        self.data.qpos[o:o + 7] = [x, y, self.block_height / 2, math.cos(yaw / 2), 0, 0, math.sin(yaw / 2)]
+        self.data.qvel[self.idx.clutter_qvel:self.idx.clutter_qvel + 6] = 0.0
         mujoco.mj_forward(self.model, self.data)
 
     def place_gate(self, centre, angle, width):
@@ -87,7 +98,12 @@ class SimRobot:
 
     # -- ground truth (only the simulation has it)
     def object_pose(self) -> np.ndarray:
-        o = self.idx.obj_qpos
+        return self._planar_pose(self.idx.obj_qpos)
+
+    def block_pose(self) -> np.ndarray:
+        return self._planar_pose(self.idx.clutter_qpos)
+
+    def _planar_pose(self, o):
         q = self.data.qpos[o + 3:o + 7]
         yaw = math.atan2(2 * (q[0] * q[3] + q[1] * q[2]), 1 - 2 * (q[2] ** 2 + q[3] ** 2))
         return np.array([self.data.qpos[o], self.data.qpos[o + 1], yaw])

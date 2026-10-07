@@ -82,11 +82,21 @@ class TaskConfig:
     gate_cross: float = 0.035                     # object centre this far past the wall: head for the goal
     # Clutter task (ClutterEnv only): a second block that must stay where it is.
     clutter: str = ""                             # object name from objects.py, e.g. "box"
-    clutter_in_way: float = 0.6                   # share of episodes with the block on the object's path
+    clutter_in_way: float = 0.6                   # share of episodes with the block close beside the object's path
+    clutter_min_gap: float = 0.015                # block to the object's straight sweep, at least (m): the rod's
+                                                  # diameter plus rod_guard, so the guarded rod always fits between
+    clutter_near: float = 0.030                   # "close beside": block within this of the sweep (m)
     clutter_tol: float = 0.010                    # allowed displacement of the block (m) ...
     clutter_yaw_tol: float = math.radians(10)     # ... and rotation
     w_disturb: float = 3.0                        # reward per cm the block is moved (negative)
     w_displaced: float = 1.0                      # per-step cost while the block is out of tolerance
+    w_near: float = 0.5                           # per-step cost as the rod or the object comes within ...
+    near_margin: float = 0.010                    # ... this distance of the block (m), growing linearly to contact
+                                                  # (the rod covers up to 4-5 mm per step: 10 mm is 2-3 steps of warning)
+    rod_guard: float = 0.003                      # controller: never command the rod closer than this to the
+                                                  # (estimated) block, slide along it instead; 0 = off
+    w_guard: float = 0.5                          # per-step cost per full step of command (max_speed * control_dt)
+                                                  # the guard had to remove: plan around the block, don't lean on it
 
 
 @dataclass
@@ -128,6 +138,24 @@ class EnvConfig:
         rand = RandomizationConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in d.pop("rand").items()})
         scene = SceneConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in d.pop("scene").items()})
         return EnvConfig(task=task, rand=rand, scene=scene, **d)
+
+
+def apply_overrides(cfg: EnvConfig, items) -> EnvConfig:
+    """Apply ``section.field=value`` overrides, e.g. ``rand.obs_pos_noise=0.003`` or ``rand.obs_latency_steps=2,4``."""
+    for item in items:
+        key, value = item.split("=", 1)
+        section, name = key.split(".")
+        target = getattr(cfg, section)
+        old = getattr(target, name)
+        parse = type(old[0]) if isinstance(old, tuple) else type(old)
+        if parse is bool:
+            new = value.lower() in ("1", "true", "yes")
+        elif isinstance(old, tuple):
+            new = tuple(parse(v) for v in value.split(","))
+        else:
+            new = parse(value)
+        setattr(target, name, new)
+    return cfg
 
 
 class PushEnv:
@@ -179,6 +207,7 @@ class PushEnv:
         self.q_cmd = z(5)
         self.prev_ctrl = z(m0.nu)
         self.prev_action = z(2)
+        self.cmd_deflection = z()           # how far the last command was moved by _guard_command (m)
         self.prev_dist = z()
         self.step_count = np.zeros(n, dtype=np.int64)
         self.difficulty_ep = z()
@@ -374,6 +403,10 @@ class PushEnv:
         """Task-specific conditions added to "object at its goal pose" (base: none)."""
         return success
 
+    def _guard_command(self, cmd_xy):
+        """Task-specific limits on the commanded rod position (base: none)."""
+        return cmd_xy
+
     # ------------------------------------------------------------- geometry
     def _symmetric_goal_yaw(self, yaw, goal_yaw, obj_id):
         """Goal yaw among the object's symmetric equivalents closest to ``yaw``."""
@@ -437,8 +470,9 @@ class PushEnv:
         a = np.clip(np.asarray(action, dtype=np.float64), -1.0, 1.0)
         tip = self.tip
         cmd = self.cmd_xy + a * t.max_speed * t.control_dt
-        cmd = np.clip(cmd, tip[:, :2] - t.tracking_limit, tip[:, :2] + t.tracking_limit)
-        self.cmd_xy = self._project_workspace(cmd)
+        cmd = self._project_workspace(np.clip(cmd, tip[:, :2] - t.tracking_limit, tip[:, :2] + t.tracking_limit))
+        self.cmd_xy = self._guard_command(cmd)
+        self.cmd_deflection = np.linalg.norm(self.cmd_xy - cmd, axis=-1)
         q, _, _ = self.kin.solve(np.c_[self.cmd_xy, self.tool_z_cmd], self.q_cmd, iterations=1, report=False)
         self.q_cmd = q
         return a, q

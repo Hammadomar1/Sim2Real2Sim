@@ -61,8 +61,27 @@ def summarize(eps: dict) -> dict:
         **({"passed_gate": float(s["passed"].mean())} if "passed" in s else {}),
         **({"disturbed": float(s["disturbed"].mean()),
             "disturbed_when_in_way": float(s["disturbed"][s["in_way"]].mean()) if s["in_way"].any() else float("nan"),
+            "touched": float(s["touched"].mean()), "touched_by_rod": float(s["touched_by_rod"].mean()),
             "clutter_moved_mm_median": float(np.median(s["clutter_moved_mm"]))} if "disturbed" in s else {}),
     }
+
+
+def clutter_breakdown(rows: list[dict], edges=(20, 25, 30, np.inf)) -> list[dict]:
+    """Clutter task: results by the block's clearance (mm) from the object's straight path, from per-episode rows.
+
+    The first bin starts at the smallest clearance in the data (the scenes' minimum gap).
+    """
+    gap = np.array([r["sweep_gap_mm"] for r in rows])
+    edges = (np.floor(gap.min()), *edges)
+    col = lambda k, m: np.array([r[k] for r in rows])[m]
+    out = []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        m = (gap >= lo) & (gap < hi)
+        if m.any():
+            out.append({"clearance_mm": f"{lo:.0f}-{hi:.0f}" if np.isfinite(hi) else f">{lo:.0f}", "scenes": int(m.sum()),
+                        "success": float(col("success", m).mean()), "disturbed": float(col("disturbed", m).mean()),
+                        "touched_by_rod": float(col("touched_by_rod", m).mean())})
+    return out
 
 
 def run_episodes(env_cfg: EnvConfig, agent: AgentFactory, episodes: int, seed: int,

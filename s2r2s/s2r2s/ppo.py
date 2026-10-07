@@ -38,14 +38,24 @@ class PPOConfig:
 
 
 class RunningNorm(nn.Module):
-    """Running mean/variance (parallel Welford), used for observations and value targets."""
+    """Running mean/variance (parallel Welford), used for observations and value targets.
+
+    The sample count is kept per input, so inputs appended by a warm start (``train.warm_start``) adapt
+    to their data at once while the copied inputs keep their statistics.
+    """
 
     def __init__(self, dim: int, clip: float = 10.0):
         super().__init__()
         self.register_buffer("mean", torch.zeros(dim))
         self.register_buffer("var", torch.ones(dim))
-        self.register_buffer("count", torch.tensor(1e-4))
+        self.register_buffer("count", torch.full((dim,), 1e-4))
         self.clip = clip
+
+    def _load_from_state_dict(self, state_dict, prefix, *args, **kwargs):
+        key = prefix + "count"
+        if key in state_dict and state_dict[key].dim() == 0:      # checkpoints with one count for all inputs
+            state_dict[key] = state_dict[key].expand(state_dict[prefix + "mean"].shape).clone()
+        super()._load_from_state_dict(state_dict, prefix, *args, **kwargs)
 
     @torch.no_grad()
     def update(self, x: torch.Tensor):

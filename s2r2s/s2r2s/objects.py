@@ -64,9 +64,11 @@ class ObjectShape:
 
 
 def _union_outline(boxes):
-    """Outline of a union of axis-aligned boxes, traced on a fine grid (for visuals only)."""
-    xs = sorted({cx + s * hx for cx, _, hx, _ in boxes for s in (-1, 1)})
-    ys = sorted({cy + s * hy for _, cy, _, hy in boxes for s in (-1, 1)})
+    """Outline of a union of axis-aligned boxes, traced on the grid of their edges."""
+    # Snap to 1 nm: shared edges computed from different boxes can differ in the last bit, which
+    # would leave a zero-height row of cells and drop corners from the outline.
+    xs = sorted({round(cx + s * hx, 9) for cx, _, hx, _ in boxes for s in (-1, 1)})
+    ys = sorted({round(cy + s * hy, 9) for _, cy, _, hy in boxes for s in (-1, 1)})
     inside = lambda x, y: any(abs(x - cx) < hx and abs(y - cy) < hy for cx, cy, hx, hy in boxes)
     edges = []
     for i in range(len(xs) - 1):
