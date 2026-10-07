@@ -37,3 +37,25 @@ runs/clutter_v7/*
 !runs/clutter_v7/final_eval.json
 !runs/clutter_v7/final_evals.log
 !runs/clutter_v7/stuck_cases.png
+# Level 2 deliverables: the box pusher (warm start and blind baseline), the box skill (push the box, keep the T in
+# place) and the two-block results (per-episode eval_*.json files are regenerable).
+!runs/box_v1/
+runs/box_v1/*
+!runs/box_v1/best.pt
+!runs/box_v1/config.json
+!runs/box_v1/eval.jsonl
+!runs/box_v1/progress.jsonl
+!runs/box_v1/train.log
+!runs/clutter_box_v2/
+runs/clutter_box_v2/*
+!runs/clutter_box_v2/best.pt
+!runs/clutter_box_v2/config.json
+!runs/clutter_box_v2/eval.jsonl
+!runs/clutter_box_v2/progress.jsonl
+!runs/clutter_box_v2/train.log
+!runs/clutter_box_v2/final_eval.json
+!runs/clutter_box_v2/final_evals.log
+!runs/level2/
+runs/level2/*
+!runs/level2/final_eval.json
+!runs/level2/final_evals.log

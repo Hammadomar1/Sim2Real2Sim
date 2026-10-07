@@ -1,0 +1,298 @@
+{
+ "scenes": 1000,
+ "seed": 20000003,
+ "note": "Every configuration ran on the same 1000 held-out two-block scenes. Default skills: runs/clutter_v7/best.pt (push the T, keep the box) and runs/clutter_box_v2/best.pt (push the box, keep the T); blind: runs/tee_v1 and runs/box_v1 weights, which ignore the other block.",
+ "planner": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "tee_policy": "",
+   "box_policy": "",
+   "no_park": false,
+   "order": "auto",
+   "no_guard": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": true,
+   "out": "runs/level2/eval_planner.json"
+  },
+  "episodes": 1000,
+  "success": 0.924,
+  "tee_at_goal": 0.952,
+  "box_at_goal": 0.957,
+  "failure": 0.011,
+  "all_pushes_settled": 0.901,
+  "kept_block_disturbed": 0.012,
+  "kept_block_moved_mm_median": 0.003390007501048277,
+  "time_s_median": 11.700000000000001,
+  "three_push_share": 0.006,
+  "success_two_pushes": 0.9245472837022133,
+  "success_three_pushes": 0.8333333333333334,
+  "tee_first_share": 0.5181086519114688,
+  "success_tee_first": 0.9029126213592233,
+  "success_box_first": 0.9478079331941545,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   1.736700498586598,
+   2.2553811807056365
+  ],
+  "box_err_median": [
+   1.0417778039857581,
+   1.7329586732764732
+  ],
+  "scene_stats": {
+   "scenes": 2700,
+   "two_pushes": 0.8255555555555556,
+   "three_pushes_only": 0.011111111111111112,
+   "no_plan": 0.16333333333333333
+  }
+ },
+ "always_tee_first": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "tee_policy": "",
+   "box_policy": "",
+   "no_park": false,
+   "order": "tee",
+   "no_guard": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": false,
+   "out": "runs/level2/eval_tee_first.json"
+  },
+  "episodes": 1000,
+  "success": 0.82,
+  "tee_at_goal": 0.897,
+  "box_at_goal": 0.881,
+  "failure": 0.019,
+  "all_pushes_settled": 0.792,
+  "kept_block_disturbed": 0.091,
+  "kept_block_moved_mm_median": 0.007382136905708232,
+  "time_s_median": 12.0,
+  "three_push_share": 0.0,
+  "success_two_pushes": 0.82,
+  "success_three_pushes": NaN,
+  "tee_first_share": 1.0,
+  "success_tee_first": 0.82,
+  "success_box_first": NaN,
+  "order_valid": 0.813,
+  "tee_err_median": [
+   2.6741650591401225,
+   3.141613050424959
+  ],
+  "box_err_median": [
+   0.7032799834257024,
+   1.4704109913252859
+  ]
+ },
+ "always_box_first": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "tee_policy": "",
+   "box_policy": "",
+   "no_park": false,
+   "order": "box",
+   "no_guard": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": false,
+   "out": "runs/level2/eval_box_first.json"
+  },
+  "episodes": 1000,
+  "success": 0.878,
+  "tee_at_goal": 0.911,
+  "box_at_goal": 0.954,
+  "failure": 0.017,
+  "all_pushes_settled": 0.858,
+  "kept_block_disturbed": 0.064,
+  "kept_block_moved_mm_median": 0.005014899413284071,
+  "time_s_median": 11.3,
+  "three_push_share": 0.0,
+  "success_two_pushes": 0.878,
+  "success_three_pushes": NaN,
+  "tee_first_share": 0.0,
+  "success_tee_first": NaN,
+  "success_box_first": 0.878,
+  "order_valid": 0.826,
+  "tee_err_median": [
+   1.3358118050294998,
+   1.951215289664019
+  ],
+  "box_err_median": [
+   2.101654787100961,
+   3.034906078485876
+  ]
+ },
+ "planner_blind_skills": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "tee_policy": "runs/tee_v1/best.pt",
+   "box_policy": "runs/box_v1/best.pt",
+   "no_park": false,
+   "order": "auto",
+   "no_guard": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": false,
+   "out": "runs/level2/eval_blind.json"
+  },
+  "episodes": 1000,
+  "success": 0.756,
+  "tee_at_goal": 0.874,
+  "box_at_goal": 0.823,
+  "failure": 0.012,
+  "all_pushes_settled": 0.729,
+  "kept_block_disturbed": 0.067,
+  "kept_block_moved_mm_median": 0.005621583192660718,
+  "time_s_median": 14.15,
+  "three_push_share": 0.006,
+  "success_two_pushes": 0.7565392354124748,
+  "success_three_pushes": 0.6666666666666666,
+  "tee_first_share": 0.5181086519114688,
+  "success_tee_first": 0.6640776699029126,
+  "success_box_first": 0.8559498956158664,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   1.980843053773441,
+   2.706980978124202
+  ],
+  "box_err_median": [
+   1.5437510835863422,
+   2.232014014062301
+  ]
+ },
+ "planner_no_rod_guard": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "tee_policy": "",
+   "box_policy": "",
+   "no_park": false,
+   "order": "auto",
+   "no_guard": true,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": false,
+   "out": "runs/level2/eval_no_guard.json"
+  },
+  "episodes": 1000,
+  "success": 0.622,
+  "tee_at_goal": 0.746,
+  "box_at_goal": 0.77,
+  "failure": 0.054,
+  "all_pushes_settled": 0.836,
+  "kept_block_disturbed": 0.354,
+  "kept_block_moved_mm_median": 1.7226287125987867,
+  "time_s_median": 11.75,
+  "three_push_share": 0.006,
+  "success_two_pushes": 0.6247484909456741,
+  "success_three_pushes": 0.16666666666666666,
+  "tee_first_share": 0.5181086519114688,
+  "success_tee_first": 0.5825242718446602,
+  "success_box_first": 0.6701461377870563,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   2.7482782714528136,
+   3.5369326550848554
+  ],
+  "box_err_median": [
+   1.772160412955414,
+   2.862459407962959
+  ]
+ },
+ "planner_box_skill_v1": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v1/best.pt",
+   "tee_policy": "",
+   "box_policy": "",
+   "no_park": false,
+   "order": "auto",
+   "no_guard": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": false,
+   "out": "runs/level2/eval_box_skill_v1.json"
+  },
+  "episodes": 1000,
+  "success": 0.879,
+  "tee_at_goal": 0.947,
+  "box_at_goal": 0.911,
+  "failure": 0.012,
+  "all_pushes_settled": 0.854,
+  "kept_block_disturbed": 0.017,
+  "kept_block_moved_mm_median": 0.004035859744732999,
+  "time_s_median": 11.825000000000001,
+  "three_push_share": 0.006,
+  "success_two_pushes": 0.8792756539235412,
+  "success_three_pushes": 0.8333333333333334,
+  "tee_first_share": 0.5181086519114688,
+  "success_tee_first": 0.829126213592233,
+  "success_box_first": 0.9331941544885177,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   1.7909478210267697,
+   2.325251276814865
+  ],
+  "box_err_median": [
+   1.144847964883605,
+   2.120879385898084
+  ]
+ },
+ "planner_tee_skill_v8": {
+  "args": {
+   "tee": "runs/clutter_v8/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "tee_policy": "",
+   "box_policy": "",
+   "no_park": false,
+   "order": "auto",
+   "no_guard": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "stats": false,
+   "out": "runs/level2/eval_tee_skill_v8.json"
+  },
+  "episodes": 1000,
+  "success": 0.93,
+  "tee_at_goal": 0.96,
+  "box_at_goal": 0.957,
+  "failure": 0.008,
+  "all_pushes_settled": 0.92,
+  "kept_block_disturbed": 0.015,
+  "kept_block_moved_mm_median": 0.0038392934734372314,
+  "time_s_median": 11.4,
+  "three_push_share": 0.006,
+  "success_two_pushes": 0.9305835010060363,
+  "success_three_pushes": 0.8333333333333334,
+  "tee_first_share": 0.5181086519114688,
+  "success_tee_first": 0.8970873786407767,
+  "success_box_first": 0.9665970772442589,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   1.4762520693054297,
+   2.093526387998991
+  ],
+  "box_err_median": [
+   1.030758768111047,
+   1.7634457074638572
+  ]
+ }
+}

@@ -97,6 +97,8 @@ class TaskConfig:
                                                   # (estimated) block, slide along it instead; 0 = off
     w_guard: float = 0.5                          # per-step cost per full step of command (max_speed * control_dt)
                                                   # the guard had to remove: plan around the block, don't lean on it
+    tool_near_block: float = 0.0                  # share of episodes where the rod starts 4-12 mm from the block, as
+                                                  # it does right after placing that block (Level 2's second push)
 
 
 @dataclass
