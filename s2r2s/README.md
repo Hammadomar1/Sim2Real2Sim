@@ -88,6 +88,33 @@ python -m s2r2s.train --run gate_v2 --gate --init runs\tee_v1\best.pt --minutes 
 
 Videos: `videos/gate_policy_grid.mp4` (four scenes) and `videos/gate_policy_top.mp4` (top view).
 
+## Clutter: place the T without disturbing another block (`clutter.py`), work in progress
+
+A 40 × 40 mm block shares the work band. In 60 % of scenes it sits within 25 mm of the path the T sweeps from start to goal,
+so careless pushing, turning or repositioning clips it. It never blocks that straight path: the first version did, and
+in this 5 cm-deep band those scenes were often unsolvable without touching it. **Success** means the T is at its goal pose
+*and* the block is within 10 mm / 10° of where it started. Moving the block costs 3 per cm, plus 1 per step while it
+is out of place. The policy sees the block through the same camera model as the T, plus two clearances computed from those
+estimates: T to block and rod to block. This is the proposal's *clutter* factor, and the "don't knock the other piece"
+skill that the block-connecting puzzle needs.
+
+Held-out results, 1,000 unseen scenes (`runs/clutter_v3/final_eval.json`):
+
+| | trained (`runs/clutter_v3/best.pt`, 30 min, 34M samples) | Milestone 1 policy, blind to the block |
+|---|---|---|
+| solved (T at goal and block undisturbed) | **66.6 %** | 59.3 % |
+| block disturbed | **24.7 %** | 38.1 % |
+| ... when the block sits beside the path | **35.6 %** | 52.4 % |
+| T final error, median | 2.7 mm / 3.6° | 1.3 mm / 2.0° |
+
+**Not solved yet.** What we learned along the way, and what comes next:
+1. A penalty of about 1 per cm was too small next to the goal reward (about 2 per step), so the policy ignored it.
+   Raising it and adding the clearance inputs moved success from a flat ~41 % to 67 %.
+2. Some scenes are probably impossible without touching the block: it can sit exactly where the *rod* must stand to push
+   the T. Placement should also check rod access, not only the T's path.
+3. Training ran at about 20k samples/s (the clearance inputs are computed every step for 4,096 worlds), against about 60k for the
+   other tasks. Success was still rising when the run ended. Speed up those features, then train for longer.
+
 ## Quick start (Windows, PowerShell)
 
 ```powershell
@@ -100,6 +127,8 @@ cd D:\Sim2Real2Sim\s2r2s
 .\scripts\evaluate.ps1 runs\tee_v2\best.pt            # 1000 held-out scenes, side by side with the scripted baseline
 .\scripts\record.ps1 runs\tee_v2\best.pt videos\tee.mp4   # 2x2 grid video
 ```
+
+**Real arm:** follow [HARDWARE.md](HARDWARE.md) (install `uv sync --extra hardware`, calibrate, test, run).
 
 Everything is also available as `python -m s2r2s.<module> --help` (`train`, `play`, `evaluate`, `record`, `sensitivity`, `camera_study`).
 Resume training with `python -m s2r2s.train --run tee_v2b --resume runs\tee_v2\latest.pt --minutes 60`.
@@ -161,7 +190,7 @@ and value normalisation, time-outs bootstrapped from the true terminal state, KL
 The automatic curriculum raises goal difficulty by 0.1 whenever 80 % of episodes at the current level succeed.
 Every 50 updates, the policy is scored on 512 fixed held-out scenes at full difficulty, and `best.pt` is kept.
 
-## What was verified before any RL (`pytest`, 17 tests)
+## What was verified before any RL (`pytest`, 25 tests)
 
 - Stripped training model has exactly the Menagerie masses, inertias and servo gains
 - FK and Jacobian match MuJoCo; IK solves >99.9 % of the workspace; one IK step per control tick tracks to <0.3 mm (p99)
@@ -170,6 +199,12 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
 - Symmetry-aware pose error; the reward prefers progress over idling
 - Gate (Level 1): walls block where they are placed, scenes start and end on opposite sides, the object cannot pass
   through a wall, the waypoint stage advances and falls back, and warm start reproduces the old policy exactly
+- Hardware bridge: joint-map round trip, the simulated arm reads through its hidden map, calibration recovers
+  joint directions and offsets, the LeRobot driver sends degrees and holds the gripper (checked with a fake LeRobot
+  and against the real LeRobot 0.6 classes), and a policy episode through the full hardware path succeeds
+  without ever exceeding the joint-step limit
+- Clutter: the block never overlaps the T's start, goal or straight path, stays still at rest, and moving it costs
+  reward and success
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -202,4 +237,5 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/play.py`, `record.py`, `visual.py` | Viewer, videos |
 | `s2r2s/sensitivity.py` | How good the camera pipeline must be: degrade the camera model, re-evaluate |
 | `s2r2s/camera_study.py` | Arm-occlusion study for choosing the real camera mount |
+| `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner: see [HARDWARE.md](HARDWARE.md) |
 | `tests/` | Regression tests |

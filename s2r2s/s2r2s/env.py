@@ -80,6 +80,13 @@ class TaskConfig:
     gate_post: float = 0.05                       # ... and this far after it
     gate_align_tol: float = 0.012                 # keypoint distance to the pre-gate pose that starts the passage
     gate_cross: float = 0.035                     # object centre this far past the wall: head for the goal
+    # Clutter task (ClutterEnv only): a second block that must stay where it is.
+    clutter: str = ""                             # object name from objects.py, e.g. "box"
+    clutter_in_way: float = 0.6                   # share of episodes with the block on the object's path
+    clutter_tol: float = 0.010                    # allowed displacement of the block (m) ...
+    clutter_yaw_tol: float = math.radians(10)     # ... and rotation
+    w_disturb: float = 3.0                        # reward per cm the block is moved (negative)
+    w_displaced: float = 1.0                      # per-step cost while the block is out of tolerance
 
 
 @dataclass
@@ -348,13 +355,24 @@ class PushEnv:
         """Goal pose shown in the observation (base: the goal; subclasses may show a subgoal)."""
         return self.goal[ids]
 
-    def _extra_obs(self, ids, pose, tool_xy):
+    def _extra_obs(self, ids, pose, tool_xy, actor=False):
         """Task-specific features appended to actor and critic observations (base: none)."""
         return np.zeros((len(ids), 0))
 
     def _episode_extras(self, ids):
         """Task-specific per-episode statistics (base: none)."""
         return {}
+
+    def _after_physics(self):
+        """Task-specific bookkeeping right after each physics step (base: none)."""
+
+    def _reward_extra(self):
+        """Task-specific reward terms for every world (base: none)."""
+        return 0.0
+
+    def _task_success(self, success):
+        """Task-specific conditions added to "object at its goal pose" (base: none)."""
+        return success
 
     # ------------------------------------------------------------- geometry
     def _symmetric_goal_yaw(self, yaw, goal_yaw, obj_id):
@@ -408,8 +426,14 @@ class PushEnv:
         return np.stack([rad * np.cos(ang), rad * np.sin(ang)], -1)
 
     # ------------------------------------------------------------------- step
-    def step(self, action):
-        t, r = self.cfg.task, self.cfg.rand
+    def command(self, action):
+        """The controller, shared with the real robot: action -> commanded tool position -> joint targets.
+
+        Integrates the action into the commanded tool position (kept within ``tracking_limit`` of the
+        measured tip and inside the reachable annulus) and runs one warm-started IK step.
+        Returns (clipped action (n, 2), arm joint targets in MuJoCo radians (n, 5)).
+        """
+        t = self.cfg.task
         a = np.clip(np.asarray(action, dtype=np.float64), -1.0, 1.0)
         tip = self.tip
         cmd = self.cmd_xy + a * t.max_speed * t.control_dt
@@ -417,6 +441,11 @@ class PushEnv:
         self.cmd_xy = self._project_workspace(cmd)
         q, _, _ = self.kin.solve(np.c_[self.cmd_xy, self.tool_z_cmd], self.q_cmd, iterations=1, report=False)
         self.q_cmd = q
+        return a, q
+
+    def step(self, action):
+        t, r = self.cfg.task, self.cfg.rand
+        a, q = self.command(action)
         new_ctrl = np.c_[q, np.full(self.n, self.cfg.scene.gripper_hold)]
         # Servo command latency: the previous command persists for ``delay`` substeps.
         sub = np.arange(self.nsub)[None, :, None]
@@ -429,13 +458,14 @@ class PushEnv:
 
         pose, height, up_z = self._object_pose()
         self._update_tool()
+        self._after_physics()
         tip = self.tip
         dist = self._keypoint_distance(pose, self.goal, self.obj_id)
         task_dist = self._task_distance(pose, dist=dist)
         surf = self._surface_distance(tip[:, :2], pose, self.obj_id)
         pos_err = np.linalg.norm(pose[:, :2] - self.goal[:, :2], axis=-1)
         yaw_err = np.abs(wrap(pose[:, 2] - self._symmetric_goal_yaw(pose[:, 2], self.goal[:, 2], self.obj_id)))
-        success = (pos_err <= t.success_pos) & (yaw_err <= t.success_yaw)
+        success = self._task_success((pos_err <= t.success_pos) & (yaw_err <= t.success_yaw))
         self.first_success = np.where((self.first_success < 0) & success, self.step_count, self.first_success)
 
         finite = np.isfinite(self.state).all(-1)
@@ -448,7 +478,7 @@ class PushEnv:
                   + t.w_progress * (self.prev_dist - task_dist) / 0.01
                   + t.w_reach * np.exp(-np.maximum(surf, 0) / t.sigma_reach)
                   - t.w_action * (a ** 2).sum(-1) - t.w_action_rate * ((a - self.prev_action) ** 2).sum(-1)
-                  - t.failure_penalty * failed)
+                  - t.failure_penalty * failed + self._reward_extra())
         reward = np.where(finite, reward, -t.failure_penalty)
         self.prev_dist = task_dist
         self.prev_action = a
@@ -521,7 +551,7 @@ class PushEnv:
         tip, q = self.tip[ids], self.qarm[ids]
         tool_meas = tip[:, :2] + (self.noise_rng.normal(0, r.tool_noise, (len(ids), 2)) if r.enabled else 0)
         actor = self._features(tool_meas, self.cmd_xy[ids], self.obs_pose[ids], self.prev_obs_pose[ids], q, ids)
-        actor = np.concatenate([actor, self._extra_obs(ids, self.obs_pose[ids], tool_meas)], -1)
+        actor = np.concatenate([actor, self._extra_obs(ids, self.obs_pose[ids], tool_meas, actor=True)], -1)
         pose, _, _ = self._object_pose()
         pose = pose[ids]
         true_feat = self._features(tip[:, :2], self.cmd_xy[ids], pose, self.pose_hist[ids, 1], q, ids)
@@ -560,6 +590,43 @@ class PushEnv:
         self.state[i, self.qvel_adr:] = 0.0
         self.prev_dist[i] = self._task_distance(new[None], np.array([i]))[0]
         # The camera history is left alone: the policy sees the jump only after its latency.
+
+    def set_goal(self, goal, i=0):
+        """Deployment: set world i's goal pose (x, y, yaw) in the robot base frame."""
+        self.goal[i] = goal
+
+    def sync_measurements(self, qarm, pose, first=False):
+        """Deployment: replace the simulated state with measurements and return the actor observation.
+
+        ``qarm`` (n, 5): measured arm joints in MuJoCo radians. ``pose`` (n, 3) or None: the camera's
+        object pose (x, y, yaw) in the robot base frame; None keeps the last one (a dropped frame).
+        ``first``: start of a trial (command, history and previous action are initialised).
+        This runs exactly the observation code used in training, with randomisation off.
+        """
+        qarm = np.atleast_2d(np.asarray(qarm, dtype=np.float64))
+        self.state[:, self.qpos_adr + self.idx.arm_qpos] = qarm
+        self.qarm = qarm
+        self.tip, _ = self.kin.forward(qarm)
+        if pose is not None:
+            pose = np.atleast_2d(np.asarray(pose, dtype=np.float64))
+            o = self.qpos_adr + self.idx.obj_qpos
+            self.state[:, o:o + 2] = pose[:, :2]
+            self.state[:, o + 2] = self.obj_height / 2
+            self.state[:, o + 3:o + 7] = np.stack([np.cos(pose[:, 2] / 2), 0 * pose[:, 2], 0 * pose[:, 2],
+                                                   np.sin(pose[:, 2] / 2)], -1)
+            self.prev_obs_pose = pose.copy() if first else self.obs_pose.copy()
+            self.obs_pose = pose.copy()
+            self.pose_hist = np.roll(self.pose_hist, 1, axis=1)
+            self.pose_hist[:, 0] = pose
+        if first:
+            self.pose_hist[:] = self.obs_pose[:, None, :]
+            self.cmd_xy = self.tip[:, :2].copy()
+            self.q_cmd = qarm.copy()
+            self.prev_action[:] = 0.0
+            self.step_count[:] = 0
+        self.prev_dist = self._task_distance(self.object_pose())    # also advances task stages (gate)
+        self.obs = self._observe()
+        return self.obs["actor"]
 
     def object_pose(self):
         return self._object_pose()[0]

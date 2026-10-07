@@ -98,6 +98,9 @@ camera now sits at the recommended pose. `videos/camera_study/camera_views.png` 
 
 ## 4. Milestone 2: first real pushes (exact steps)
 
+The software for steps 2, 3 and 6 is ready and rehearsed on a simulated, miscalibrated arm: follow
+[HARDWARE.md](HARDWARE.md). Steps 1, 4 (the camera pose estimator) and 5 need the physical setup.
+
 1. **Station.** Clamp the SO-101 to the table. 3D-print the pusher: a Ø12 mm rod clamped in the closed gripper,
    ending 30 mm below the jaw tips. If you build something different, update `SceneConfig`. Print the T and
    the other five objects to `objects.py` dimensions, ballasted to about 30 g. Use a matte table mat.

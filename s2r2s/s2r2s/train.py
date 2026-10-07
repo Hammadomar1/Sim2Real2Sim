@@ -2,6 +2,7 @@
 
     python -m s2r2s.train --run tee_v1 --minutes 90
     python -m s2r2s.train --run gate_v1 --gate --init runs/tee_v1/best.pt --minutes 120
+    python -m s2r2s.train --run clutter_v1 --clutter box --init runs/tee_v1/best.pt --minutes 30
 
 Writes runs/<run>/: config.json, progress.jsonl, eval.jsonl, latest.pt,
 best.pt and TensorBoard logs (tb/). Resume with --resume runs/<run>/latest.pt.
@@ -88,6 +89,7 @@ def main(argv=None):
     p.add_argument("--eval-episodes", type=int, default=512)
     p.add_argument("--resume", default="")
     p.add_argument("--gate", action="store_true", help="Level 1: push through a gate, then to the goal")
+    p.add_argument("--clutter", default="", help="a second block that must not be disturbed, e.g. box")
     p.add_argument("--episode-seconds", type=float, default=0.0, help="default 20 s (30 s with --gate)")
     p.add_argument("--init", default="", help="warm-start the policy from a checkpoint (inputs may be extended)")
     p.add_argument("--init-std", type=float, default=0.25, help="action noise after --init")
@@ -107,7 +109,7 @@ def main(argv=None):
         env_cfg.task.difficulty = ck["difficulty"]
     else:
         env_cfg = EnvConfig(num_envs=args.num_envs, seed=args.seed,
-                            task=TaskConfig(objects=tuple(args.objects.split(",")), gate=args.gate,
+                            task=TaskConfig(objects=tuple(args.objects.split(",")), gate=args.gate, clutter=args.clutter,
                                             episode_seconds=args.episode_seconds or (30.0 if args.gate else 20.0),
                                             difficulty=1.0 if args.no_curriculum else args.difficulty))
         env_cfg.scene.timestep = args.timestep

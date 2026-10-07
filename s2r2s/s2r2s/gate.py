@@ -146,7 +146,7 @@ class GateEnv(PushEnv):
         st = self.stage[ids][:, None]
         return np.where(st == 0, a, np.where(st == 1, b, self.goal[ids]))
 
-    def _extra_obs(self, ids, pose, tool_xy):
+    def _extra_obs(self, ids, pose, tool_xy, actor=False):
         along, passage = self._axes(ids)
         c = self.gate_centre[ids]
         a, b = self._waypoints(ids)
@@ -167,6 +167,14 @@ class GateEnv(PushEnv):
 
     def _episode_extras(self, ids):
         return {"passed": self.stage[ids] == 2, "gate_width": self.gate_width[ids].copy()}
+
+    def configure_gate(self, centre, angle, width, side, start_yaw, i=0):
+        """Deployment: describe the real gate (opening centre, wall angle, width, passage side) for world i."""
+        self.gate_centre[i], self.gate_angle[i], self.gate_width[i], self.gate_side[i] = centre, angle, width, side
+        set_gate(self.models[i], centre, angle, width)
+        cand = np.array([angle, angle + math.pi])
+        self.target_yaw[i] = wrap(cand[np.abs(wrap(cand - start_yaw)).argmin()])
+        self.stage[i] = 0
 
     def subgoal(self):
         """Current waypoint or goal for every world (used by the scripted controller)."""

@@ -60,6 +60,8 @@ class SceneConfig:
     # Level 1 puzzle: a wall with an opening across the work band (placed per episode, see set_gate).
     gate: bool = False
     gate_friction: float = 0.35
+    # Clutter: a second free object (name from objects.py) that the policy must not disturb.
+    clutter: str = ""
 
     def to_dict(self):
         return asdict(self)
@@ -186,6 +188,30 @@ def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual:
                           pos=[0, 0, GATE_WALL_HALF_HEIGHT], contype=_STATIC, conaffinity=0, condim=3, priority=1,
                           friction=[cfg.gate_friction, 0.005, 0.0001], rgba=[0.80, 0.55, 0.30, 1], group=0)
 
+    if cfg.clutter:
+        other = OBJECTS[cfg.clutter]
+        body = world.add_body(name="clutter", pos=[0.2, 0.08, other.height / 2])
+        body.simple = False
+        body.add_freejoint(name="clutter_free")
+        ch = other.height / 2
+        if other.disk_radius > 0:
+            body.add_geom(name="clutter_0", type=mujoco.mjtGeom.mjGEOM_CYLINDER, size=[other.disk_radius, ch, 0],
+                          mass=other.mass, contype=_OBJECT, conaffinity=_TABLE | _OBJECT | _PUSHER | _STATIC,
+                          condim=3, friction=[0.1, 0.005, 0.0001], rgba=[0.55, 0.55, 0.58, 1])
+        else:
+            parts = other.centred_boxes
+            areas = np.array([hx * hy for _, _, hx, hy in parts])
+            for i, (cx, cy, hx, hy) in enumerate(parts):
+                body.add_geom(name=f"clutter_{i}", type=mujoco.mjtGeom.mjGEOM_BOX, size=[hx, hy, ch], pos=[cx, cy, 0],
+                              mass=float(other.mass * areas[i] / areas.sum()), contype=_OBJECT,
+                              conaffinity=_TABLE | _OBJECT | _PUSHER | _STATIC, condim=3,
+                              friction=[0.1, 0.005, 0.0001], rgba=[0.55, 0.55, 0.58, 1])
+        if visual:   # where the clutter block belongs (it should still be there at the end)
+            home = world.add_body(name="clutter_home", mocap=True, pos=[0.2, 0.08, 0.0])
+            for cx, cy, hx, hy in (other.centred_boxes or [(0, 0, other.disk_radius, other.disk_radius)]):
+                home.add_geom(type=mujoco.mjtGeom.mjGEOM_BOX, size=[hx, hy, 0.0004], pos=[cx, cy, 0.0004],
+                              contype=0, conaffinity=0, rgba=[0.3, 0.3, 0.3, 0.35], group=0)
+
     # Goal marker: mocap body with a thin, non-colliding copy of the footprint.
     goal = world.add_body(name="goal", mocap=True, pos=[0.2, 0.05, 0.0])
     if shape.disk_radius > 0:
@@ -225,6 +251,8 @@ def build_model(cfg: SceneConfig | None = None, object_name: str = "tee", visual
     # Single-geom objects compile with body frame == inertial frame, and MuJoCo then
     # ignores body_ipos. Clear the flag so centre-of-mass randomisation takes effect.
     model.body_sameframe[model.body("object").id] = 0
+    if cfg is not None and cfg.clutter:
+        model.body_sameframe[model.body("clutter").id] = 0
     return model
 
 
@@ -247,6 +275,11 @@ class SceneIndex:
         self.table_geom = model.geom("table").id
         self.object_geoms = np.array([i for i in range(model.ngeom) if model.geom(i).name.startswith("object_")])
         self.nq, self.nv, self.nu = model.nq, model.nv, model.nu
+        if mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "clutter_free") >= 0:
+            j = model.joint("clutter_free").id
+            self.clutter_qpos, self.clutter_qvel = model.jnt_qposadr[j], model.jnt_dofadr[j]
+            self.clutter_body = model.body("clutter").id
+            self.clutter_geoms = np.array([i for i in range(model.ngeom) if model.geom(i).name.startswith("clutter_")])
 
 
 def set_gate(model: mujoco.MjModel, centre, angle: float, width: float):

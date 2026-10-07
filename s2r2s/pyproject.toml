@@ -12,9 +12,13 @@ dependencies = [
   "imageio",
   "imageio-ffmpeg",
   "pyyaml",
-  "opencv-python",
+  "opencv-python-headless>=4.9,<4.14",   # headless: LeRobot uses it too, and both builds cannot coexist
   "pytest",
 ]
+
+[project.optional-dependencies]
+# Real robot (Milestone 2): LeRobot's SO-101 driver and the RealSense SDK.  uv sync --extra hardware
+hardware = ["lerobot[feetech,intelrealsense]"]
 
 [build-system]
 requires = ["setuptools>=75"]
@@ -31,6 +35,7 @@ explicit = true
 
 [tool.uv.sources]
 torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

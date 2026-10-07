@@ -59,6 +59,9 @@ def summarize(eps: dict) -> dict:
         "time_to_goal_s_median": float(np.median(s["first_success"][reached]) * 0.05) if reached.any() else float("nan"),
         "difficulty_mean": float(s["difficulty"].mean()),
         **({"passed_gate": float(s["passed"].mean())} if "passed" in s else {}),
+        **({"disturbed": float(s["disturbed"].mean()),
+            "disturbed_when_in_way": float(s["disturbed"][s["in_way"]].mean()) if s["in_way"].any() else float("nan"),
+            "clutter_moved_mm_median": float(np.median(s["clutter_moved_mm"]))} if "disturbed" in s else {}),
     }
 
 

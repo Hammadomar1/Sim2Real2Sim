@@ -41,7 +41,9 @@ ROWS = [("passed_gate", "passed the gate", "{:.1%}"), ("success", "success rate"
         ("pos_err_mm_p90", "position error p90 (mm)", "{:.1f}"), ("yaw_err_deg_median", "yaw error median (deg)", "{:.1f}"),
         ("yaw_err_deg_p90", "yaw error p90 (deg)", "{:.1f}"), ("E_mean", "mean E = pos/20mm + yaw/10deg", "{:.2f}"),
         ("reached", "ever within tolerance", "{:.1%}"), ("time_to_goal_s_median", "time to tolerance median (s)", "{:.1f}"),
-        ("failure", "failures (tipped/escaped)", "{:.1%}"), ("action_rate_mean", "action rate (smoothness, lower=smoother)", "{:.4f}")]
+        ("failure", "failures (tipped/escaped)", "{:.1%}"),
+        ("disturbed", "clutter block disturbed (>10 mm or >10 deg)", "{:.1%}"),
+        ("disturbed_when_in_way", "  ... when it was on the path", "{:.1%}"), ("action_rate_mean", "action rate (smoothness, lower=smoother)", "{:.4f}")]
 
 
 def main(argv=None):

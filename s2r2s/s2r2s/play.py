@@ -29,7 +29,7 @@ def make_env(args):
         policy, cfg, _ = load_policy(args.checkpoint, "cpu")
         agent = policy_agent(policy, "cpu", deterministic=not args.stochastic)
     else:
-        cfg = EnvConfig(task=TaskConfig(objects=(args.object,), gate=args.gate,
+        cfg = EnvConfig(task=TaskConfig(objects=(args.object,), gate=args.gate, clutter=args.clutter,
                                         episode_seconds=30.0 if args.gate else 20.0))
         agent = scripted_agent()
     cfg.num_envs, cfg.num_threads, cfg.seed = 1, 1, args.seed
@@ -52,6 +52,7 @@ def main(argv=None):
     p.add_argument("--stochastic", action="store_true")
     p.add_argument("--no-randomization", action="store_true")
     p.add_argument("--gate", action="store_true", help="with --scripted: the Level 1 gate puzzle")
+    p.add_argument("--clutter", default="", help="with --scripted: add a block to keep in place, e.g. box")
     args = p.parse_args(argv)
     if not args.checkpoint and not args.scripted:
         p.error("give --checkpoint or --scripted")

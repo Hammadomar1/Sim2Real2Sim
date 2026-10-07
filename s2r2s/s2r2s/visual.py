@@ -28,6 +28,8 @@ class SceneMirror:
         self.data.time = e.step_count[i] * e.cfg.task.control_dt
         if hasattr(e, "gate_centre"):
             set_gate(self.model, e.gate_centre[i], e.gate_angle[i], e.gate_width[i])
+        if hasattr(e, "clutter_home"):
+            set_marker(self.model, self.data, "clutter_home", e.clutter_home[i])
         set_marker(self.model, self.data, "goal", e.goal[i])
         set_marker(self.model, self.data, "estimate", e.obs_pose[i] if self.show_estimate else (5.0, 5.0, 0.0))
         mujoco.mj_forward(self.model, self.data)
