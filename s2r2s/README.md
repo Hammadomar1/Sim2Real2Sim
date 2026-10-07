@@ -171,6 +171,72 @@ python -m s2r2s.hardware.runner --checkpoint runs\clutter_v7\best.pt --robot sim
 
 Video: `videos/clutter_policy_grid.mp4` (four scenes). The status line shows how far the block has moved.
 
+## Level 2: two blocks, each to its own goal (`level2.py`)
+
+The T and the 40 mm box each start in the work band with their own goal pose (the Milestone 1 rules: up to 12 cm
+away, any rotation), at least 15 mm apart at the start and at the goal. **Success** means both blocks at their goals
+(≤10 mm, ≤10°) at the end.
+
+Instead of one big new policy, Level 2 uses two learned skills and a small planner:
+- **Skills.** Each skill is a clutter policy: push one block to a target while the other stays where it is. The T
+  skill is the clutter policy above (`clutter_v7`, which keeps the box in place). The box skill is new
+  (`clutter_box_v2`, which keeps the T in place). It is warm-started from a plain box pusher (`box_v1`: 98.9 % of
+  held-out scenes after 20 minutes; scripted 98.6 %, but 4.0 mm vs 0.7 mm median error), the same way the T skill
+  started from Milestone 1.
+- **Planner.** It picks the order in which both pushes keep the skills' 15 mm rule (the one with more room). Two
+  pushes in some order work for **83 %** of random scenes. Otherwise it looks for a spot to park one block first
+  (park A, push B, then bring A back). That rescues only about 1 % more: in a 5 cm-deep band the two paths cross
+  whichever block goes first, and no spot is within the skills' 12 cm reach. The remaining 16 % have no plan and
+  are left out.
+- **Execution.** One simulated world holds both blocks. Each skill sees it through its own copy of the
+  environment, exactly as on the real arm: measured joints and camera estimates go in, joint targets come out. The
+  rod guard protects whichever block must stay. The next push starts once the current block has stayed at its
+  target for 1 s, judged by the camera.
+
+Held-out results, 1,000 unseen two-block scenes, every configuration on the same scenes
+(`runs/level2/final_eval.json`):
+
+| | solved (both at their goals) | T at goal | box at goal | a block that should stay moved >10 mm | time, median |
+|---|---|---|---|---|---|
+| **planner + both skills** | **92.4 %** | 95.2 % | 95.7 % | 1.2 % | 11.7 s |
+| always the T first | 82.0 % | 89.7 % | 88.1 % | 9.1 % | 12.0 s |
+| always the box first | 87.8 % | 91.1 % | 95.4 % | 6.4 % | 11.3 s |
+| planner, skills blind to the other block (`tee_v1`, `box_v1`) | 75.6 % | 87.4 % | 82.3 % | 6.7 % | 14.2 s |
+| planner + skills, rod guard off | 62.2 % | 74.6 % | 77.0 % | 35.4 % | 11.8 s |
+
+Final errors, median: T 1.7 mm / 2.3°, box 1.0 mm / 1.7°. Failures (a block left the band): 1.1 %.
+
+The box skill on its own (1,000 held-out scenes, `runs/clutter_box_v2/final_eval.json`):
+
+| solved | `clutter_box_v2` | `clutter_box_v1` | box pusher blind to the T | scripted |
+|---|---|---|---|---|
+| standard scenes | **98.6 %** | 97.5 % | 91.5 % | 92.6 % |
+| rod starting 4–12 mm from the T | **93.6 %** | 87.6 % | 79.9 % | |
+| standard scenes, rod guard off | 93.3 % | | 81.5 % | |
+
+How we got here:
+1. **Order matters.** Scenes where the T goes first were the weak spot. There, the box skill must work around a
+   placed T, which is much bigger than the box. With the first box skill, those scenes succeeded 82.9 % of the time
+   against 93.3 % for box-first scenes (87.9 % overall).
+2. **Train the skills for how they are used.** A second push starts with the rod right next to the block that was
+   just placed, and the skills had never started that way. In the failed T-first scenes, the rod spent a median
+   53 s pressing against the guard around the T. Fine-tuning the box skill with the rod starting beside the T in
+   30 % of episodes (`task.tool_near_block=0.3`, 40 minutes) raised T-first scenes to 90.3 % and Level 2 to
+   92.4 %. The same fine-tune for the T skill (`clutter_v8`) gave 93.0 %, within noise, so `clutter_v7` stays.
+   Pushing around the small box was not the problem.
+
+```powershell
+python -m s2r2s.level2 --view                                   # watch scenes one after another in the viewer
+python -m s2r2s.level2                                          # 1,000 held-out scenes (add --stats for the scene census)
+python -m s2r2s.level2 --order tee                              # without the planner: always the T first
+python -m s2r2s.level2 --episodes 4 --video videos\level2.mp4   # a 2x2 video
+python -m s2r2s.train --run box_v2 --objects box --minutes 20   # retrain: the box pusher, then the box skill
+python -m s2r2s.train --run clutter_box_v3 --objects box --clutter tee --init runs\box_v2\best.pt --no-curriculum --minutes 75
+python -m s2r2s.train --run clutter_box_v4 --objects box --clutter tee --init runs\clutter_box_v3\best.pt --init-std 0.1 --no-curriculum --minutes 40 --set task.tool_near_block=0.3
+```
+
+Video: `videos/level2_grid.mp4` (four scenes; the box's goal is the faint orange outline, the T's is green).
+
 ## Quick start (Windows, PowerShell)
 
 ```powershell
@@ -246,7 +312,7 @@ and value normalisation, time-outs bootstrapped from the true terminal state, KL
 The automatic curriculum raises goal difficulty by 0.1 whenever 80 % of episodes at the current level succeed.
 Every 50 updates, the policy is scored on 512 fixed held-out scenes at full difficulty, and `best.pt` is kept.
 
-## What was verified before any RL (`pytest`, 30 tests)
+## What was verified before any RL (`pytest`, 35 tests)
 
 - Stripped training model has exactly the Menagerie masses, inertias and servo gains
 - FK and Jacobian match MuJoCo; IK solves >99.9 % of the workspace; one IK step per control tick tracks to <0.3 mm (p99)
@@ -262,7 +328,10 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
 - Clutter: footprint clearances are exact (against brute force, including bars crossing like a plus sign); the guarded
   rod always fits between the block and the T's path; the block stays still at rest; moving it, or coming close,
   costs reward (and moving it, success); the rod guard slides the rod along the block instead of shoving it; and the
-  block's camera pose reaches a policy through the hardware path
+  block's camera pose reaches a policy through the hardware path; the rod can start beside the block (as after
+  placing it)
+- Level 2: every two-block scene has a plan whose pushes all keep the skills' 15 mm rule (also with parking), the
+  clearance sweep matches point checks at its ends, and each skill's twin guards the block that must stay
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -290,6 +359,7 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/env.py` | Batched environment: control, observations, camera model, reward, randomisation, resets |
 | `s2r2s/gate.py`, `tasks.py` | Level 1 gate puzzle (waypoints, path-length reward, gate features); environment factory |
 | `s2r2s/clutter.py` | Clutter task: block placement, exact footprint clearances, rod guard, block features and costs |
+| `s2r2s/level2.py` | Level 2: two-block scenes, push planner (order, parking), skills run through twins, viewer and videos |
 | `s2r2s/ppo.py`, `train.py` | PPO and the training loop (logs, curriculum, evaluation, checkpoints) |
 | `s2r2s/evaluation.py`, `evaluate.py` | Held-out evaluation (policy and baseline on identical scenes) |
 | `s2r2s/scripted.py` | Heuristic pusher: feasibility check and baseline |

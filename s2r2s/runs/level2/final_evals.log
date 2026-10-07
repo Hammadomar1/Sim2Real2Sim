@@ -1,0 +1,154 @@
+$ python -m s2r2s.level2 --stats --out runs/level2/eval_planner.json
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 92.4%
+    T at its goal                            95.2%
+    box at its goal                          95.7%
+  every push settled at its target           90.1%
+  a block that had to stay moved >10 mm      1.2%
+  failures (a block left the band)           1.1%
+  time to finish, median (s)                 11.7
+  scenes with a parking push                 0.6%
+  success with two pushes                    92.5%
+  success with three pushes                  83.3%
+  two pushes: T first                        51.8%
+    success when the T goes first            90.3%
+    success when the box goes first          94.8%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                1.7 mm 2.3 deg / 1.0 mm 1.7 deg
+  random scenes (2700): two pushes 82.6%, three pushes only (parking) 1.1%, no plan 16.3%
+
+$ python -m s2r2s.level2 --order tee --out runs/level2/eval_tee_first.json
+
+Level 2: 1000 two-block scenes (seed 20000003), without parking, order tee, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 82.0%
+    T at its goal                            89.7%
+    box at its goal                          88.1%
+  every push settled at its target           79.2%
+  a block that had to stay moved >10 mm      9.1%
+  failures (a block left the band)           1.9%
+  time to finish, median (s)                 12.0
+  scenes with a parking push                 0.0%
+  success with two pushes                    82.0%
+  success with three pushes                  nan%
+  two pushes: T first                        100.0%
+    success when the T goes first            82.0%
+    success when the box goes first          nan%
+  plans that keep the 15 mm rule             81.3%
+  final error median, T / box                2.7 mm 3.1 deg / 0.7 mm 1.5 deg
+
+$ python -m s2r2s.level2 --order box --out runs/level2/eval_box_first.json
+
+Level 2: 1000 two-block scenes (seed 20000003), without parking, order box, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 87.8%
+    T at its goal                            91.1%
+    box at its goal                          95.4%
+  every push settled at its target           85.8%
+  a block that had to stay moved >10 mm      6.4%
+  failures (a block left the band)           1.7%
+  time to finish, median (s)                 11.3
+  scenes with a parking push                 0.0%
+  success with two pushes                    87.8%
+  success with three pushes                  nan%
+  two pushes: T first                        0.0%
+    success when the T goes first            nan%
+    success when the box goes first          87.8%
+  plans that keep the 15 mm rule             82.6%
+  final error median, T / box                1.3 mm 2.0 deg / 2.1 mm 3.0 deg
+
+$ python -m s2r2s.level2 --tee-policy runs/tee_v1/best.pt --box-policy runs/box_v1/best.pt --out runs/level2/eval_blind.json
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/tee_v1/best.pt | box skill runs/box_v1/best.pt
+  both blocks at their goals                 75.6%
+    T at its goal                            87.4%
+    box at its goal                          82.3%
+  every push settled at its target           72.9%
+  a block that had to stay moved >10 mm      6.7%
+  failures (a block left the band)           1.2%
+  time to finish, median (s)                 14.2
+  scenes with a parking push                 0.6%
+  success with two pushes                    75.7%
+  success with three pushes                  66.7%
+  two pushes: T first                        51.8%
+    success when the T goes first            66.4%
+    success when the box goes first          85.6%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                2.0 mm 2.7 deg / 1.5 mm 2.2 deg
+
+$ python -m s2r2s.level2 --no-guard --out runs/level2/eval_no_guard.json
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard off | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 62.2%
+    T at its goal                            74.6%
+    box at its goal                          77.0%
+  every push settled at its target           83.6%
+  a block that had to stay moved >10 mm      35.4%
+  failures (a block left the band)           5.4%
+  time to finish, median (s)                 11.8
+  scenes with a parking push                 0.6%
+  success with two pushes                    62.5%
+  success with three pushes                  16.7%
+  two pushes: T first                        51.8%
+    success when the T goes first            58.3%
+    success when the box goes first          67.0%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                2.7 mm 3.5 deg / 1.8 mm 2.9 deg
+
+$ python -m s2r2s.level2 --box runs/clutter_box_v1/best.pt --out runs/level2/eval_box_skill_v1.json
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v1/best.pt
+  both blocks at their goals                 87.9%
+    T at its goal                            94.7%
+    box at its goal                          91.1%
+  every push settled at its target           85.4%
+  a block that had to stay moved >10 mm      1.7%
+  failures (a block left the band)           1.2%
+  time to finish, median (s)                 11.8
+  scenes with a parking push                 0.6%
+  success with two pushes                    87.9%
+  success with three pushes                  83.3%
+  two pushes: T first                        51.8%
+    success when the T goes first            82.9%
+    success when the box goes first          93.3%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                1.8 mm 2.3 deg / 1.1 mm 2.1 deg
+
+$ python -m s2r2s.level2 --tee runs/clutter_v8/best.pt --out runs/level2/eval_tee_skill_v8.json
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_v8/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 93.0%
+    T at its goal                            96.0%
+    box at its goal                          95.7%
+  every push settled at its target           92.0%
+  a block that had to stay moved >10 mm      1.5%
+  failures (a block left the band)           0.8%
+  time to finish, median (s)                 11.4
+  scenes with a parking push                 0.6%
+  success with two pushes                    93.1%
+  success with three pushes                  83.3%
+  two pushes: T first                        51.8%
+    success when the T goes first            89.7%
+    success when the box goes first          96.7%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                1.5 mm 2.1 deg / 1.0 mm 1.8 deg
+
+$ python -m s2r2s.level2 --episodes 4 --seed 3 --video videos/level2_grid.mp4
+wrote videos\level2_grid.mp4 (1199 frames)
+
+Level 2: 4 two-block scenes (seed 3), with parking, order auto, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 100.0%
+    T at its goal                            100.0%
+    box at its goal                          100.0%
+  every push settled at its target           100.0%
+  a block that had to stay moved >10 mm      0.0%
+  failures (a block left the band)           0.0%
+  time to finish, median (s)                 10.8
+  scenes with a parking push                 0.0%
+  success with two pushes                    100.0%
+  success with three pushes                  nan%
+  two pushes: T first                        75.0%
+    success when the T goes first            100.0%
+    success when the box goes first          100.0%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                1.6 mm 2.0 deg / 0.7 mm 0.7 deg
+

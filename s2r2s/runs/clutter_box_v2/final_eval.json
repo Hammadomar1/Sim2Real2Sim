@@ -1,0 +1,479 @@
+{
+ "checkpoint": "runs/clutter_box_v2/best.pt",
+ "scenes": 1000,
+ "seed": 20000003,
+ "standard_scenes": {
+  "policy": {
+   "episodes": 1000,
+   "success": 0.986,
+   "failure": 0.001,
+   "tipped": 0.0,
+   "outside": 0.001,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.6682438262545043,
+   "yaw_err_deg_median": 1.4023996793719602,
+   "pos_err_mm_p90": 1.4784966462201996,
+   "yaw_err_deg_p90": 3.6992884397560224,
+   "E_mean": 0.27197538493767354,
+   "reached": 0.986,
+   "time_to_goal_s_median": 3.1,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.005,
+   "disturbed_when_in_way": 0.007052186177715092,
+   "touched": 0.01,
+   "touched_by_rod": 0.008,
+   "clutter_moved_mm_median": 0.0022634351823437563,
+   "action_rate_mean": 0.02898078846961752,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.9881889763779528,
+     "disturbed": 0.003937007874015748,
+     "touched_by_rod": 0.0
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.9835390946502057,
+     "disturbed": 0.00411522633744856,
+     "touched_by_rod": 0.01646090534979424
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.9764150943396226,
+     "disturbed": 0.014150943396226415,
+     "touched_by_rod": 0.018867924528301886
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.993127147766323,
+     "disturbed": 0.0,
+     "touched_by_rod": 0.0
+    }
+   ]
+  },
+  "clutter_box_v1": {
+   "episodes": 1000,
+   "success": 0.975,
+   "failure": 0.001,
+   "tipped": 0.0,
+   "outside": 0.001,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.7901712137524571,
+   "yaw_err_deg_median": 1.6330798501155628,
+   "pos_err_mm_p90": 1.6640167291185224,
+   "yaw_err_deg_p90": 4.214916172026925,
+   "E_mean": 0.33555495947117736,
+   "reached": 0.978,
+   "time_to_goal_s_median": 3.1,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.006,
+   "disturbed_when_in_way": 0.005641748942172073,
+   "touched": 0.017,
+   "touched_by_rod": 0.016,
+   "clutter_moved_mm_median": 0.0022634358074391297,
+   "action_rate_mean": 0.027041331283529278,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.9645669291338582,
+     "disturbed": 0.003937007874015748,
+     "touched_by_rod": 0.027559055118110236
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.9794238683127572,
+     "disturbed": 0.00823045267489712,
+     "touched_by_rod": 0.00823045267489712
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.9764150943396226,
+     "disturbed": 0.0047169811320754715,
+     "touched_by_rod": 0.018867924528301886
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.979381443298969,
+     "disturbed": 0.006872852233676976,
+     "touched_by_rod": 0.010309278350515464
+    }
+   ]
+  },
+  "box_v1": {
+   "episodes": 1000,
+   "success": 0.915,
+   "failure": 0.007,
+   "tipped": 0.0,
+   "outside": 0.007,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.8302941955848433,
+   "yaw_err_deg_median": 1.5963981084952172,
+   "pos_err_mm_p90": 2.3182932602926405,
+   "yaw_err_deg_p90": 5.3696586085823155,
+   "E_mean": 0.6210707770954322,
+   "reached": 0.917,
+   "time_to_goal_s_median": 3.4000000000000004,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.015,
+   "disturbed_when_in_way": 0.018335684062059238,
+   "touched": 0.045,
+   "touched_by_rod": 0.039,
+   "clutter_moved_mm_median": 0.002263437913188604,
+   "action_rate_mean": 0.028785074864102086,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.8976377952755905,
+     "disturbed": 0.015748031496062992,
+     "touched_by_rod": 0.047244094488188976
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.9053497942386831,
+     "disturbed": 0.01646090534979424,
+     "touched_by_rod": 0.04938271604938271
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.910377358490566,
+     "disturbed": 0.02358490566037736,
+     "touched_by_rod": 0.0330188679245283
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.9415807560137457,
+     "disturbed": 0.006872852233676976,
+     "touched_by_rod": 0.027491408934707903
+    }
+   ]
+  },
+  "scripted": {
+   "episodes": 1000,
+   "success": 0.926,
+   "failure": 0.0,
+   "tipped": 0.0,
+   "outside": 0.0,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 4.061044800274704,
+   "yaw_err_deg_median": 4.056651181390943,
+   "pos_err_mm_p90": 4.9551403566202294,
+   "yaw_err_deg_p90": 4.943085712225831,
+   "E_mean": 0.7718675206112849,
+   "reached": 0.936,
+   "time_to_goal_s_median": 7.2250000000000005,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.003,
+   "disturbed_when_in_way": 0.0028208744710860366,
+   "touched": 0.027,
+   "touched_by_rod": 0.023,
+   "clutter_moved_mm_median": 0.002263436851752345,
+   "action_rate_mean": 0.08651026316396238,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.9212598425196851,
+     "disturbed": 0.003937007874015748,
+     "touched_by_rod": 0.031496062992125984
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.9218106995884774,
+     "disturbed": 0.0,
+     "touched_by_rod": 0.0205761316872428
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.8915094339622641,
+     "disturbed": 0.0047169811320754715,
+     "touched_by_rod": 0.02830188679245283
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.9587628865979382,
+     "disturbed": 0.003436426116838488,
+     "touched_by_rod": 0.013745704467353952
+    }
+   ]
+  }
+ },
+ "rod_starts_beside_the_T": {
+  "policy": {
+   "episodes": 1000,
+   "success": 0.936,
+   "failure": 0.001,
+   "tipped": 0.0,
+   "outside": 0.001,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.744767052222644,
+   "yaw_err_deg_median": 1.597323490993335,
+   "pos_err_mm_p90": 1.8001123899131246,
+   "yaw_err_deg_p90": 4.441455152146565,
+   "E_mean": 0.5232945294207368,
+   "reached": 0.937,
+   "time_to_goal_s_median": 3.1,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.022,
+   "disturbed_when_in_way": 0.02538787023977433,
+   "touched": 0.06,
+   "touched_by_rod": 0.062,
+   "clutter_moved_mm_median": 0.002263438854622295,
+   "action_rate_mean": 0.02808355953439398,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.905511811023622,
+     "disturbed": 0.031496062992125984,
+     "touched_by_rod": 0.09055118110236221
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.9218106995884774,
+     "disturbed": 0.0205761316872428,
+     "touched_by_rod": 0.04526748971193416
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.9481132075471698,
+     "disturbed": 0.02358490566037736,
+     "touched_by_rod": 0.06132075471698113
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.9656357388316151,
+     "disturbed": 0.013745704467353952,
+     "touched_by_rod": 0.05154639175257732
+    }
+   ]
+  },
+  "clutter_box_v1": {
+   "episodes": 1000,
+   "success": 0.876,
+   "failure": 0.002,
+   "tipped": 0.0,
+   "outside": 0.002,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.859489314181757,
+   "yaw_err_deg_median": 1.7631811329193372,
+   "pos_err_mm_p90": 19.2045040591013,
+   "yaw_err_deg_p90": 8.054779581646587,
+   "E_mean": 0.800975668463277,
+   "reached": 0.881,
+   "time_to_goal_s_median": 3.1,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.033,
+   "disturbed_when_in_way": 0.039492242595204514,
+   "touched": 0.083,
+   "touched_by_rod": 0.084,
+   "clutter_moved_mm_median": 0.0022634405334863482,
+   "action_rate_mean": 0.025237849958155742,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.8228346456692913,
+     "disturbed": 0.051181102362204724,
+     "touched_by_rod": 0.1220472440944882
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.8806584362139918,
+     "disturbed": 0.03292181069958848,
+     "touched_by_rod": 0.0823045267489712
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.8726415094339622,
+     "disturbed": 0.0330188679245283,
+     "touched_by_rod": 0.08490566037735849
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.9209621993127147,
+     "disturbed": 0.01718213058419244,
+     "touched_by_rod": 0.05154639175257732
+    }
+   ]
+  },
+  "box_v1": {
+   "episodes": 1000,
+   "success": 0.799,
+   "failure": 0.002,
+   "tipped": 0.0,
+   "outside": 0.002,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.916318137396141,
+   "yaw_err_deg_median": 1.8687720423028937,
+   "pos_err_mm_p90": 47.884499847904564,
+   "yaw_err_deg_p90": 17.297449124957005,
+   "E_mean": 1.0928938217671884,
+   "reached": 0.801,
+   "time_to_goal_s_median": 3.4000000000000004,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.043,
+   "disturbed_when_in_way": 0.045133991537376586,
+   "touched": 0.124,
+   "touched_by_rod": 0.123,
+   "clutter_moved_mm_median": 0.002263446632845929,
+   "action_rate_mean": 0.026883839337322142,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.7519685039370079,
+     "disturbed": 0.051181102362204724,
+     "touched_by_rod": 0.16535433070866143
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.8024691358024691,
+     "disturbed": 0.053497942386831275,
+     "touched_by_rod": 0.11934156378600823
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.7971698113207547,
+     "disturbed": 0.02830188679245283,
+     "touched_by_rod": 0.09433962264150944
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.8384879725085911,
+     "disturbed": 0.037800687285223365,
+     "touched_by_rod": 0.10996563573883161
+    }
+   ]
+  }
+ },
+ "rod_guard_off": {
+  "policy": {
+   "episodes": 1000,
+   "success": 0.933,
+   "failure": 0.007,
+   "tipped": 0.0,
+   "outside": 0.007,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.7488016995938296,
+   "yaw_err_deg_median": 1.515341529652435,
+   "pos_err_mm_p90": 1.6848393314327479,
+   "yaw_err_deg_p90": 3.866389055661511,
+   "E_mean": 0.30726592126531704,
+   "reached": 0.943,
+   "time_to_goal_s_median": 3.0500000000000003,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.066,
+   "disturbed_when_in_way": 0.0846262341325811,
+   "touched": 0.092,
+   "touched_by_rod": 0.088,
+   "clutter_moved_mm_median": 0.002263435999804692,
+   "action_rate_mean": 0.029877555584825365,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.8700787401574803,
+     "disturbed": 0.12992125984251968,
+     "touched_by_rod": 0.1889763779527559
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.9300411522633745,
+     "disturbed": 0.06584362139917696,
+     "touched_by_rod": 0.08641975308641975
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.9481132075471698,
+     "disturbed": 0.05188679245283019,
+     "touched_by_rod": 0.05660377358490566
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.979381443298969,
+     "disturbed": 0.020618556701030927,
+     "touched_by_rod": 0.024054982817869417
+    }
+   ]
+  },
+  "box_v1": {
+   "episodes": 1000,
+   "success": 0.815,
+   "failure": 0.017,
+   "tipped": 0.0,
+   "outside": 0.017,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 0.7641011799205755,
+   "yaw_err_deg_median": 1.5951663470641726,
+   "pos_err_mm_p90": 1.6254248082117928,
+   "yaw_err_deg_p90": 4.272722603982517,
+   "E_mean": 0.3456382779105186,
+   "reached": 0.829,
+   "time_to_goal_s_median": 3.2,
+   "difficulty_mean": 1.0,
+   "disturbed": 0.179,
+   "disturbed_when_in_way": 0.21156558533145275,
+   "touched": 0.252,
+   "touched_by_rod": 0.244,
+   "clutter_moved_mm_median": 0.0022634453224660493,
+   "action_rate_mean": 0.029865027910354523,
+   "by_clearance": [
+    {
+     "clearance_mm": "15-20",
+     "scenes": 254,
+     "success": 0.7165354330708661,
+     "disturbed": 0.2795275590551181,
+     "touched_by_rod": 0.42913385826771655
+    },
+    {
+     "clearance_mm": "20-25",
+     "scenes": 243,
+     "success": 0.8395061728395061,
+     "disturbed": 0.1522633744855967,
+     "touched_by_rod": 0.2139917695473251
+    },
+    {
+     "clearance_mm": "25-30",
+     "scenes": 212,
+     "success": 0.8018867924528302,
+     "disturbed": 0.19811320754716982,
+     "touched_by_rod": 0.2169811320754717
+    },
+    {
+     "clearance_mm": ">30",
+     "scenes": 291,
+     "success": 0.8900343642611683,
+     "disturbed": 0.09965635738831616,
+     "touched_by_rod": 0.12714776632302405
+    }
+   ]
+  }
+ }
+}

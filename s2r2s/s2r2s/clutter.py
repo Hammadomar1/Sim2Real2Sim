@@ -167,22 +167,25 @@ class ClutterEnv(PushEnv):
         if t.rod_guard <= 0:
             return cmd_xy
         need = self.cfg.scene.pusher_radius + t.rod_guard + self.clutter_grow
-        lx, ly, (x, y, c, s, hx, hy) = self._block_frame(cmd_xy, self.clutter_obs)
-        # Nearest point on each rectangle's outline and the outward normal there (inside: exit by the nearest side).
-        inside = (np.abs(lx) < hx) & (np.abs(ly) < hy)
-        by_x = hx - np.abs(lx) < hy - np.abs(ly)
-        sx, sy = np.where(lx >= 0, 1.0, -1.0), np.where(ly >= 0, 1.0, -1.0)
-        px = np.where(inside & by_x, sx * hx, np.clip(lx, -hx, hx))
-        py = np.where(inside & ~by_x, sy * hy, np.clip(ly, -hy, hy))
-        dist = np.hypot(lx - px, ly - py)
-        nx = np.where(inside, np.where(by_x, sx, 0.0), np.where(dist > 1e-12, (lx - px) / np.maximum(dist, 1e-12), 1.0))
-        ny = np.where(inside, np.where(by_x, 0.0, sy), np.where(dist > 1e-12, (ly - py) / np.maximum(dist, 1e-12), 0.0))
-        signed = np.where(inside, -dist, dist)
-        k = signed.argmin(1)
         r = np.arange(len(cmd_xy))
-        bx, by = px[r, k] + nx[r, k] * need, py[r, k] + ny[r, k] * need
-        target = np.stack([x[r, k] + c[r, k] * bx - s[r, k] * by, y[r, k] + s[r, k] * bx + c[r, k] * by], -1)
-        return np.where((signed[r, k] < need)[:, None], target, cmd_xy)
+        # A block made of several rectangles (a T): leaving one may enter another, so repeat a few times.
+        for _ in range(1 if len(self.clutter_parts) == 1 else 3):
+            lx, ly, (x, y, c, s, hx, hy) = self._block_frame(cmd_xy, self.clutter_obs)
+            # Nearest point on each rectangle's outline and the outward normal there (inside: exit by the nearest side).
+            inside = (np.abs(lx) < hx) & (np.abs(ly) < hy)
+            by_x = hx - np.abs(lx) < hy - np.abs(ly)
+            sx, sy = np.where(lx >= 0, 1.0, -1.0), np.where(ly >= 0, 1.0, -1.0)
+            px = np.where(inside & by_x, sx * hx, np.clip(lx, -hx, hx))
+            py = np.where(inside & ~by_x, sy * hy, np.clip(ly, -hy, hy))
+            dist = np.hypot(lx - px, ly - py)
+            nx = np.where(inside, np.where(by_x, sx, 0.0), np.where(dist > 1e-12, (lx - px) / np.maximum(dist, 1e-12), 1.0))
+            ny = np.where(inside, np.where(by_x, 0.0, sy), np.where(dist > 1e-12, (ly - py) / np.maximum(dist, 1e-12), 0.0))
+            signed = np.where(inside, -dist, dist)
+            k = signed.argmin(1)
+            bx, by = px[r, k] + nx[r, k] * need, py[r, k] + ny[r, k] * need
+            target = np.stack([x[r, k] + c[r, k] * bx - s[r, k] * by, y[r, k] + s[r, k] * bx + c[r, k] * by], -1)
+            cmd_xy = np.where((signed[r, k] < need)[:, None], target, cmd_xy)
+        return cmd_xy
 
     def _sweep_gap(self, clutter_pose, start_pose, goal, obj_id, steps: int = 33):
         """Smallest clearance between the block and the object moved straight (and turned) from start to goal.
@@ -254,9 +257,12 @@ class ClutterEnv(PushEnv):
             sweep_gap[todo[found]] = gap[pick[found]]
             todo = todo[~found]
         if len(todo):
-            # Rare: start, goal and path cover the band. Park the block beyond the rod's reach, facing the robot.
+            # Rare: start, goal and path cover the band. Park the block beyond the rod's reach (tip 0.275 m plus
+            # its radius), its local x axis pointing away from the robot.
             side = -np.sign(np.arctan2(start[todo, 1], start[todo, 0]) + 1e-9)
-            home[todo] = np.c_[0.31 * np.cos(side * 0.82), 0.31 * np.sin(side * 0.82), side * 0.82]
+            p = self.clutter_parts
+            park = 0.29 + float(np.max(p[:, 2] - p[:, 0])) + self.clutter_grow     # 0.31 m for the 40 mm box
+            home[todo] = np.c_[park * np.cos(side * 0.82), park * np.sin(side * 0.82), side * 0.82]
             sweep_gap[todo] = np.inf
         self.clutter_home[ids] = home
         self.in_way[ids] = sweep_gap < t.clutter_near
@@ -266,6 +272,33 @@ class ClutterEnv(PushEnv):
     def _tool_clear(self, ids, cand, start, start_yaw):
         ok = super()._tool_clear(ids, cand, start, start_yaw)
         return ok & (self._block_clearance(cand, self.clutter_home[ids]) > self.cfg.scene.pusher_radius + 0.01)
+
+    def _sample_tool(self, ids, start, start_yaw):
+        tool = super()._sample_tool(ids, start, start_yaw)
+        t = self.cfg.task
+        if t.tool_near_block <= 0:
+            return tool
+        # Some episodes start with the rod right beside the block, as after placing it (its surface 4-12 mm away).
+        near = np.flatnonzero(self.rng.random(len(ids)) < t.tool_near_block)
+        rod, todo = self.cfg.scene.pusher_radius, near
+        for _ in range(20):
+            if len(todo) == 0:
+                break
+            home = self.clutter_home[ids[todo]]
+            ang = self.rng.uniform(-math.pi, math.pi, len(todo))
+            # Walk out from the block's centre until the rod's surface is the drawn distance from it.
+            want = rod + self.rng.uniform(0.004, 0.012, len(todo))
+            d = np.zeros(len(todo))
+            for _ in range(30):
+                cand = home[:, :2] + d[:, None] * np.stack([np.cos(ang), np.sin(ang)], -1)
+                d += np.maximum(want - self._block_clearance(cand, home), 0.0) + 1e-4 * (d == 0)
+            cand = home[:, :2] + d[:, None] * np.stack([np.cos(ang), np.sin(ang)], -1)
+            obj_clear = PushEnv._tool_clear(self, ids[todo], cand, start[todo], start_yaw[todo])
+            reach = self._in_region(cand, (t.tool_r[0] + 0.01, t.tool_r[1] - 0.01), t.tool_az - 0.1)
+            ok = obj_clear & reach
+            tool[todo[ok]] = cand[ok]
+            todo = todo[~ok]
+        return tool
 
     def _place(self, ids, start, start_yaw, tool):
         super()._place(ids, start, start_yaw, tool)

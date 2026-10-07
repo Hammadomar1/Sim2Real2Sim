@@ -69,11 +69,12 @@ def main(argv=None):
     print(f"\n{args.checkpoint} (iteration {ck['iteration']}, {ck['samples'] / 1e6:.0f}M samples) | "
           f"{args.episodes} episodes, seed {args.seed}, difficulty {args.difficulty}, timestep "
           f"{cfg.scene.timestep * 1e3:.0f} ms, randomization {'on' if cfg.rand.enabled else 'off'}")
-    print(f"{'':44s}" + "".join(f"{n:>12s}" for n in names))
+    width = {n: max(12, len(n) + 2) for n in names}
+    print(f"{'':44s}" + "".join(f"{n:>{width[n]}s}" for n in names))
     for key, label, fmt in ROWS:
         if all(key not in results[n] for n in names):
             continue
-        print(f"{label:44s}" + "".join(f"{fmt.format(results[n].get(key, float('nan'))):>12s}" for n in names))
+        print(f"{label:44s}" + "".join(f"{fmt.format(results[n].get(key, float('nan'))):>{width[n]}s}" for n in names))
     if "sweep_gap_mm" in results["policy"]["per_episode"][0]:
         print("\nby the block's clearance from the T's straight path: success / disturbed / first touched by the rod")
         for n in names:

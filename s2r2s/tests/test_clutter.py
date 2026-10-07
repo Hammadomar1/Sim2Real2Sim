@@ -132,3 +132,12 @@ def test_rod_guard_slides_the_rod_along_the_block():
             assert np.median(env.cmd_deflection) > 0.5 * full_step
     assert np.median(moved[0.0]) > 0.02                # unguarded, the rod shoves the block away ...
     assert moved[0.003].max() < 0.001                  # ... guarded, it never moves it
+
+
+def test_rod_can_start_beside_the_block():
+    env = make(256, seed=6, tool_near_block=1.0)
+    rod = env.cfg.scene.pusher_radius
+    gap = env._block_clearance(env.tool_position()[:, :2], env.clutter_home) - rod
+    assert np.mean((gap > 0.0039) & (gap < 0.0121)) > 0.9      # as right after placing the block (the rest fall back)
+    assert (gap > 0.0039).all()                                  # never inside the guard zone
+    assert (env._surface_distance(env.tool_position()[:, :2], env.object_pose(), env.obj_id) > 0.009).all()

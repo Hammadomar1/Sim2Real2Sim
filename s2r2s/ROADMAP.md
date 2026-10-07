@@ -133,10 +133,12 @@ The software for steps 2, 3 and 6 is ready and rehearsed on a simulated, miscali
 
 **Done (simulation):** Milestone 1 (96.6 %), Level 1, the gate (95.3 % through a 64–70 mm opening), and clutter:
 place the T without disturbing a second block (94.9 %; the T reaches its goal in 96.7 %, the block is disturbed in
-1.9 %). See README. The hardware runner already carries the block's camera pose and the controller's rod guard.
-Next, in simulation: Level 2 (two blocks) and Level 3 (connect blocks: the clutter policy is the "don't knock the
-other piece" skill; add a planner). The clutter task's remaining failures, where the rod must detour around the
-block, are a ready-made test case for the failure-guided sampler.
+1.9 %), and Level 2: two blocks, each to its own goal, by two clutter skills and a push planner (92.4 % of
+two-block scenes). See README. The hardware runner already carries the block's camera pose and the controller's
+rod guard; running Level 2 on the arm needs the planner in the runner and a camera that tells the T from the box.
+Next, in simulation: Level 3 (connect blocks: the same skills, with goals that make the pieces touch, and a final
+push to close the gap). The remaining failures, where the rod must detour around a block, are a ready-made test
+case for the failure-guided sampler.
 
 - [ ] Run `.\scripts\setup.ps1`, then `.\scripts\play.ps1 runs\tee_v1\best.pt`. Press K to kick the T mid-push and watch it recover.
 - [ ] (Simulation) Train the six-object generalist. Add the clutter block to the scene specification and the sampler.
