@@ -43,7 +43,8 @@ from .objects import OBJECTS
 from .tasks import make_env
 from .train import load_policy
 
-TEE, BOX = 0, 1                       # which block is being pushed
+TEE, BOX, DOCK = 0, 1, 2              # which skill pushes: the T, the box, or the box into the T's corner (Level 3)
+MAX_PUSHES = 4
 PUSH_STEPS = 400                      # 20 s per push at most
 SETTLE_STEPS = 20                     # 1 s within 8 mm / 8 deg ends a push
 
@@ -59,10 +60,11 @@ class Level2Env(ClutterEnv):
         n = cfg.num_envs
         self.parking = parking
         self.box_goal = np.zeros((n, 3))
-        self.plan_who = np.full((n, 3), -1, dtype=np.int64)    # block pushed by each step of the plan
-        self.plan_goal = np.zeros((n, 3, 3))                 # target pose of each push
+        self.plan_who = np.full((n, MAX_PUSHES), -1, dtype=np.int64)    # skill of each push in the plan
+        self.plan_goal = np.zeros((n, MAX_PUSHES, 3))                 # target pose of each push
         self.plan_len = np.zeros(n, dtype=np.int64)
         self.plan_clearance = np.zeros(n)                    # the plan's smallest clearance to the block that stays
+        self.stop_when_done = False                          # hold the arm still once the last push has ended
         self.external_q = None
         super().__init__(cfg)
         self.external_q = self.qarm.copy()
@@ -155,7 +157,8 @@ class Level2Env(ClutterEnv):
         Returns (length (k,): 0 = no plan, who (k, 3), targets (k, 3, 3), clearance (k,))."""
         t = self.cfg.task
         k = len(t_start)
-        length, who, goal, clear = np.zeros(k, dtype=np.int64), np.full((k, 3), -1), np.zeros((k, 3, 3)), np.zeros(k)
+        length, who, goal, clear = (np.zeros(k, dtype=np.int64), np.full((k, MAX_PUSHES), -1), np.zeros((k, MAX_PUSHES, 3)),
+                                    np.zeros(k))
         c = self.order_clearances(t_start, t_goal, b_start, b_goal)
         two = (c > t.clutter_min_gap).any(1)
         first = np.where(c[:, 0] >= c[:, 1], TEE, BOX)
@@ -169,7 +172,7 @@ class Level2Env(ClutterEnv):
             pc, parked, spot = self.park_plans(t_start[idx], t_goal[idx], b_start[idx], b_goal[idx])
             good, p = idx[pc > 0], parked[pc > 0]
             length[good], clear[good] = 3, pc[pc > 0]
-            who[good] = np.c_[p, 1 - p, p]
+            who[good, :3] = np.c_[p, 1 - p, p]
             goal[good, 0] = spot[pc > 0]
             goal[good, 1] = goals[good, 1 - p]
             goal[good, 2] = goals[good, p]
@@ -224,6 +227,50 @@ class Level2Env(ClutterEnv):
         return {"box_pos_err": pos, "box_yaw_err": yaw,
                 "box_outside": ~self._in_region(box[:, :2], self.cfg.task.fail_r, self.cfg.task.fail_az),
                 "tee_final": self.object_pose()[ids], "box_final": box}
+
+    # ------------------------------------------------------------- hooks for the plan executor
+    def push_target(self, ids, k):
+        """Target pose of push ``k[i]`` in worlds ``ids`` (Level 2: fixed by the plan)."""
+        return self.plan_goal[ids, k]
+
+    def push_steps(self, who):
+        """Control steps a push may take at most."""
+        return PUSH_STEPS
+
+    def settle_tol(self, who):
+        """Position (m) and yaw (rad) within which a push counts as settled at its target."""
+        return 0.008, math.radians(8)
+
+    def episode_row(self, ep):
+        """Task outcome of a finished episode, from its ``info['episode']`` entries."""
+        t = self.cfg.task
+        tee_ok = ep["pos_err"] <= t.success_pos and ep["yaw_err"] <= t.success_yaw
+        box_ok = ep["box_pos_err"] <= t.success_pos and ep["box_yaw_err"] <= t.success_yaw
+        failed = bool(ep["failed"] or ep["box_outside"])
+        return dict(success=bool(tee_ok and box_ok and not failed), tee_ok=bool(tee_ok), box_ok=bool(box_ok), failed=failed,
+                    tee_pos_mm=float(ep["pos_err"] * 1e3), tee_yaw_deg=float(np.degrees(ep["yaw_err"])),
+                    box_pos_mm=float(ep["box_pos_err"] * 1e3), box_yaw_deg=float(np.degrees(ep["box_yaw_err"])))
+
+    def box_marker(self, i):
+        """Where to draw the box's target in videos."""
+        return self.box_goal[i]
+
+    def push_label(self, i, push, who, plan_len):
+        moves = plan_len - int((self.plan_who[i] == DOCK).sum())
+        if who == DOCK:
+            return "dock the box"
+        return ("park the " if moves == 3 and push == 0 else "") + ("T" if who == TEE else "box")
+
+    def status(self, i, push, who, plan_len):
+        """Two lines of text for videos and the viewer."""
+        tp = self.object_pose()[i]
+        te = np.linalg.norm(tp[:2] - self.goal[i, :2]) * 1e3
+        ty = math.degrees(_yaw_err(tp[2], self.goal[i, 2], 1))
+        bpos, byaw = (v[0] for v in self.box_errors(np.array([i])))
+        ok = te <= 10 and ty <= 10 and bpos <= 0.01 and byaw <= math.radians(10)
+        return (f"push {push + 1}/{plan_len}: {self.push_label(i, push, who, plan_len)}",
+                f"T {te:4.1f} mm {ty:4.1f} deg  box {bpos * 1e3:4.1f} mm {math.degrees(byaw):4.1f} deg"
+                f"{'  BOTH AT GOAL' if ok else ''}")
 
     def _observe(self, subset=None):
         # The world is never observed by a policy (the skills observe their twins); keep resets and steps cheap.
@@ -280,28 +327,17 @@ def _yaw_err(yaw, goal, symmetry):
     return np.abs((yaw - goal + period / 2) % period - period / 2) if symmetry != 0 else np.zeros_like(yaw)
 
 
-def run_level2(world_cfg: EnvConfig, tee: Skill, box: Skill, episodes: int, seed: int, order: str = "auto",
-               parking: bool = False, frames=None) -> dict:
-    """One two-block episode in each of ``episodes`` worlds, following each world's push plan.
+def execute(world: Level2Env, skills: dict, frames=None) -> list:
+    """Run each world's push plan once, one episode per world; returns the per-episode rows.
 
-    ``order``: auto (the planner's plans), or tee / box: two pushes in that fixed order (no parking).
-    ``frames(world, push, active, plan_len, over)``: optional callback after every step (videos, viewer).
+    ``skills``: {TEE: Skill, BOX: Skill, (DOCK: Skill)}; the T skill pushes the world's object (the T), the
+    others push its clutter block (the box). ``frames(world, push, active, plan_len, over)``: optional callback
+    after every step (videos, viewer).
     """
-    cfg = copy.deepcopy(world_cfg)
-    cfg.num_envs, cfg.seed = episodes, seed
-    cfg.task.difficulty, cfg.task.easy_fraction = 1.0, 0.0
-    world = Level2Env(cfg, parking=parking and order == "auto")
-    n, t = world.n, cfg.task
-    if order != "auto":                                  # fixed order, whatever the scene allows
-        first = TEE if order == "tee" else BOX
-        world.plan_who[:] = [first, 1 - first, -1]
-        goals = np.stack([world.goal, world.box_goal], 1)
-        world.plan_goal[:, 0], world.plan_goal[:, 1] = goals[:, first], goals[:, 1 - first]
-        world.plan_len[:] = 2
-    sym = {TEE: OBJECTS[t.objects[0]].symmetry, BOX: OBJECTS[t.clutter].symmetry}
-    skills = {TEE: tee, BOX: box}
+    n, t = world.n, world.cfg.task
+    sym = {TEE: OBJECTS[t.objects[0]].symmetry, BOX: OBJECTS[t.clutter].symmetry, DOCK: OBJECTS[t.clutter].symmetry}
     # Scene facts, kept before a finished world is reset (inside step) to a new scene.
-    plan_who, plan_goal, plan_len = world.plan_who.copy(), world.plan_goal.copy(), world.plan_len.copy()
+    plan_who, plan_len = world.plan_who.copy(), world.plan_len.copy()
     tee0, box0 = world.object_pose().copy(), world.clutter_pose().copy()
     clear = world.order_clearances(tee0, world.goal, box0, world.box_goal)
     push = np.zeros(n, dtype=np.int64)
@@ -314,27 +350,39 @@ def run_level2(world_cfg: EnvConfig, tee: Skill, box: Skill, episodes: int, seed
     kept_moved = np.zeros(n)                             # largest move of a block that had to stay (m)
     leaning = np.zeros(n)                                # steps the rod guard had to deflect the command
 
+    def views(w):
+        """Camera estimates of (the block skill ``w`` pushes, the block it keeps in place)."""
+        return (world.obs_pose, world.clutter_obs) if w == TEE else (world.clutter_obs, world.obs_pose)
+
     def begin(ids):
         """Start push ``push[ids]`` with its skill; the other block must stay where it is now."""
         who = plan_who[ids, push[ids]]
-        for w in (TEE, BOX):
+        for w, skill in skills.items():
             sub = ids[who == w]
-            if len(sub) == 0:
-                continue
-            pose, block = (world.obs_pose, world.clutter_obs) if w == TEE else (world.clutter_obs, world.obs_pose)
-            skills[w].start(sub, world.qarm[sub], pose[sub], block[sub], plan_goal[sub, push[sub]], world.tool_z_cmd[sub])
+            if len(sub):
+                pose, block = views(w)
+                skill.start(sub, world.qarm[sub], pose[sub], block[sub], world.push_target(sub, push[sub]),
+                            world.tool_z_cmd[sub])
         kept_at_start[ids] = np.where((who == TEE)[:, None], world.clutter_pose()[ids], world.object_pose()[ids])
         push_start[ids] = world.step_count[ids]
 
     begin(np.arange(n))
     done_once = np.zeros(n, dtype=bool)
     rows = [None] * n
+    r = np.arange(n)
     for _ in range(world.max_steps):
-        active = plan_who[np.arange(n), push]
-        q_tee = tee.act(world.qarm, world.obs_pose, world.clutter_obs)
-        q_box = box.act(world.qarm, world.clutter_obs, world.obs_pose)
-        world.external_q = np.where((active == TEE)[:, None], q_tee, q_box)
-        leaning += np.where(active == TEE, tee.twin.cmd_deflection, box.twin.cmd_deflection) > 1e-4
+        active = plan_who[r, push]
+        q = np.zeros((n, 5))
+        for w, skill in skills.items():
+            mine = active == w
+            if mine.any():                               # targets can move (the dock target follows the T)
+                skill.twin.goal[mine] = world.push_target(r[mine], push[mine])
+            pose, block = views(w)
+            q = np.where(mine[:, None], skill.act(world.qarm, pose, block), q)
+            leaning += mine & (skill.twin.cmd_deflection > 1e-4)
+        if world.stop_when_done:                         # the plan is over: hold the arm where it is
+            q = np.where(over[:, None], world.qarm, q)
+        world.external_q = q
         _, _, _, info = world.step(np.zeros((n, 2)))
         if "episode" in info:
             ids = info["terminal_ids"]
@@ -342,29 +390,32 @@ def run_level2(world_cfg: EnvConfig, tee: Skill, box: Skill, episodes: int, seed
                 if done_once[i]:
                     continue
                 ep = {k: np.asarray(v)[j] for k, v in info["episode"].items()}
-                tee_ok = ep["pos_err"] <= t.success_pos and ep["yaw_err"] <= t.success_yaw
-                box_ok = ep["box_pos_err"] <= t.success_pos and ep["box_yaw_err"] <= t.success_yaw
-                failed = bool(ep["failed"] or ep["box_outside"])
                 kept_final = ep["box_final"] if active[i] == TEE else ep["tee_final"]
                 moved = max(kept_moved[i], float(np.linalg.norm(kept_final[:2] - kept_at_start[i, :2])))
                 first = int(plan_who[i, 0])
-                rows[i] = dict(success=bool(tee_ok and box_ok and not failed), tee_ok=bool(tee_ok), box_ok=bool(box_ok),
-                               failed=failed, pushes=int(plan_len[i]), order="tee" if first == TEE else "box",
-                               pushes_done=int(pushes_done[i]), kept_moved_mm=moved * 1e3, guard_s=float(leaning[i] * t.control_dt),
-                               order_valid=bool(plan_len[i] == 3 or clear[i, first] > t.clutter_min_gap),
-                               tee_pos_mm=float(ep["pos_err"] * 1e3), tee_yaw_deg=float(np.degrees(ep["yaw_err"])),
-                               box_pos_mm=float(ep["box_pos_err"] * 1e3), box_yaw_deg=float(np.degrees(ep["box_yaw_err"])),
-                               time_s=float(finish_step[i] * t.control_dt) if finish_step[i] >= 0 else float("nan"))
+                pushes = int(plan_len[i])
+                moves = pushes - int((plan_who[i] == DOCK).sum())      # pushes that bring a block to a place
+                rows[i] = dict(pushes=pushes, moves=moves, order="tee" if first == TEE else "box", pushes_done=int(pushes_done[i]),
+                               kept_moved_mm=moved * 1e3, guard_s=float(leaning[i] * t.control_dt),
+                               order_valid=bool(moves != 2 or clear[i, first] > t.clutter_min_gap),
+                               time_s=float(finish_step[i] * t.control_dt) if finish_step[i] >= 0 else float("nan"),
+                               **world.episode_row(ep))
                 done_once[i] = True
             if done_once.all():
                 break
         # Sequencer: once the pushed block has settled at its target (by the camera), start the next push.
         est = np.where((active == TEE)[:, None], world.obs_pose, world.clutter_obs)
-        goal = plan_goal[np.arange(n), push]
+        goal = world.push_target(r, push)
         pos = np.linalg.norm(est[:, :2] - goal[:, :2], axis=-1)
-        yaw = np.where(active == TEE, _yaw_err(est[:, 2], goal[:, 2], sym[TEE]), _yaw_err(est[:, 2], goal[:, 2], sym[BOX]))
-        settled = np.where((pos < 0.008) & (yaw < math.radians(8)), settled + 1, 0)
-        finished = ~done_once & ~over & ((settled == SETTLE_STEPS) | (world.step_count - push_start == PUSH_STEPS))
+        yaw = np.zeros(n)
+        tol_pos, tol_yaw = np.zeros(n), np.zeros(n)
+        for w in skills:
+            m = active == w
+            yaw[m] = _yaw_err(est[m, 2], goal[m, 2], sym[w])
+            tol_pos[m], tol_yaw[m] = world.settle_tol(w)
+        settled = np.where((pos < tol_pos) & (yaw < tol_yaw), settled + 1, 0)
+        budget = np.array([world.push_steps(w) for w in range(3)])[np.maximum(active, 0)]
+        finished = ~done_once & ~over & ((settled == SETTLE_STEPS) | (world.step_count - push_start >= budget))
         if finished.any():
             ids = np.flatnonzero(finished)
             ok = settled[ids] >= SETTLE_STEPS
@@ -380,14 +431,34 @@ def run_level2(world_cfg: EnvConfig, tee: Skill, box: Skill, episodes: int, seed
                 settled[nxt] = 0
                 begin(nxt)
         if frames is not None:
-            frames(world, push, plan_who[np.arange(n), push], plan_len, over)
-    return summarize_level2(rows)
+            frames(world, push, plan_who[r, push], plan_len, over)
+    return rows
+
+
+def run_level2(world_cfg: EnvConfig, tee: Skill, box: Skill, episodes: int, seed: int, order: str = "auto",
+               parking: bool = False, frames=None) -> dict:
+    """One two-block episode in each of ``episodes`` worlds, following each world's push plan.
+
+    ``order``: auto (the planner's plans), or tee / box: two pushes in that fixed order (no parking).
+    """
+    cfg = copy.deepcopy(world_cfg)
+    cfg.num_envs, cfg.seed = episodes, seed
+    cfg.task.difficulty, cfg.task.easy_fraction = 1.0, 0.0
+    world = Level2Env(cfg, parking=parking and order == "auto")
+    if order != "auto":                                  # fixed order, whatever the scene allows
+        first = TEE if order == "tee" else BOX
+        world.plan_who[:] = -1
+        world.plan_who[:, :2] = [first, 1 - first]
+        goals = np.stack([world.goal, world.box_goal], 1)
+        world.plan_goal[:, 0], world.plan_goal[:, 1] = goals[:, first], goals[:, 1 - first]
+        world.plan_len[:] = 2
+    return summarize_level2(execute(world, {TEE: tee, BOX: box}, frames))
 
 
 def summarize_level2(rows) -> dict:
     col = lambda k: np.array([r[k] for r in rows])
-    ok, pushes = col("success"), col("pushes")
-    two, three = pushes == 2, pushes == 3
+    ok, pushes, moves = col("success"), col("pushes"), col("moves")
+    two, three = moves == 2, moves == 3
     rate = lambda m: float(ok[m].mean()) if m.any() else float("nan")
     out = {"episodes": len(rows), "success": float(ok.mean()), "tee_at_goal": float(col("tee_ok").mean()),
            "box_at_goal": float(col("box_ok").mean()), "failure": float(col("failed").mean()),
@@ -428,117 +499,105 @@ def scene_stats(world_cfg: EnvConfig, k: int = 400000, seed: int = 1) -> dict:
             "three_pushes_only": float((length == 3).mean()), "no_plan": float((length == 0).mean())}
 
 
-def _video(path, world_cfg, tee, box, episodes, seed, order, parking, size=480):
+def _mirror(world, i):
+    """A visual copy of world ``i``: the box orange, its target a light orange outline."""
+    from .visual import SceneMirror
+    m = SceneMirror(world, i, show_estimate=False)
+    home = m.model.body("clutter_home").id
+    for g in range(m.model.ngeom):
+        if m.model.geom(g).name.startswith("clutter_"):
+            m.model.geom_rgba[g] = [0.95, 0.55, 0.15, 1.0]
+        elif m.model.geom_bodyid[g] == home:
+            m.model.geom_rgba[g] = [0.95, 0.65, 0.3, 0.5]
+    return m
+
+
+def _show(m, world, i):
+    """Sync mirror ``m`` with world ``i``, drawing the box's target."""
+    import mujoco
+    from .scene import set_marker
+    m.env = world
+    m.sync()
+    set_marker(m.model, m.data, "clutter_home", world.box_marker(i))
+    mujoco.mj_forward(m.model, m.data)
+
+
+def video(path, episodes, run, control_dt, size=480):
+    """Render ``run(frames)`` (episodes worlds side by side) to an MP4; returns run's result."""
     import cv2
     import imageio.v2 as imageio
     import mujoco
-    from .scene import set_marker
-    from .visual import SceneMirror
     grid = int(math.ceil(math.sqrt(episodes)))
     state = {"mirrors": None, "renderers": None, "frames": [], "done": np.zeros(episodes, dtype=bool)}
 
     def frame(world, push, active, plan_len, over):
         if state["mirrors"] is None:
-            state["mirrors"] = [SceneMirror(world, i, show_estimate=False) for i in range(episodes)]
-            for m in state["mirrors"]:                   # the box orange, its goal a light orange outline
-                home = m.model.body("clutter_home").id
-                for g in range(m.model.ngeom):
-                    if m.model.geom(g).name.startswith("clutter_"):
-                        m.model.geom_rgba[g] = [0.95, 0.55, 0.15, 1.0]
-                    elif m.model.geom_bodyid[g] == home:
-                        m.model.geom_rgba[g] = [0.95, 0.65, 0.3, 0.5]
+            state["mirrors"] = [_mirror(world, i) for i in range(episodes)]
             state["renderers"] = [mujoco.Renderer(m.model, size, size) for m in state["mirrors"]]
         state["done"] |= world.step_count[:episodes] == 0       # finished (and reset to a new scene): dim it
         canvas = []
         for i, (m, r) in enumerate(zip(state["mirrors"], state["renderers"])):
-            m.sync()
-            set_marker(m.model, m.data, "clutter_home", world.box_goal[i])
-            mujoco.mj_forward(m.model, m.data)
+            _show(m, world, i)
             r.update_scene(m.data, camera="front")
             img = np.ascontiguousarray(r.render())
             if state["done"][i]:
                 img = (img * 0.35).astype(np.uint8)
-            tp = world.object_pose()[i]
-            te = np.linalg.norm(tp[:2] - world.goal[i, :2]) * 1e3
-            ty = math.degrees(_yaw_err(tp[2], world.goal[i, 2], 1))
-            bpos, byaw = (v[0] for v in world.box_errors(np.array([i])))
-            ok = te <= 10 and ty <= 10 and bpos <= 0.01 and byaw <= math.radians(10)
-            parked = plan_len[i] == 3 and push[i] == 0
-            what = ("park the " if parked else "") + ("T" if active[i] == TEE else "box")
+            line1, line2 = world.status(i, push[i], active[i], plan_len[i])
             cv2.rectangle(img, (0, 0), (img.shape[1], 50), (25, 25, 25), -1)
-            cv2.putText(img, f"t {world.step_count[i] * world.cfg.task.control_dt:4.1f}s  push {push[i] + 1}/{plan_len[i]}: {what}",
-                        (8, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(img, f"T {te:4.1f} mm {ty:4.1f} deg  box {bpos * 1e3:4.1f} mm {math.degrees(byaw):4.1f} deg"
-                        f"{'  BOTH AT GOAL' if ok else ''}", (8, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.45,
-                        (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(img, f"t {world.step_count[i] * control_dt:4.1f}s  {line1}", (8, 20), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.putText(img, line2, (8, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 1, cv2.LINE_AA)
             canvas.append(img)
         while len(canvas) < grid * grid:
             canvas.append(np.zeros_like(canvas[0]))
         state["frames"].append(np.concatenate([np.concatenate(canvas[k * grid:(k + 1) * grid], 1) for k in range(grid)], 0))
 
-    result = run_level2(world_cfg, tee, box, episodes, seed, order, parking, frames=frame)
+    result = run(frame)
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    imageio.mimwrite(out, state["frames"], fps=round(1 / world_cfg.task.control_dt), quality=7, macro_block_size=8)
+    imageio.mimwrite(out, state["frames"], fps=round(1 / control_dt), quality=7, macro_block_size=8)
     print(f"wrote {out} ({len(state['frames'])} frames)")
     return result
 
 
-def _view(world_cfg, tee_args, box_args, seed, park):
-    """Watch scenes one after another in the MuJoCo viewer, in real time (close the window to stop)."""
+def view(run_one, control_dt):
+    """Watch ``run_one(seed, frames)`` scene after scene in the MuJoCo viewer, in real time (close it to stop)."""
     import time
     import mujoco
     import mujoco.viewer
-    from .scene import set_marker
-    from .visual import SceneMirror
-    tee, box = Skill(*tee_args[:1], 1, "cpu", tee_args[1]), Skill(*box_args[:1], 1, "cpu", box_args[1])
-    state = {"viewer": None, "mirror": None, "t": time.time(), "after": 0}
+    state = {"viewer": None, "mirror": None, "t": time.time(), "after": 0, "scene": 1}
 
     class NextScene(Exception):
         pass
 
     def frame(world, push, active, plan_len, over):
         if state["mirror"] is None:
-            state["mirror"] = m = SceneMirror(world, 0, show_estimate=False)
-            home = m.model.body("clutter_home").id
-            for g in range(m.model.ngeom):
-                if m.model.geom(g).name.startswith("clutter_"):
-                    m.model.geom_rgba[g] = [0.95, 0.55, 0.15, 1.0]
-                elif m.model.geom_bodyid[g] == home:
-                    m.model.geom_rgba[g] = [0.95, 0.65, 0.3, 0.5]
+            state["mirror"] = m = _mirror(world, 0)
             state["viewer"] = v = mujoco.viewer.launch_passive(m.model, m.data)
             v.cam.lookat[:] = [0.19, 0.0, 0.02]
             v.cam.distance, v.cam.azimuth, v.cam.elevation = 0.62, 200.0, -42.0
         m, v = state["mirror"], state["viewer"]
         if not v.is_running():
             raise KeyboardInterrupt
-        m.env = world                             # every scene has the same layout: reuse the window
-        m.sync()
-        set_marker(m.model, m.data, "clutter_home", world.box_goal[0])
-        mujoco.mj_forward(m.model, m.data)
-        tp = world.object_pose()[0]
-        te, ty = np.linalg.norm(tp[:2] - world.goal[0, :2]) * 1e3, math.degrees(_yaw_err(tp[2], world.goal[0, 2], 1))
-        bpos, byaw = (v_[0] for v_ in world.box_errors(np.array([0])))
-        what = ("park the " if plan_len[0] == 3 and push[0] == 0 else "") + ("T" if active[0] == TEE else "box")
+        _show(m, world, 0)                        # every scene has the same layout: reuse the window
+        line1, line2 = world.status(0, push[0], active[0], plan_len[0])
         v.set_texts((mujoco.mjtFontScale.mjFONTSCALE_150, mujoco.mjtGridPos.mjGRID_TOPLEFT,
-                     f"scene {seed - first_seed + 1}, push {push[0] + 1}/{plan_len[0]}: {what}",
-                     f"T {te:.1f} mm {ty:.1f} deg   box {bpos * 1e3:.1f} mm {math.degrees(byaw):.1f} deg"))
+                     f"scene {state['scene']}, {line1}", line2))
         v.sync()
-        time.sleep(max(0.0, world.cfg.task.control_dt - (time.time() - state["t"])))
+        time.sleep(max(0.0, control_dt - (time.time() - state["t"])))
         state["t"] = time.time()
         state["after"] = state["after"] + 1 if over[0] else 0
         if state["after"] > 40:                   # 2 s after the last push: next scene
             raise NextScene
 
-    first_seed = seed
     try:
         while True:
             try:
-                run_level2(world_cfg, tee, box, 1, seed, "auto", park, frames=frame)
+                run_one(state["scene"], frame)
             except NextScene:
                 pass
             state["after"] = 0
-            seed += 1
+            state["scene"] += 1
     except KeyboardInterrupt:
         pass
     finally:
@@ -567,10 +626,7 @@ def main(argv=None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     n = args.episodes
     if args.view:
-        _, world_cfg, _ = load_policy(args.tee, "cpu")
-        park = not args.no_park
-        world_cfg.task.episode_seconds = 60.0 if park else 40.0
-        return _view(world_cfg, (args.tee, args.tee_policy or None), (args.box, args.box_policy or None), args.seed, park)
+        n, device = 1, "cpu"
     tee = Skill(args.tee, n, device, args.tee_policy or None)
     box = Skill(args.box, n, device, args.box_policy or None)
     if args.no_guard:
@@ -578,8 +634,13 @@ def main(argv=None):
     _, world_cfg, _ = load_policy(args.tee, "cpu")           # camera model and randomisation of the T skill
     park = not args.no_park and args.order == "auto"
     world_cfg.task.episode_seconds = 60.0 if park else 40.0              # 20 s per push at most
-    run = _video if args.video else (lambda *a: run_level2(*a[1:]))
-    r = run(args.video, world_cfg, tee, box, n, args.seed, args.order, park)
+    dt = world_cfg.task.control_dt
+    if args.view:
+        return view(lambda seed, frames: run_level2(world_cfg, tee, box, 1, args.seed + seed, args.order, park, frames), dt)
+    if args.video:
+        r = video(args.video, n, lambda frames: run_level2(world_cfg, tee, box, n, args.seed, args.order, park, frames), dt)
+    else:
+        r = run_level2(world_cfg, tee, box, n, args.seed, args.order, park)
     print(f"\nLevel 2: {n} two-block scenes (seed {args.seed}), {'with' if park else 'without'} parking, order "
           f"{args.order}, rod guard {'off' if args.no_guard else 'on'} | T skill {args.tee_policy or args.tee} | box skill "
           f"{args.box_policy or args.box}")

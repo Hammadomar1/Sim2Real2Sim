@@ -133,12 +133,23 @@ The software for steps 2, 3 and 6 is ready and rehearsed on a simulated, miscali
 
 **Done (simulation):** Milestone 1 (96.6 %), Level 1, the gate (95.3 % through a 64–70 mm opening), and clutter:
 place the T without disturbing a second block (94.9 %; the T reaches its goal in 96.7 %, the block is disturbed in
-1.9 %), and Level 2: two blocks, each to its own goal, by two clutter skills and a push planner (92.4 % of
-two-block scenes). See README. The hardware runner already carries the block's camera pose and the controller's
-rod guard; running Level 2 on the arm needs the planner in the runner and a camera that tells the T from the box.
-Next, in simulation: Level 3 (connect blocks: the same skills, with goals that make the pieces touch, and a final
-push to close the gap). The remaining failures, where the rod must detour around a block, are a ready-made test
-case for the failure-guided sampler.
+1.9 %), Level 2: two blocks, each to its own goal, by two clutter skills and a push planner (92.4 % of
+two-block scenes), and Level 3: connect the blocks (82.5 % of held-out scenes assembled: the T at its goal and
+the box nested in its corner, touching both faces), with the same planner plus a dock skill trained on the
+states where docking starts in Level 3. See README.
+
+The hardware runner already carries the block's camera pose and the controller's rod guard. Running Level 2 or 3
+on the arm needs the planner in the runner and a camera that tells the T from the box. For Level 3, the camera
+must also see the two pieces when they touch: the dock target and the final check both depend on the T's pose
+next to the box.
+
+Twice now, a skill failed because it started from states it had never trained on: the rod beside a placed block in
+Level 2, and the rod between the box and the T in Level 3. Training from the states a skill meets in use fixed it
+both times. That is the failure-guided sampler in miniature. The remaining Level 3
+failures are a ready-made test case for it:
+- 7.4 %: the T was already off its goal before docking;
+- 5.2 %: the box did not seat;
+- 3.4 %: docking moved the T.
 
 - [ ] Run `.\scripts\setup.ps1`, then `.\scripts\play.ps1 runs\tee_v1\best.pt`. Press K to kick the T mid-push and watch it recover.
 - [ ] (Simulation) Train the six-object generalist. Add the clutter block to the scene specification and the sampler.

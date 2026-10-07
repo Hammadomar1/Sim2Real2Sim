@@ -237,6 +237,96 @@ python -m s2r2s.train --run clutter_box_v4 --objects box --clutter tee --init ru
 
 Video: `videos/level2_grid.mp4` (four scenes; the box's goal is the faint orange outline, the T's is green).
 
+## Level 3: connect the blocks (`level3.py`, `dock.py`)
+
+The T starts in the work band with a goal (the Milestone 1 rules). The box starts anywhere in the band, at least
+15 mm from the T. **Assembled** means two things at the end:
+- the T is at its goal (≤10 mm, ≤10°);
+- the box is nested in one of the T's two inner corners (where the bar overhangs the stem), touching both the
+  stem and the bar. That is, it is within 3 mm / 5° of the corner pose on the T's *actual* final pose.
+
+Level 3 reuses Level 2 and adds one skill:
+- **Plan.** The Level 2 planner brings the T to its goal and the box to a pre-dock spot. The spot is 25 mm out
+  from the chosen corner along its diagonal, 17.7 mm from both faces, so both pushes keep the skills' 15 mm rule.
+  The planner uses the order with more room, or a parking push (37 % of scenes). The chosen corner is one where
+  the docked box, the pre-dock spot and the rod behind the box all fit in the band.
+- **Dock skill** (`dock_v4`, new). It pushes the box the last 25 mm into the corner without moving the T (5 mm /
+  5° at most). Its environment (`DockEnv`) is the clutter task with the box as the object and the T as the block
+  that must stay. Only the rod pays the proximity cost, since the box has to touch the T. It was warm-started from
+  the box skill.
+- **Execution.** As in Level 2, except that the docking push gets 10 s (the dock skill's episode length). The
+  target is the corner where the camera sees the T when docking starts, fixed from then on, and the run stops
+  once the box is seated.
+
+Held-out results, 1,000 unseen assembly scenes, every configuration on the same scenes
+(`runs/level3/final_eval.json`):
+
+| | assembled | T at goal | box in its corner | a block that should stay moved >10 mm | time, median |
+|---|---|---|---|---|---|
+| **planner + skills, dock skill `dock_v4`** | **82.5 %** | 87.7 % | 89.7 % | 6.5 % | 18.5 s |
+| docking by the box skill (`clutter_box_v2`) | 58.8 % | 80.3 % | 66.1 % | 11.7 % | 19.8 s |
+| dock skill `dock_v3` (not trained on Level 3 starts) | 55.6 % | 69.3 % | 69.9 % | 20.3 % | 19.0 s |
+| dock skill `dock_v1` (trained with a target that follows the T) | 63.8 % | 77.2 % | 72.1 % | 15.0 % | 19.5 s |
+
+More detail on the `dock_v4` row:
+- Scenes done with two pushes then docking assemble 85.2 % of the time; scenes that need a parking push, 77.9 %.
+  Without parking, only scenes that two pushes can do are left, and 83.4 % of those assemble.
+- With the T placed first (61 % of scenes) 88.1 % assemble; with the box first, 80.7 %.
+- Final errors, median: T 3.1 mm / 3.6°, box to its corner 0.8 mm / 0.8°. The median gap between the pieces is
+  0.0 mm. Failures (a block left the band): 2.2 %.
+
+Where the other 17.5 % goes, measured on the same test scenes:
+- 7.4 %: the T was already off its goal when docking started.
+- 5.2 %: the box did not seat.
+- 3.4 %: docking pushed the T off its goal.
+- 1.5 %: a block left the band before docking.
+
+Docking on its own, 1,000 held-out scenes per row (`runs/dock_v4/final_eval.json`):
+
+| docked | `dock_v4` | `dock_v3` | box skill | scripted |
+|---|---|---|---|---|
+| starts sampled around the corner | **94.7 %** | 94.2 % | 69.0 % | 19.7 % |
+| starts recorded in Level 3 on the test scenes | **92.7 %** | 57.5 % | 67.4 % | |
+| ... the T disturbed (>10 mm or >10°) | 2.8 % | 35.4 % | 16.4 % | |
+
+How we got here:
+1. **A target that follows the T gets chased.** `dock_v1` recomputed its target from the T's pose at every step.
+   Once the box pressed on the T, both blocks moved, the target moved with them, and the skill kept shoving. The
+   target is now fixed when docking starts, and success still checks that the pieces touch where the T ends up.
+   Two more fixes: docking stops once the box is seated, and it gets the 10 s it trained for. Holding past its
+   training horizon made it drift.
+2. **That was not enough.** `dock_v3` was trained with the fixed target and with the rod starting beside the box.
+   It docked 94.2 % of its own scenes, but Level 3 *fell* to 55.6 %.
+3. **Is it the pipeline or the states?** We replayed the states where Level 3 docking began inside the dock
+   skill's own environment, and the same failures came back. So the executor (camera, twin, timing) was faithful,
+   and the starts were the problem. The box skill pushes the box outward to the pre-dock spot and leaves the rod
+   *between the box and the T*: in 49 % of Level 3 docking starts, against 27 % of sampled ones. The rod is also
+   within 8 mm of the T in 46 % of Level 3 starts, against 3 %. The dock skill must first get out of the corner
+   and around the box without touching the T, and `dock_v3` had rarely started there.
+4. **Train on the states it meets.** `--record-dock-starts` recorded 3,956 docking starts from Level 3 on
+   training seeds 1–4 (`runs/dock_v4/start_bank.npz`). `dock_v4` is `dock_v3` trained 40 more minutes with half
+   its episodes starting from them (`task.dock_start_bank`, `task.dock_bank_share=0.5`). From Level 3 starts on
+   the held-out scenes, which it never trained on, it docks 92.7 %, and Level 3 rose from 55.6 % to 82.5 %. This
+   is the same lesson as in Level 2: train each skill on the states it starts from in use.
+
+```powershell
+python -m s2r2s.level3 --view                                        # watch assemblies in the viewer
+python -m s2r2s.level3                                               # 1,000 held-out scenes
+python -m s2r2s.level3 --dock-policy runs\clutter_box_v2\best.pt     # dock with the box skill instead
+python -m s2r2s.level3 --episodes 4 --video videos\level3.mp4        # a 2x2 video
+python -m s2r2s.level3 --record-dock-starts runs\dock_v4\test_starts.npz --record-seeds 20000003   # then:
+python -m s2r2s.evaluate runs\dock_v4\best.pt --set task.dock_start_bank=runs/dock_v4/test_starts.npz task.dock_bank_share=1
+```
+
+The shipped `dock_v4` went through four runs, about 2 hours in total (`dock_v1` was 13 minutes plus 35 more as
+`dock_v2`, then `dock_v3` and `dock_v4` 40 minutes each), two of them on setups since replaced. The short path in
+`dock.py`'s docstring follows the same recipe (box skill, then 75 minutes of docking, then 40 minutes with the
+recorded starts) but has not been rerun as written.
+
+Video: `videos/level3_grid.mp4` (four scenes, all assembled; two use a parking push). The box's target is the
+faint orange outline in the T's goal corner, and the status line shows the T's error and the box's distance
+from its corner.
+
 ## Quick start (Windows, PowerShell)
 
 ```powershell
@@ -312,7 +402,7 @@ and value normalisation, time-outs bootstrapped from the true terminal state, KL
 The automatic curriculum raises goal difficulty by 0.1 whenever 80 % of episodes at the current level succeed.
 Every 50 updates, the policy is scored on 512 fixed held-out scenes at full difficulty, and `best.pt` is kept.
 
-## What was verified before any RL (`pytest`, 35 tests)
+## What was verified before any RL (`pytest`, 40 tests)
 
 - Stripped training model has exactly the Menagerie masses, inertias and servo gains
 - FK and Jacobian match MuJoCo; IK solves >99.9 % of the workspace; one IK step per control tick tracks to <0.3 mm (p99)
@@ -332,6 +422,10 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
   placing it)
 - Level 2: every two-block scene has a plan whose pushes all keep the skills' 15 mm rule (also with parking), the
   clearance sweep matches point checks at its ends, and each skill's twin guards the block that must stay
+- Level 3: the docked box touches both the stem and the bar (1 mm off one face it still touches the other; off
+  both, it is free); docking scenes start clear of the T and succeed only when seated with the T in place; the
+  dock target stays put when the T is nudged; every assembly plan ends with docking from a pre-dock spot 17.7 mm
+  from both faces; and recorded Level 3 starts are reproduced exactly when training starts from them
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -360,6 +454,7 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/gate.py`, `tasks.py` | Level 1 gate puzzle (waypoints, path-length reward, gate features); environment factory |
 | `s2r2s/clutter.py` | Clutter task: block placement, exact footprint clearances, rod guard, block features and costs |
 | `s2r2s/level2.py` | Level 2: two-block scenes, push planner (order, parking), skills run through twins, viewer and videos |
+| `s2r2s/dock.py`, `level3.py` | Level 3: the dock skill's environment (box into the T's corner); assembly plans and their execution |
 | `s2r2s/ppo.py`, `train.py` | PPO and the training loop (logs, curriculum, evaluation, checkpoints) |
 | `s2r2s/evaluation.py`, `evaluate.py` | Held-out evaluation (policy and baseline on identical scenes) |
 | `s2r2s/scripted.py` | Heuristic pusher: feasibility check and baseline |

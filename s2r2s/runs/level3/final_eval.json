@@ -1,0 +1,269 @@
+{
+ "scenes": 1000,
+ "seed": 20000003,
+ "note": "Every configuration ran on the same 1000 held-out assembly scenes. Skills: runs/clutter_v7/best.pt (push the T, keep the box), runs/clutter_box_v2/best.pt (push the box, keep the T) and the dock skill named in each entry. dock_v1 (and dock_v2, 35 more minutes of it) had a target that followed the T, dock_v3 a fixed target and rod starts beside the box, dock_v4 adds starts recorded in Level 3 (runs/dock_v4/start_bank.npz).",
+ "planner_dock_v4": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "dock": "runs/dock_v4/best.pt",
+   "dock_policy": "",
+   "no_park": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "out": "runs/level3/eval_planner.json"
+  },
+  "episodes": 1000,
+  "success": 0.825,
+  "tee_at_goal": 0.877,
+  "box_at_goal": 0.897,
+  "failure": 0.022,
+  "all_pushes_settled": 0.696,
+  "kept_block_disturbed": 0.065,
+  "kept_block_moved_mm_median": 1.6299514074974624,
+  "time_s_median": 18.525,
+  "three_push_share": 0.366,
+  "success_two_pushes": 0.8517350157728707,
+  "success_three_pushes": 0.7786885245901639,
+  "tee_first_share": 0.6072555205047319,
+  "success_tee_first": 0.8805194805194805,
+  "success_box_first": 0.8072289156626506,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   3.0861479707971142,
+   3.590754423505471
+  ],
+  "box_err_median": [
+   0.7855393059852618,
+   0.7710527215255871
+  ],
+  "docked": 0.897,
+  "gap_mm_median": 0.0008653693671905466,
+  "dock_err_median": [
+   0.7855393059852618,
+   0.7710527215255871
+  ]
+ },
+ "planner_dock_v4_no_parking": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "dock": "runs/dock_v4/best.pt",
+   "dock_policy": "",
+   "no_park": true,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "out": "runs/level3/eval_no_park.json"
+  },
+  "episodes": 1000,
+  "success": 0.834,
+  "tee_at_goal": 0.883,
+  "box_at_goal": 0.908,
+  "failure": 0.013,
+  "all_pushes_settled": 0.735,
+  "kept_block_disturbed": 0.053,
+  "kept_block_moved_mm_median": 1.4922508247710227,
+  "time_s_median": 16.75,
+  "three_push_share": 0.0,
+  "success_two_pushes": 0.834,
+  "success_three_pushes": NaN,
+  "tee_first_share": 0.607,
+  "success_tee_first": 0.8813838550247117,
+  "success_box_first": 0.7608142493638677,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   3.1219023931587095,
+   3.37223197955125
+  ],
+  "box_err_median": [
+   0.7300966907606681,
+   0.6429571600038195
+  ],
+  "docked": 0.908,
+  "gap_mm_median": 0.0007970679851143636,
+  "dock_err_median": [
+   0.7300966907606681,
+   0.6429571600038195
+  ]
+ },
+ "planner_box_skill_docks": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "dock": "runs/dock_v4/best.pt",
+   "dock_policy": "runs/clutter_box_v2/best.pt",
+   "no_park": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "out": "runs/level3/eval_dock_with_box_skill.json"
+  },
+  "episodes": 1000,
+  "success": 0.588,
+  "tee_at_goal": 0.803,
+  "box_at_goal": 0.661,
+  "failure": 0.026,
+  "all_pushes_settled": 0.446,
+  "kept_block_disturbed": 0.117,
+  "kept_block_moved_mm_median": 2.4872600430740865,
+  "time_s_median": 19.825000000000003,
+  "three_push_share": 0.366,
+  "success_two_pushes": 0.6277602523659306,
+  "success_three_pushes": 0.5191256830601093,
+  "tee_first_share": 0.6072555205047319,
+  "success_tee_first": 0.6961038961038961,
+  "success_box_first": 0.5220883534136547,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   3.9582590857744737,
+   3.931428819150695
+  ],
+  "box_err_median": [
+   1.696766625910084,
+   1.2110200588389017
+  ],
+  "docked": 0.661,
+  "gap_mm_median": 0.002062719195269902,
+  "dock_err_median": [
+   1.696766625910084,
+   1.2110200588389017
+  ]
+ },
+ "planner_dock_v3": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "dock": "runs/dock_v3/best.pt",
+   "dock_policy": "",
+   "no_park": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "out": "runs/level3/eval_dock_v3.json"
+  },
+  "episodes": 1000,
+  "success": 0.556,
+  "tee_at_goal": 0.693,
+  "box_at_goal": 0.699,
+  "failure": 0.022,
+  "all_pushes_settled": 0.28,
+  "kept_block_disturbed": 0.203,
+  "kept_block_moved_mm_median": 3.601763425596722,
+  "time_s_median": 19.0,
+  "three_push_share": 0.366,
+  "success_two_pushes": 0.5725552050473186,
+  "success_three_pushes": 0.5273224043715847,
+  "tee_first_share": 0.6072555205047319,
+  "success_tee_first": 0.6025974025974026,
+  "success_box_first": 0.5261044176706827,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   4.928617598439291,
+   4.470896266786562
+  ],
+  "box_err_median": [
+   1.230166792001703,
+   1.389186658513685
+  ],
+  "docked": 0.699,
+  "gap_mm_median": 0.0018124815063850185,
+  "dock_err_median": [
+   1.230166792001703,
+   1.389186658513685
+  ]
+ },
+ "planner_dock_v2": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "dock": "runs/dock_v2/best.pt",
+   "dock_policy": "",
+   "no_park": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "out": "runs/level3/eval_dock_v2.json"
+  },
+  "episodes": 1000,
+  "success": 0.543,
+  "tee_at_goal": 0.651,
+  "box_at_goal": 0.709,
+  "failure": 0.024,
+  "all_pushes_settled": 0.242,
+  "kept_block_disturbed": 0.26,
+  "kept_block_moved_mm_median": 4.479760237895635,
+  "time_s_median": 19.025,
+  "three_push_share": 0.366,
+  "success_two_pushes": 0.5441640378548895,
+  "success_three_pushes": 0.5409836065573771,
+  "tee_first_share": 0.6072555205047319,
+  "success_tee_first": 0.5818181818181818,
+  "success_box_first": 0.4859437751004016,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   5.801720543631327,
+   4.787614776577704
+  ],
+  "box_err_median": [
+   1.1530694265666068,
+   0.9912886652586013
+  ],
+  "docked": 0.709,
+  "gap_mm_median": 0.0024731396060639205,
+  "dock_err_median": [
+   1.1530694265666068,
+   0.9912886652586013
+  ]
+ },
+ "planner_dock_v1": {
+  "args": {
+   "tee": "runs/clutter_v7/best.pt",
+   "box": "runs/clutter_box_v2/best.pt",
+   "dock": "runs/dock_v1/best.pt",
+   "dock_policy": "",
+   "no_park": false,
+   "episodes": 1000,
+   "seed": 20000003,
+   "video": "",
+   "view": false,
+   "out": "runs/level3/eval_dock_v1.json"
+  },
+  "episodes": 1000,
+  "success": 0.638,
+  "tee_at_goal": 0.772,
+  "box_at_goal": 0.721,
+  "failure": 0.032,
+  "all_pushes_settled": 0.364,
+  "kept_block_disturbed": 0.15,
+  "kept_block_moved_mm_median": 3.1075474443848456,
+  "time_s_median": 19.450000000000003,
+  "three_push_share": 0.366,
+  "success_two_pushes": 0.6561514195583596,
+  "success_three_pushes": 0.6065573770491803,
+  "tee_first_share": 0.6072555205047319,
+  "success_tee_first": 0.6909090909090909,
+  "success_box_first": 0.6024096385542169,
+  "order_valid": 1.0,
+  "tee_err_median": [
+   4.355959637235134,
+   3.7991158242021896
+  ],
+  "box_err_median": [
+   1.1570169303829756,
+   1.1218138473435952
+  ],
+  "docked": 0.721,
+  "gap_mm_median": 0.002303692536204105,
+  "dock_err_median": [
+   1.1570169303829756,
+   1.1218138473435952
+  ]
+ }
+}

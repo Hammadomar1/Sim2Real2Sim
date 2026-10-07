@@ -99,6 +99,13 @@ class TaskConfig:
                                                   # the guard had to remove: plan around the block, don't lean on it
     tool_near_block: float = 0.0                  # share of episodes where the rod starts 4-12 mm from the block, as
                                                   # it does right after placing that block (Level 2's second push)
+    near_object: bool = True                      # w_near also for the object (off when it must touch the block)
+    # Level 3 docking (DockEnv only): nest the object into an inner corner of the block (a T), touching both.
+    dock: bool = False
+    dock_pos_tol: float = 0.003                   # docked: within this of the corner pose (m) ...
+    dock_yaw_tol: float = math.radians(5)         # ... and this rotation, with the T moved at most clutter_tol
+    dock_start_bank: str = ""                     # .npz of docking starts recorded in Level 3 (T, box, rod, side) ...
+    dock_bank_share: float = 0.5                  # ... used for this share of episodes
 
 
 @dataclass

@@ -338,7 +338,7 @@ class ClutterEnv(PushEnv):
         obj = self._gap_to_object(block, self.object_pose(), self.obj_id)
         # Bookkeeping for evaluation: was the rod or the object closer when the block first moved 2 mm?
         self.first_touch = np.where((self.first_touch == 0) & (pos > 0.002), np.where(rod < obj, 1, 2), self.first_touch)
-        out -= t.w_near * np.clip(1.0 - np.minimum(rod, obj) / t.near_margin, 0.0, 1.0)
+        out -= t.w_near * np.clip(1.0 - (np.minimum(rod, obj) if t.near_object else rod) / t.near_margin, 0.0, 1.0)
         # Leaning on the rod guard (commanding into the block) gets the rod stuck: plan around the block instead.
         return out - t.w_guard * self.cmd_deflection / (t.max_speed * t.control_dt)
 

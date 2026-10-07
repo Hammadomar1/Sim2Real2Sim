@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .clutter import ClutterEnv
+from .dock import DockEnv
 from .env import EnvConfig, PushEnv
 from .gate import GateEnv
 
@@ -11,6 +12,8 @@ def make_env(cfg: EnvConfig) -> PushEnv:
         raise ValueError("gate and clutter tasks cannot be combined yet")
     if cfg.task.gate:
         return GateEnv(cfg)
+    if cfg.task.clutter and cfg.task.dock:
+        return DockEnv(cfg)
     if cfg.task.clutter:
         return ClutterEnv(cfg)
     return PushEnv(cfg)
