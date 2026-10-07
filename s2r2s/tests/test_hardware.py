@@ -98,3 +98,51 @@ def test_policy_runs_through_the_hardware_path():
     pos, yaw = runner.errors(robot.object_pose())
     assert pos < 0.01 and yaw < math.radians(10)
     assert max(abs(np.array(r["target"]) - np.array(r["q"])).max() for r in runner.log) <= math.radians(4.0) + 1e-9
+
+
+def test_clutter_policy_gets_the_block_through_the_hardware_path(tmp_path):
+    import torch
+    from s2r2s.env import EnvConfig, TaskConfig
+    from s2r2s.ppo import ActorCritic, PPOConfig
+    from s2r2s.tasks import make_env
+    cfg = EnvConfig(num_envs=1, num_threads=1, task=TaskConfig(clutter="box"))
+    env = make_env(cfg)                       # also records the block in cfg.scene, as training does
+    dims = (env.num_obs, env.num_critic_obs, env.num_actions)
+    torch.manual_seed(0)
+    policy = ActorCritic(*dims, PPOConfig())
+    torch.save({"ppo": {"policy": policy.state_dict()}, "env_cfg": cfg.to_dict(), "ppo_cfg": PPOConfig().to_dict(),
+                "iteration": 0, "samples": 0, "dims": dims}, tmp_path / "untrained.pt")
+    robot = SimRobot(cfg.scene)
+    robot.place((0.15, -0.10), (0.20, -0.02, 0.3))
+    robot.place_block((0.21, 0.06, 0.4))
+    runner = PolicyRunner(tmp_path / "untrained.pt", robot, SimPoseSource(robot, dropout=0.0, seed=1), JointMap(),
+                          realtime=False)
+    assert runner.clutter
+    runner.start(np.array([0.21, 0.0, 1.0]))
+    assert np.allclose(runner.twin.clutter_home[0], [0.21, 0.06, 0.4], atol=0.06)        # camera noise: 1 mm, 1 deg
+    assert np.allclose(runner.twin.clutter_home[0, :2], [0.21, 0.06], atol=0.005)
+    robot.place_block((0.23, 0.07, 0.4))      # someone nudges the block: the policy sees it move
+    for _ in range(3):
+        runner.tick()
+    assert np.allclose(runner.twin.clutter_obs[0, :2], [0.23, 0.07], atol=0.005)
+    assert runner.block_moved(robot.block_pose())[0] > 0.015
+    assert max(abs(np.array(r["target"]) - np.array(r["q"])).max() for r in runner.log) <= math.radians(4.0) + 1e-9
+
+
+@pytest.mark.skipif(not (ROOT / "runs" / "clutter_v7" / "best.pt").exists(), reason="needs the trained policy")
+def test_clutter_policy_runs_through_the_hardware_path():
+    from s2r2s.train import load_policy
+    checkpoint = ROOT / "runs" / "clutter_v7" / "best.pt"
+    _, cfg, _ = load_policy(checkpoint)
+    robot = SimRobot(cfg.scene)
+    # A held-out scene: the T moves 106 mm and turns 141 deg; the block sits 17.5 mm from its straight path.
+    robot.place((0.2359, 0.0297), (0.1813, -0.0637, 2.3041))
+    block = (0.1778, 0.1064, -1.3348)
+    robot.place_block(block)
+    runner = PolicyRunner(checkpoint, robot, SimPoseSource(robot, seed=1), JointMap(), realtime=False)
+    runner.start(np.array([0.1957, 0.0409, -0.1613]))
+    for _ in range(400):
+        runner.tick()
+    pos, yaw = runner.errors(robot.object_pose())
+    assert pos < 0.01 and yaw < math.radians(10)
+    assert runner.block_moved(robot.block_pose(), block)[0] < 0.002                 # not even touched

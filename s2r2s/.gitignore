@@ -25,3 +25,15 @@ runs/gate_pilot/*
 !runs/gate_pilot/*.jsonl
 !runs/gate_pilot/train.log
 !runs/gate_pilot/final_evals.log
+# Clutter task deliverable: the policy, its training logs, a summary of the final evaluations and the
+# figure of the remaining failure mode (the per-episode eval_*.json files are regenerable).
+!runs/clutter_v7/
+runs/clutter_v7/*
+!runs/clutter_v7/best.pt
+!runs/clutter_v7/config.json
+!runs/clutter_v7/eval.jsonl
+!runs/clutter_v7/progress.jsonl
+!runs/clutter_v7/train.log
+!runs/clutter_v7/final_eval.json
+!runs/clutter_v7/final_evals.log
+!runs/clutter_v7/stuck_cases.png

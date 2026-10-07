@@ -3,6 +3,7 @@
     python -m s2r2s.record --checkpoint runs/tee_v1/best.pt --out videos/tee.mp4 --grid 2
     python -m s2r2s.record --scripted --out videos/scripted.mp4
     python -m s2r2s.record --checkpoint ... --camera d435i      # what the planned real camera sees
+    python -m s2r2s.record --checkpoint runs/clutter_v7/best.pt --out videos/clutter.mp4 --grid 2
 """
 from __future__ import annotations
 
@@ -37,6 +38,7 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=3)
     p.add_argument("--no-randomization", action="store_true")
     p.add_argument("--gate", action="store_true", help="with --scripted: the Level 1 gate puzzle")
+    p.add_argument("--clutter", default="", help="with --scripted: add a block to keep in place, e.g. box")
     p.add_argument("--kick-every", type=float, default=0.0,
                    help="seconds between random displacements of the object (disturbance demo)")
     args = p.parse_args(argv)
@@ -45,7 +47,7 @@ def main(argv=None):
         policy, cfg, _ = load_policy(args.checkpoint, "cpu")
         agent = policy_agent(policy, "cpu")
     else:
-        cfg = EnvConfig(task=TaskConfig(objects=(args.object,), gate=args.gate,
+        cfg = EnvConfig(task=TaskConfig(objects=(args.object,), gate=args.gate, clutter=args.clutter,
                                         episode_seconds=30.0 if args.gate else 20.0))
         agent = scripted_agent()
     tiles = args.grid ** 2

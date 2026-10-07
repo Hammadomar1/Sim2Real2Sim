@@ -2,7 +2,7 @@
 
     python -m s2r2s.train --run tee_v1 --minutes 90
     python -m s2r2s.train --run gate_v1 --gate --init runs/tee_v1/best.pt --minutes 120
-    python -m s2r2s.train --run clutter_v1 --clutter box --init runs/tee_v1/best.pt --minutes 30
+    python -m s2r2s.train --run clutter_v8 --clutter box --init runs/tee_v1/best.pt --no-curriculum --minutes 60
 
 Writes runs/<run>/: config.json, progress.jsonl, eval.jsonl, latest.pt,
 best.pt and TensorBoard logs (tb/). Resume with --resume runs/<run>/latest.pt.
@@ -19,7 +19,7 @@ import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
-from .env import EnvConfig, TaskConfig
+from .env import EnvConfig, TaskConfig, apply_overrides
 from .evaluation import policy_agent, run_episodes, summarize as episode_summary
 from .ppo import PPO, PPOConfig, ActorCritic
 from .tasks import make_env
@@ -39,13 +39,21 @@ def save(path: Path, ppo: PPO, env_cfg: EnvConfig, ppo_cfg: PPOConfig, it, sampl
     tmp.replace(path)
 
 
-def load_policy(path, device="cpu"):
+def load_policy(path, device="cpu", dims=None):
+    """Load a checkpoint's policy, its environment config and the checkpoint itself.
+
+    ``dims`` (actor, critic, action sizes) builds the network for a task with appended inputs; the new
+    inputs get zero weights (see ``warm_start``), so the policy ignores them.
+    """
     ck = torch.load(path, map_location=device, weights_only=False)
     env_cfg = EnvConfig.from_dict(ck["env_cfg"])
     ppo_cfg = PPOConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in ck["ppo_cfg"].items()})
-    n_actor, n_critic, n_act = ck["dims"]
+    n_actor, n_critic, n_act = dims or ck["dims"]
     policy = ActorCritic(n_actor, n_critic, n_act, ppo_cfg).to(device)
-    policy.load_state_dict(ck["ppo"]["policy"])
+    if dims is not None and tuple(dims) != tuple(ck["dims"]):
+        warm_start(policy, ck["ppo"]["policy"])
+    else:
+        policy.load_state_dict(ck["ppo"]["policy"])
     policy.eval()
     return policy, env_cfg, ck
 
@@ -59,6 +67,8 @@ def warm_start(policy: ActorCritic, source: dict, init_std: float = 0.0):
     own = policy.state_dict()
     for key, value in source.items():
         target = own[key]
+        if key.endswith(".count") and value.dim() == 0:     # older checkpoints: one count for all inputs
+            value = value.expand(source[key[:-len("count")] + "mean"].shape)
         if target.shape == value.shape:
             target.copy_(value)
         elif target.dim() == 2 and value.dim() == 2 and target.shape[0] == value.shape[0]:   # first layers
@@ -93,6 +103,8 @@ def main(argv=None):
     p.add_argument("--episode-seconds", type=float, default=0.0, help="default 20 s (30 s with --gate)")
     p.add_argument("--init", default="", help="warm-start the policy from a checkpoint (inputs may be extended)")
     p.add_argument("--init-std", type=float, default=0.25, help="action noise after --init")
+    p.add_argument("--set", nargs="*", default=[], metavar="SECTION.FIELD=VALUE",
+                   help="config overrides for a new run, e.g. task.rod_guard=0 task.w_near=0.25")
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = p.parse_args(argv)
 
@@ -114,10 +126,11 @@ def main(argv=None):
                                             difficulty=1.0 if args.no_curriculum else args.difficulty))
         env_cfg.scene.timestep = args.timestep
         env_cfg.rand.enabled = not args.no_randomization
+        apply_overrides(env_cfg, args.set)
         ppo_cfg = PPOConfig()
+    env = make_env(env_cfg)               # task environments complete the scene config (gate, clutter)
     (run_dir / "config.json").write_text(json.dumps({"env": env_cfg.to_dict(), "ppo": ppo_cfg.to_dict(),
                                                     "args": vars(args)}, indent=2))
-    env = make_env(env_cfg)
     # Desynchronise episode boundaries so resets spread evenly over training.
     env.step_count[:] = env.rng.integers(0, env.max_steps, env.n)
     dims = (env.num_obs, env.num_critic_obs, env.num_actions)

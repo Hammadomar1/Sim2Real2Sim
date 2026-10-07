@@ -21,16 +21,16 @@ model on. The scripted baseline runs on the *same* scenes but with the *true* ob
 
 | | RL policy (`runs/tee_v1/best.pt`) | scripted baseline |
 |---|---|---|
-| success (≤10 mm and ≤10° at the end of the episode) | **96.6 %** | 88.7 % |
-| final position error, median / p90 | **1.4 / 3.9 mm** | 4.5 / 6.7 mm |
-| final orientation error, median / p90 | **2.0 / 5.9°** | 3.9 / 9.2° |
+| success (≤10 mm and ≤10° at the end of the episode) | **96.6 %** | 88.8 % |
+| final position error, median / p90 | **1.4 / 3.9 mm** | 4.5 / 6.6 mm |
+| final orientation error, median / p90 | **2.0 / 5.9°** | 3.8 / 10.3° |
 | proposal metric E = e_pos/20 mm + e_yaw/10°, mean | **0.51** | 1.33 |
 | time to reach tolerance, median | **6.0 s** | 8.6 s |
-| failures (object escaped the reachable band) | 0.5 % | 0.1 % |
-| action rate (smoothness, lower is smoother) | **0.027** | 0.125 |
+| failures (object escaped the reachable band) | 0.5 % | 0.0 % |
+| action rate (smoothness, lower is smoother) | **0.027** | 0.124 |
 
-- **Large rotations:** success by required rotation, policy vs baseline: 0–60° 97 % vs 95 %, 60–120° 97 % vs 99 %,
-  120–150° 95 % vs 84 %, **150–180° 96 % vs 59 %**. RL found rotation strategies the heuristic lacks.
+- **Large rotations:** success by required rotation, policy vs baseline: 0–60° 97 % vs 96 %, 60–120° 97 % vs 99 %,
+  120–150° 95 % vs 84 %, **150–180° 96 % vs 58 %**. RL found rotation strategies the heuristic lacks.
 - **Robustness:** with 2 ms physics instead of the 5 ms used in training, success is 97.1 %, so the policy does not exploit the integrator.
   With nominal physics and a perfect camera it is 94.5 % (same scenes). Likely cause: a deterministic policy can
   stall when nothing perturbs it. Real sensors always add noise, but check this if it ever matters.
@@ -69,11 +69,11 @@ Held-out results: 1,000 unseen scenes at full difficulty, with randomisation and
 
 | | trained (`runs/gate_pilot/best.pt`) | Milestone 1 policy, untrained on gates | scripted (true pose) |
 |---|---|---|---|
-| passed the gate | **98.5 %** | 46.5 % | 30.6 % |
-| solved (≤10 mm, ≤10° at the goal) | **95.3 %** | 39.9 % | 12.1 % |
+| passed the gate | **98.5 %** | 46.5 % | 30.7 % |
+| solved (≤10 mm, ≤10° at the goal) | **95.3 %** | 39.9 % | 12.0 % |
 | final error, median | **1.4 mm / 2.1°** | 72 mm / 31° | 99 mm / 73° |
 | failures (object left the band) | 1.9 % | 5.6 % | 0.0 % |
-| time to the goal, median | 8.7 s | 13.4 s | 16.1 s |
+| time to the goal, median | 8.7 s | 13.4 s | 16.6 s |
 
 Training time on this laptop: the best checkpoint came after **9 minutes** (29M samples) of a 30-minute run. Longer
 training did not help: the final checkpoint scores 93.8 %. Success is flat across opening widths (94.8 % at 64–66 mm,
@@ -88,32 +88,88 @@ python -m s2r2s.train --run gate_v2 --gate --init runs\tee_v1\best.pt --minutes 
 
 Videos: `videos/gate_policy_grid.mp4` (four scenes) and `videos/gate_policy_top.mp4` (top view).
 
-## Clutter: place the T without disturbing another block (`clutter.py`), work in progress
+## Clutter: place the T without disturbing another block (`clutter.py`)
 
-A 40 × 40 mm block shares the work band. In 60 % of scenes it sits within 25 mm of the path the T sweeps from start to goal,
-so careless pushing, turning or repositioning clips it. It never blocks that straight path: the first version did, and
-in this 5 cm-deep band those scenes were often unsolvable without touching it. **Success** means the T is at its goal pose
-*and* the block is within 10 mm / 10° of where it started. Moving the block costs 3 per cm, plus 1 per step while it
-is out of place. The policy sees the block through the same camera model as the T, plus two clearances computed from those
-estimates: T to block and rod to block. This is the proposal's *clutter* factor, and the "don't knock the other piece"
-skill that the block-connecting puzzle needs.
+A 40 × 40 mm block shares the work band. In about three quarters of the scenes it sits close beside the T's path:
+15–30 mm from the area the T sweeps when moved straight (and turned) from its start to its goal. In the rest it is
+anywhere in the band. It is never closer than 15 mm, the rod's 12 mm plus a 3 mm safety margin, so the rod can always
+pass between the block and the T's path. **Success** means the T at its goal (≤10 mm, ≤10°) *and* the block within
+10 mm / 10° of where it started. This is the proposal's *clutter* factor, and the "don't knock the other piece" skill
+that the block-connecting puzzle needs.
 
-Held-out results, 1,000 unseen scenes (`runs/clutter_v3/final_eval.json`):
+- **The policy sees the block the way it sees the T**: through the camera model (latency, noise, dropped frames),
+  plus three inputs computed from those estimates: T-to-block clearance, rod-to-block clearance, and the block's
+  nearest point to the rod.
+- **Rod guard, in the controller** (the same code runs on the real arm): the rod is never commanded closer than
+  3 mm to the block's estimated outline; it slides along the block instead of shoving it.
+- **Reward**: Milestone 1's, plus costs for moving the block (3 per cm, and 1 per step while it is out of place),
+  for coming within 10 mm of it with the rod or the T (up to 0.5 per step), and for leaning on the guard (up to
+  0.5 per step, in proportion to the part of a command the guard had to remove), so the policy plans around the
+  block instead of pushing against the guard.
+- **Training**: warm start from the Milestone 1 policy. Its inputs keep their weights; the 17 block inputs start at
+  zero. `best.pt` came after 24 minutes (69M samples) of a 60-minute run at about 50k samples/s.
 
-| | trained (`runs/clutter_v3/best.pt`, 30 min, 34M samples) | Milestone 1 policy, blind to the block |
+Held-out results, 1,000 unseen scenes, every agent on the same scenes, rod guard on
+(`runs/clutter_v7/final_eval.json`):
+
+| | trained (`runs/clutter_v7/best.pt`) | Milestone 1 policy, blind to the block | scripted (true pose, blind to the block) |
+|---|---|---|---|
+| solved (T at its goal and the block undisturbed) | **94.9 %** | 86.2 % | 85.3 % |
+| T at its goal at the end, block or not | **96.7 %** | 89.6 % | 85.3 % |
+| block disturbed (>10 mm or >10°) | 1.9 % | 3.9 % | 0.1 % |
+| block touched (moved >2 mm) | 3.8 % | 7.4 % | 1.8 % |
+| T final error, median | **1.3 mm / 1.9°** | 1.5 mm / 2.3° | 4.5 mm / 4.0° |
+| failures (T left the band) | 0.7 % | 1.2 % | 0.0 % |
+| time to the goal, median | **4.8 s** | 6.1 s | 8.8 s |
+
+By the block's clearance from the T's straight path (solved, trained vs the blind Milestone 1 policy): 15–20 mm
+(274 scenes) **92.0 %** vs 79.6 %, 20–25 mm **95.5 %** vs 82.7 %, 25–30 mm **93.2 %** vs 87.9 %, over 30 mm
+**98.6 %** vs 94.6 %.
+
+What each part contributes (solved, same 1,000 scenes):
+
+| | rod guard off | rod guard on |
 |---|---|---|
-| solved (T at goal and block undisturbed) | **66.6 %** | 59.3 % |
-| block disturbed | **24.7 %** | 38.1 % |
-| ... when the block sits beside the path | **35.6 %** | 52.4 % |
-| T final error, median | 2.7 mm / 3.6° | 1.3 mm / 2.0° |
+| Milestone 1 policy, blind to the block | 68.3 % | 86.2 % |
+| trained with the block inputs, without the guard (`clutter_v5`) | 83.0 % | 92.2 % |
+| trained with the guard, no cost for leaning on it (`clutter_v6`) | – | 92.8 % |
+| **final** (`clutter_v7`) | 83.6 % | **94.9 %** |
+| scripted, blind to the block | 74.4 % | 85.3 % |
 
-**Not solved yet.** What we learned along the way, and what comes next:
-1. A penalty of about 1 per cm was too small next to the goal reward (about 2 per step), so the policy ignored it.
-   Raising it and adding the clearance inputs moved success from a flat ~41 % to 67 %.
-2. Some scenes are probably impossible without touching the block: it can sit exactly where the *rod* must stand to push
-   the T. Placement should also check rod access, not only the T's path.
-3. Training ran at about 20k samples/s (the clearance inputs are computed every step for 4,096 worlds), against about 60k for the
-   other tasks. Success was still rising when the run ended. Speed up those features, then train for longer.
+`clutter_v5` and `clutter_v6` were trained under the earlier 12 mm gap rule and are not in git. Reproduce them with the
+retrain command below plus `--set task.rod_guard=0 task.w_guard=0 task.clutter_min_gap=0.012` (v5) or
+`--set task.w_guard=0 task.clutter_min_gap=0.012` (v6).
+
+**Robustness** (trained policy): 2 ms physics instead of 5 ms, 95.0 %. Camera noise doubled to 2 mm / 2°, 94.1 %
+(the block is disturbed more often, 3.7 %: the guard trusts the camera). Latency 100–150 ms, 93.4 %. Nominal
+physics and a perfect camera, 93.3 %. Through the hardware path (simulated arm and camera, joint map, safety limits;
+`hardware.runner --robot sim`, 200 episodes), 92.5 % with the block kept in place in 96.5 %. The final checkpoint of
+the run scores 94.3 %.
+
+How we got here, from 66.6 % (`clutter_v3`):
+1. **Measure before tuning.** In four touches out of five, the rod, not the T, moved the block, and half of those
+   came in the first second: the rod drove straight at the T through a block in the way. Proximity costs with 4 mm
+   and then 10 mm margins did not teach it to go around (about 81 %).
+2. **A guard in the controller fixed that at once.** Switching it on for a policy trained without it lifts it from
+   83.0 % to 92.2 %. On its own, though, it let the rod get stuck leaning on the block in half of the remaining misses,
+   hence the cost on the removed command, and a 15 mm gap rule so the guarded rod always fits.
+3. **A geometry bug.** `objects.py` lost two corners of the T's outline to a floating-point sliver, so the first
+   version's T-to-block clearance input was off by up to 12 mm. Clearances are now exact (separating axes and
+   corners, checked against brute force to 0.004 mm) and 3× faster, which made long training affordable.
+4. **What still fails** (`runs/clutter_v7/stuck_cases.png`): the rod ends up on the block's far side, away from the
+   side of the T it has to push, and must detour around the block, sometimes near the edge of the reachable ring.
+   That needs a path planner for the rod, or more training on exactly these scenes: what the failure-guided sampler
+   (Milestone 3) is for.
+
+```powershell
+python -m s2r2s.play --checkpoint runs\clutter_v7\best.pt                       # watch it; the grey outline is the block's place
+python -m s2r2s.evaluate runs\clutter_v7\best.pt --baseline --compare runs\tee_v1\best.pt   # held-out evaluation
+python -m s2r2s.evaluate runs\clutter_v7\best.pt --set task.rod_guard=0          # the same without the rod guard
+python -m s2r2s.train --run clutter_v8 --clutter box --init runs\tee_v1\best.pt --no-curriculum --minutes 60   # retrain
+python -m s2r2s.hardware.runner --checkpoint runs\clutter_v7\best.pt --robot sim --episodes 20   # hardware-path rehearsal
+```
+
+Video: `videos/clutter_policy_grid.mp4` (four scenes). The status line shows how far the block has moved.
 
 ## Quick start (Windows, PowerShell)
 
@@ -190,7 +246,7 @@ and value normalisation, time-outs bootstrapped from the true terminal state, KL
 The automatic curriculum raises goal difficulty by 0.1 whenever 80 % of episodes at the current level succeed.
 Every 50 updates, the policy is scored on 512 fixed held-out scenes at full difficulty, and `best.pt` is kept.
 
-## What was verified before any RL (`pytest`, 25 tests)
+## What was verified before any RL (`pytest`, 30 tests)
 
 - Stripped training model has exactly the Menagerie masses, inertias and servo gains
 - FK and Jacobian match MuJoCo; IK solves >99.9 % of the workspace; one IK step per control tick tracks to <0.3 mm (p99)
@@ -201,10 +257,12 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
   through a wall, the waypoint stage advances and falls back, and warm start reproduces the old policy exactly
 - Hardware bridge: joint-map round trip, the simulated arm reads through its hidden map, calibration recovers
   joint directions and offsets, the LeRobot driver sends degrees and holds the gripper (checked with a fake LeRobot
-  and against the real LeRobot 0.6 classes), and a policy episode through the full hardware path succeeds
-  without ever exceeding the joint-step limit
-- Clutter: the block never overlaps the T's start, goal or straight path, stays still at rest, and moving it costs
-  reward and success
+  and against the real LeRobot 0.6 classes), and policy episodes through the full hardware path succeed
+  (Milestone 1, and clutter with the block left untouched) without ever exceeding the joint-step limit
+- Clutter: footprint clearances are exact (against brute force, including bars crossing like a plus sign); the guarded
+  rod always fits between the block and the T's path; the block stays still at rest; moving it, or coming close,
+  costs reward (and moving it, success); the rod guard slides the rod along the block instead of shoving it; and the
+  block's camera pose reaches a policy through the hardware path
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -231,6 +289,7 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/kinematics.py` | Batched FK/IK, shared by simulation and hardware |
 | `s2r2s/env.py` | Batched environment: control, observations, camera model, reward, randomisation, resets |
 | `s2r2s/gate.py`, `tasks.py` | Level 1 gate puzzle (waypoints, path-length reward, gate features); environment factory |
+| `s2r2s/clutter.py` | Clutter task: block placement, exact footprint clearances, rod guard, block features and costs |
 | `s2r2s/ppo.py`, `train.py` | PPO and the training loop (logs, curriculum, evaluation, checkpoints) |
 | `s2r2s/evaluation.py`, `evaluate.py` | Held-out evaluation (policy and baseline on identical scenes) |
 | `s2r2s/scripted.py` | Heuristic pusher: feasibility check and baseline |

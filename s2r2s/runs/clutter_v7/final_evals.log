@@ -1,0 +1,386 @@
+$ python -m s2r2s.evaluate runs/clutter_v7/best.pt --baseline --compare runs/tee_v1/best.pt runs/clutter_v5/best.pt runs/clutter_v6/best.pt --out runs/clutter_v7/eval_guard_on.json
+
+runs/clutter_v7/best.pt (iteration 700, 69M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy      tee_v1  clutter_v5  clutter_v6    scripted
+success rate                                       94.9%       86.2%       92.2%       92.8%       85.3%
+position error median (mm)                           1.3         1.5         1.7         1.6         4.5
+position error p90 (mm)                              3.5         6.9         5.1         4.2        11.1
+yaw error median (deg)                               1.9         2.3         2.6         2.3         4.0
+yaw error p90 (deg)                                  5.7         9.5         7.6         6.6        31.8
+mean E = pos/20mm + yaw/10deg                       0.65        1.25        0.75        0.79        1.69
+ever within tolerance                              94.9%       87.2%       93.5%       93.4%       86.4%
+time to tolerance median (s)                         4.8         6.1         4.8         4.9         8.8
+failures (tipped/escaped)                           0.7%        1.2%        0.7%        1.3%        0.0%
+clutter block disturbed (>10 mm or >10 deg)         1.9%        3.9%        2.2%        2.7%        0.1%
+  ... when it sat close beside the path             2.6%        5.2%        3.0%        3.7%        0.1%
+clutter block touched (moved >2 mm)                 3.8%        7.4%        4.4%        4.6%        1.8%
+  ... first by the rod                              0.5%        3.5%        2.1%        1.2%        0.6%
+action rate (smoothness, lower=smoother)          0.0319      0.0263      0.0325      0.0329      0.1218
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 92.0% /  4.0% /  0.7%   tee_v1: 79.6% /  6.2% /  3.6%   clutter_v5: 89.8% /  3.6% /  2.2%   clutter_v6: 88.3% /  4.4% /  1.5%   scripted: 82.8% /  0.4% /  1.8%
+    20-25 mm ( 243 scenes)   policy: 95.5% /  1.6% /  0.8%   tee_v1: 82.7% /  7.0% /  7.0%   clutter_v5: 90.9% /  2.9% /  2.1%   clutter_v6: 92.6% /  3.7% /  2.1%   scripted: 82.7% /  0.0% /  0.0%
+    25-30 mm ( 207 scenes)   policy: 93.2% /  1.9% /  0.5%   tee_v1: 87.9% /  1.9% /  3.4%   clutter_v5: 93.2% /  2.4% /  3.9%   clutter_v6: 93.7% /  2.9% /  1.4%   scripted: 87.4% /  0.0% /  0.0%
+      >30 mm ( 276 scenes)   policy: 98.6% /  0.0% /  0.0%   tee_v1: 94.6% /  0.4% /  0.4%   clutter_v5: 94.9% /  0.0% /  0.7%   clutter_v6: 96.7% /  0.0% /  0.0%   scripted: 88.4% /  0.0% /  0.4%
+
+
+$ python -m s2r2s.evaluate runs/clutter_v7/best.pt --baseline --compare runs/tee_v1/best.pt runs/clutter_v5/best.pt --set task.rod_guard=0 --out runs/clutter_v7/eval_guard_off.json
+
+runs/clutter_v7/best.pt (iteration 700, 69M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy      tee_v1  clutter_v5    scripted
+success rate                                       83.6%       68.3%       83.0%       74.4%
+position error median (mm)                           1.3         1.4         1.6         4.5
+position error p90 (mm)                              3.7         4.2         4.4         5.9
+yaw error median (deg)                               1.9         2.2         2.7         3.8
+yaw error p90 (deg)                                  5.9         6.6         6.7         6.3
+mean E = pos/20mm + yaw/10deg                       0.54        0.63        0.55        1.21
+ever within tolerance                              84.6%       71.4%       84.0%       75.5%
+time to tolerance median (s)                         4.7         5.7         4.7         8.6
+failures (tipped/escaped)                           1.0%        1.1%        0.8%        0.1%
+clutter block disturbed (>10 mm or >10 deg)        14.7%       28.5%       14.4%       17.7%
+  ... when it sat close beside the path            18.1%       34.5%       17.1%       20.6%
+clutter block touched (moved >2 mm)                19.1%       34.6%       18.6%       22.7%
+  ... first by the rod                             16.0%       30.6%       16.1%       21.7%
+action rate (smoothness, lower=smoother)          0.0323      0.0272      0.0328      0.1246
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 72.6% / 25.5% / 26.3%   tee_v1: 53.3% / 44.2% / 44.5%   clutter_v5: 77.0% / 21.2% / 25.2%   scripted: 65.7% / 28.5% / 34.3%
+    20-25 mm ( 243 scenes)   policy: 83.1% / 15.6% / 18.5%   tee_v1: 61.7% / 34.6% / 36.2%   clutter_v5: 81.1% / 16.5% / 17.3%   scripted: 74.1% / 17.7% / 22.6%
+    25-30 mm ( 207 scenes)   policy: 86.0% / 11.1% / 11.6%   tee_v1: 74.9% / 21.7% / 26.1%   clutter_v5: 84.1% / 12.6% / 13.5%   scripted: 79.2% / 13.5% / 18.4%
+      >30 mm ( 276 scenes)   policy: 93.1% /  5.8% /  6.9%   tee_v1: 84.1% / 12.7% / 15.2%   clutter_v5: 89.9% /  7.2% /  8.0%   scripted: 79.7% / 10.1% / 10.9%
+
+
+$ python -m s2r2s.evaluate runs/clutter_v7/best.pt --timestep 0.002 --out runs/clutter_v7/eval_dt2ms.json
+
+runs/clutter_v7/best.pt (iteration 700, 69M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 2 ms, randomization on
+                                                  policy
+success rate                                       95.0%
+position error median (mm)                           1.3
+position error p90 (mm)                              3.4
+yaw error median (deg)                               1.9
+yaw error p90 (deg)                                  5.4
+mean E = pos/20mm + yaw/10deg                       0.67
+ever within tolerance                              95.3%
+time to tolerance median (s)                         4.6
+failures (tipped/escaped)                           0.9%
+clutter block disturbed (>10 mm or >10 deg)         1.6%
+  ... when it sat close beside the path             2.2%
+clutter block touched (moved >2 mm)                 2.5%
+  ... first by the rod                              0.2%
+action rate (smoothness, lower=smoother)          0.0308
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 93.1% /  2.9% /  0.0%
+    20-25 mm ( 243 scenes)   policy: 94.2% /  2.5% /  0.8%
+    25-30 mm ( 207 scenes)   policy: 93.2% /  1.0% /  0.0%
+      >30 mm ( 276 scenes)   policy: 98.9% /  0.0% /  0.0%
+
+
+$ python -m s2r2s.evaluate runs/clutter_v7/best.pt --set rand.obs_pos_noise=0.002 rand.obs_yaw_noise=0.0349 --out runs/clutter_v7/eval_camera2mm.json
+
+runs/clutter_v7/best.pt (iteration 700, 69M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy
+success rate                                       94.1%
+position error median (mm)                           1.5
+position error p90 (mm)                              3.7
+yaw error median (deg)                               1.7
+yaw error p90 (deg)                                  5.3
+mean E = pos/20mm + yaw/10deg                       0.49
+ever within tolerance                              95.2%
+time to tolerance median (s)                         4.9
+failures (tipped/escaped)                           0.4%
+clutter block disturbed (>10 mm or >10 deg)         3.7%
+  ... when it sat close beside the path             4.8%
+clutter block touched (moved >2 mm)                 8.6%
+  ... first by the rod                              5.9%
+action rate (smoothness, lower=smoother)          0.0746
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 90.1% /  6.2% /  9.5%
+    20-25 mm ( 243 scenes)   policy: 95.5% /  2.9% /  6.2%
+    25-30 mm ( 207 scenes)   policy: 92.3% /  5.3% /  5.3%
+      >30 mm ( 276 scenes)   policy: 98.2% /  0.7% /  2.5%
+
+
+$ python -m s2r2s.evaluate runs/clutter_v7/best.pt --set rand.obs_latency_steps=2,3 --out runs/clutter_v7/eval_latency150ms.json
+
+runs/clutter_v7/best.pt (iteration 700, 69M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy
+success rate                                       93.4%
+position error median (mm)                           1.3
+position error p90 (mm)                              3.5
+yaw error median (deg)                               2.0
+yaw error p90 (deg)                                  5.9
+mean E = pos/20mm + yaw/10deg                       0.67
+ever within tolerance                              94.4%
+time to tolerance median (s)                         5.2
+failures (tipped/escaped)                           1.0%
+clutter block disturbed (>10 mm or >10 deg)         2.1%
+  ... when it sat close beside the path             2.9%
+clutter block touched (moved >2 mm)                 4.1%
+  ... first by the rod                              0.6%
+action rate (smoothness, lower=smoother)          0.0361
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 89.4% /  4.4% /  0.7%
+    20-25 mm ( 243 scenes)   policy: 93.0% /  2.5% /  1.2%
+    25-30 mm ( 207 scenes)   policy: 93.7% /  1.4% /  0.5%
+      >30 mm ( 276 scenes)   policy: 97.5% /  0.0% /  0.0%
+
+
+$ python -m s2r2s.evaluate runs/clutter_v7/best.pt --no-randomization --out runs/clutter_v7/eval_norand.json
+
+runs/clutter_v7/best.pt (iteration 700, 69M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization off
+                                                  policy
+success rate                                       93.3%
+position error median (mm)                           1.7
+position error p90 (mm)                              4.5
+yaw error median (deg)                               2.3
+yaw error p90 (deg)                                  7.5
+mean E = pos/20mm + yaw/10deg                       0.81
+ever within tolerance                              94.4%
+time to tolerance median (s)                         4.5
+failures (tipped/escaped)                           0.5%
+clutter block disturbed (>10 mm or >10 deg)         1.5%
+  ... when it sat close beside the path             2.1%
+clutter block touched (moved >2 mm)                 2.2%
+  ... first by the rod                              0.1%
+action rate (smoothness, lower=smoother)          0.0163
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 89.4% /  2.6% /  0.4%
+    20-25 mm ( 243 scenes)   policy: 91.8% /  2.1% /  0.0%
+    25-30 mm ( 207 scenes)   policy: 94.7% /  1.4% /  0.0%
+      >30 mm ( 276 scenes)   policy: 97.5% /  0.0% /  0.0%
+
+
+$ python -m s2r2s.evaluate runs/clutter_v7/latest.pt --out runs/clutter_v7/eval_latest.json
+
+runs/clutter_v7/latest.pt (iteration 1715, 169M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy
+success rate                                       94.3%
+position error median (mm)                           1.1
+position error p90 (mm)                              3.1
+yaw error median (deg)                               1.7
+yaw error p90 (deg)                                  5.0
+mean E = pos/20mm + yaw/10deg                       0.62
+ever within tolerance                              94.9%
+time to tolerance median (s)                         4.7
+failures (tipped/escaped)                           1.2%
+clutter block disturbed (>10 mm or >10 deg)         2.7%
+  ... when it sat close beside the path             3.6%
+clutter block touched (moved >2 mm)                 5.0%
+  ... first by the rod                              1.5%
+action rate (smoothness, lower=smoother)          0.0296
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    15-20 mm ( 274 scenes)   policy: 91.2% /  6.2% /  2.9%
+    20-25 mm ( 243 scenes)   policy: 91.8% /  3.7% /  1.6%
+    25-30 mm ( 207 scenes)   policy: 97.6% /  0.0% /  1.0%
+      >30 mm ( 276 scenes)   policy: 97.1% /  0.4% /  0.4%
+
+
+$ python -m s2r2s.hardware.runner --checkpoint runs/clutter_v7/best.pt --robot sim --episodes 200 --log-dir runs/clutter_v7/dry_run
+episode   1: success pos   1.1 mm  yaw   1.4 deg  block moved  0.0 mm
+episode   2: success pos   0.4 mm  yaw   0.2 deg  block moved  0.0 mm
+episode   3: success pos   0.7 mm  yaw   1.6 deg  block moved  0.0 mm
+episode   4: miss    pos  17.5 mm  yaw 127.2 deg  block moved  1.2 mm
+episode   5: success pos   2.8 mm  yaw   5.5 deg  block moved  0.6 mm
+episode   6: success pos   1.6 mm  yaw   2.7 deg  block moved  0.0 mm
+episode   7: success pos   1.2 mm  yaw   0.6 deg  block moved  0.0 mm
+episode   8: success pos   1.8 mm  yaw   1.0 deg  block moved  0.0 mm
+episode   9: success pos   2.2 mm  yaw   4.1 deg  block moved  0.0 mm
+episode  10: success pos   1.7 mm  yaw   2.8 deg  block moved  0.0 mm
+episode  11: success pos   1.1 mm  yaw   1.7 deg  block moved  0.0 mm
+episode  12: success pos   0.6 mm  yaw   1.2 deg  block moved  0.0 mm
+episode  13: success pos   3.0 mm  yaw   3.0 deg  block moved  0.0 mm
+episode  14: success pos   7.7 mm  yaw   7.5 deg  block moved  0.1 mm
+episode  15: success pos   2.0 mm  yaw   3.5 deg  block moved  0.0 mm
+episode  16: success pos   2.8 mm  yaw   7.3 deg  block moved  0.0 mm
+episode  17: success pos   1.2 mm  yaw   2.2 deg  block moved  0.0 mm
+episode  18: success pos   0.8 mm  yaw   0.0 deg  block moved  0.0 mm
+episode  19: success pos   1.5 mm  yaw   0.1 deg  block moved  0.0 mm
+episode  20: success pos   0.5 mm  yaw   2.5 deg  block moved  0.0 mm
+episode  21: success pos   0.9 mm  yaw   1.1 deg  block moved  0.0 mm
+episode  22: miss    pos   5.3 mm  yaw   8.4 deg  block moved 104.5 mm
+episode  23: success pos   2.4 mm  yaw   3.1 deg  block moved  1.4 mm
+episode  24: success pos   0.8 mm  yaw   0.1 deg  block moved  0.0 mm
+episode  25: success pos   1.1 mm  yaw   1.4 deg  block moved  0.0 mm
+episode  26: success pos   1.1 mm  yaw   2.5 deg  block moved  0.0 mm
+episode  27: success pos   1.6 mm  yaw   2.0 deg  block moved  0.0 mm
+episode  28: success pos   0.4 mm  yaw   2.4 deg  block moved  0.0 mm
+episode  29: success pos   2.6 mm  yaw   3.5 deg  block moved  0.0 mm
+episode  30: success pos   0.8 mm  yaw   0.1 deg  block moved  0.0 mm
+episode  31: success pos   2.9 mm  yaw   5.3 deg  block moved  0.0 mm
+episode  32: success pos   0.2 mm  yaw   2.7 deg  block moved  0.0 mm
+episode  33: success pos   1.6 mm  yaw   2.7 deg  block moved  0.0 mm
+episode  34: success pos   2.0 mm  yaw   4.3 deg  block moved  0.0 mm
+episode  35: success pos   1.4 mm  yaw   3.2 deg  block moved  0.0 mm
+episode  36: success pos   0.9 mm  yaw   0.1 deg  block moved  0.0 mm
+episode  37: success pos   1.5 mm  yaw   1.1 deg  block moved  0.0 mm
+episode  38: success pos   2.7 mm  yaw   7.6 deg  block moved  0.0 mm
+episode  39: success pos   1.2 mm  yaw   2.1 deg  block moved  0.0 mm
+episode  40: success pos   2.3 mm  yaw   1.6 deg  block moved  3.1 mm
+episode  41: success pos   3.9 mm  yaw   8.9 deg  block moved  0.0 mm
+episode  42: success pos   1.5 mm  yaw   1.5 deg  block moved  0.0 mm
+episode  43: success pos   0.4 mm  yaw   1.1 deg  block moved  0.0 mm
+episode  44: success pos   0.4 mm  yaw   2.3 deg  block moved  0.0 mm
+episode  45: success pos   0.5 mm  yaw   2.0 deg  block moved  0.0 mm
+episode  46: success pos   0.4 mm  yaw   2.5 deg  block moved  0.0 mm
+episode  47: success pos   1.3 mm  yaw   1.7 deg  block moved  0.0 mm
+episode  48: success pos   1.5 mm  yaw   0.6 deg  block moved  0.0 mm
+episode  49: success pos   0.9 mm  yaw   1.1 deg  block moved  0.0 mm
+episode  50: success pos   0.7 mm  yaw   5.7 deg  block moved  0.0 mm
+episode  51: success pos   2.1 mm  yaw   2.2 deg  block moved  1.7 mm
+episode  52: success pos   2.2 mm  yaw   1.7 deg  block moved  0.0 mm
+episode  53: success pos   1.9 mm  yaw   5.5 deg  block moved  0.0 mm
+episode  54: success pos   1.3 mm  yaw   2.3 deg  block moved  0.0 mm
+episode  55: success pos   3.2 mm  yaw   1.4 deg  block moved  0.0 mm
+episode  56: success pos   1.5 mm  yaw   1.9 deg  block moved  0.0 mm
+episode  57: success pos   1.0 mm  yaw   1.6 deg  block moved  0.0 mm
+episode  58: success pos   2.4 mm  yaw   3.5 deg  block moved  0.0 mm
+episode  59: miss    pos   7.2 mm  yaw  13.2 deg  block moved  0.0 mm
+episode  60: miss    pos 104.2 mm  yaw  27.7 deg  block moved  0.4 mm
+episode  61: success pos   1.8 mm  yaw   4.8 deg  block moved  0.0 mm
+episode  62: miss    pos  35.9 mm  yaw 110.6 deg  block moved  1.3 mm
+episode  63: success pos   0.7 mm  yaw   2.1 deg  block moved  3.0 mm
+episode  64: success pos   1.2 mm  yaw   0.5 deg  block moved  1.1 mm
+episode  65: success pos   2.0 mm  yaw   4.2 deg  block moved  0.0 mm
+episode  66: success pos   0.2 mm  yaw   1.1 deg  block moved  3.9 mm
+episode  67: success pos   1.2 mm  yaw   0.6 deg  block moved  0.0 mm
+episode  68: success pos   2.3 mm  yaw   0.0 deg  block moved  0.0 mm
+episode  69: miss    pos   4.6 mm  yaw   6.1 deg  block moved 20.5 mm
+episode  70: success pos   2.1 mm  yaw   3.2 deg  block moved  0.0 mm
+episode  71: success pos   1.4 mm  yaw   2.9 deg  block moved  0.0 mm
+episode  72: success pos   1.6 mm  yaw   1.5 deg  block moved  0.0 mm
+episode  73: success pos   2.1 mm  yaw   4.9 deg  block moved  0.0 mm
+episode  74: success pos   1.7 mm  yaw   4.4 deg  block moved  0.0 mm
+episode  75: success pos   4.0 mm  yaw   7.5 deg  block moved  0.0 mm
+episode  76: success pos   0.7 mm  yaw   0.9 deg  block moved  0.0 mm
+episode  77: success pos   1.2 mm  yaw   0.1 deg  block moved  0.0 mm
+episode  78: success pos   1.2 mm  yaw   6.3 deg  block moved  0.0 mm
+episode  79: miss    pos   7.2 mm  yaw  10.3 deg  block moved  1.8 mm
+episode  80: success pos   0.6 mm  yaw   1.9 deg  block moved  0.0 mm
+episode  81: success pos   3.6 mm  yaw   6.5 deg  block moved  0.0 mm
+episode  82: success pos   0.9 mm  yaw   1.2 deg  block moved  0.0 mm
+episode  83: miss    pos   2.4 mm  yaw   1.7 deg  block moved 12.1 mm
+episode  84: success pos   1.4 mm  yaw   2.0 deg  block moved  2.0 mm
+episode  85: success pos   1.2 mm  yaw   0.8 deg  block moved  0.0 mm
+episode  86: success pos   0.1 mm  yaw   2.6 deg  block moved  0.0 mm
+episode  87: success pos   1.0 mm  yaw   2.7 deg  block moved  0.0 mm
+episode  88: success pos   0.9 mm  yaw   0.7 deg  block moved  0.0 mm
+episode  89: success pos   1.0 mm  yaw   1.5 deg  block moved  0.0 mm
+episode  90: success pos   0.8 mm  yaw   0.2 deg  block moved  0.0 mm
+episode  91: success pos   1.0 mm  yaw   0.2 deg  block moved  4.5 mm
+episode  92: success pos   1.2 mm  yaw   0.3 deg  block moved  0.0 mm
+episode  93: success pos   1.5 mm  yaw   3.6 deg  block moved  0.0 mm
+episode  94: success pos   0.5 mm  yaw   3.7 deg  block moved  0.0 mm
+episode  95: success pos   0.6 mm  yaw   3.5 deg  block moved  0.0 mm
+episode  96: success pos   0.5 mm  yaw   0.8 deg  block moved  0.0 mm
+episode  97: success pos   1.8 mm  yaw   1.4 deg  block moved  0.0 mm
+episode  98: success pos   0.6 mm  yaw   0.7 deg  block moved  0.0 mm
+episode  99: success pos   2.1 mm  yaw   1.1 deg  block moved  0.0 mm
+episode 100: success pos   2.3 mm  yaw   0.7 deg  block moved  0.0 mm
+episode 101: success pos   1.0 mm  yaw   2.2 deg  block moved  3.6 mm
+episode 102: success pos   2.2 mm  yaw   4.1 deg  block moved  0.0 mm
+episode 103: success pos   1.6 mm  yaw   0.2 deg  block moved  0.0 mm
+episode 104: success pos   3.5 mm  yaw   3.9 deg  block moved  0.0 mm
+episode 105: success pos   0.2 mm  yaw   0.7 deg  block moved  0.0 mm
+episode 106: success pos   0.3 mm  yaw   2.3 deg  block moved  0.0 mm
+episode 107: success pos   0.8 mm  yaw   3.0 deg  block moved  0.0 mm
+episode 108: success pos   3.2 mm  yaw   4.6 deg  block moved  0.0 mm
+episode 109: success pos   1.5 mm  yaw   4.9 deg  block moved  0.0 mm
+episode 110: success pos   3.0 mm  yaw   3.4 deg  block moved  0.0 mm
+episode 111: success pos   2.2 mm  yaw   0.5 deg  block moved  0.0 mm
+episode 112: success pos   0.2 mm  yaw   1.6 deg  block moved  0.0 mm
+episode 113: success pos   1.3 mm  yaw   1.9 deg  block moved  0.0 mm
+episode 114: success pos   0.6 mm  yaw   1.3 deg  block moved  0.0 mm
+episode 115: success pos   2.7 mm  yaw   5.8 deg  block moved  0.0 mm
+episode 116: success pos   0.5 mm  yaw   0.3 deg  block moved  0.0 mm
+episode 117: success pos   0.5 mm  yaw   3.9 deg  block moved  0.0 mm
+episode 118: success pos   0.8 mm  yaw   0.1 deg  block moved  0.0 mm
+episode 119: success pos   0.3 mm  yaw   1.5 deg  block moved  0.0 mm
+episode 120: success pos   1.5 mm  yaw   0.8 deg  block moved  0.0 mm
+episode 121: success pos   0.6 mm  yaw   0.0 deg  block moved  0.0 mm
+episode 122: success pos   2.4 mm  yaw   2.3 deg  block moved  0.0 mm
+episode 123: success pos   1.6 mm  yaw   1.4 deg  block moved  0.0 mm
+episode 124: success pos   0.7 mm  yaw   1.9 deg  block moved  0.0 mm
+episode 125: success pos   2.5 mm  yaw   4.5 deg  block moved  0.0 mm
+episode 126: success pos   0.7 mm  yaw   0.0 deg  block moved  0.0 mm
+episode 127: success pos   0.7 mm  yaw   0.2 deg  block moved  0.0 mm
+episode 128: success pos   0.7 mm  yaw   1.4 deg  block moved  0.0 mm
+episode 129: success pos   1.8 mm  yaw   5.0 deg  block moved  0.0 mm
+episode 130: success pos   3.2 mm  yaw   3.4 deg  block moved  0.0 mm
+episode 131: success pos   1.8 mm  yaw   6.0 deg  block moved  0.0 mm
+episode 132: success pos   1.2 mm  yaw   3.5 deg  block moved  0.0 mm
+episode 133: miss    pos   3.5 mm  yaw   3.3 deg  block moved 10.7 mm
+episode 134: success pos   0.8 mm  yaw   1.5 deg  block moved  0.0 mm
+episode 135: success pos   2.4 mm  yaw   2.8 deg  block moved  0.0 mm
+episode 136: success pos   0.4 mm  yaw   1.2 deg  block moved  0.0 mm
+episode 137: success pos   1.2 mm  yaw   1.6 deg  block moved  0.0 mm
+episode 138: success pos   1.9 mm  yaw   3.7 deg  block moved  0.0 mm
+episode 139: success pos   3.8 mm  yaw   5.9 deg  block moved  0.0 mm
+episode 140: miss    pos   4.1 mm  yaw   3.8 deg  block moved 55.1 mm
+episode 141: success pos   3.0 mm  yaw   3.0 deg  block moved  0.0 mm
+episode 142: success pos   0.9 mm  yaw   0.1 deg  block moved  0.0 mm
+episode 143: success pos   0.4 mm  yaw   0.8 deg  block moved  0.0 mm
+episode 144: success pos   0.4 mm  yaw   0.1 deg  block moved  0.0 mm
+episode 145: success pos   0.7 mm  yaw   0.8 deg  block moved  4.5 mm
+episode 146: success pos   0.8 mm  yaw   0.4 deg  block moved  0.0 mm
+episode 147: success pos   2.3 mm  yaw   4.2 deg  block moved  0.0 mm
+episode 148: success pos   1.2 mm  yaw   1.8 deg  block moved  0.0 mm
+episode 149: success pos   1.1 mm  yaw   3.2 deg  block moved  0.0 mm
+episode 150: success pos   0.6 mm  yaw   1.7 deg  block moved  0.0 mm
+episode 151: success pos   3.0 mm  yaw   2.9 deg  block moved  0.0 mm
+episode 152: success pos   1.4 mm  yaw   4.7 deg  block moved  0.0 mm
+episode 153: success pos   0.2 mm  yaw   1.4 deg  block moved  0.0 mm
+episode 154: success pos   0.2 mm  yaw   1.0 deg  block moved  0.0 mm
+episode 155: success pos   2.0 mm  yaw   1.7 deg  block moved  0.0 mm
+episode 156: success pos   2.5 mm  yaw   6.5 deg  block moved  0.0 mm
+episode 157: success pos   1.0 mm  yaw   0.3 deg  block moved  0.0 mm
+episode 158: success pos   3.0 mm  yaw   2.3 deg  block moved  0.0 mm
+episode 159: miss    pos  27.1 mm  yaw  18.9 deg  block moved  0.0 mm
+episode 160: success pos   2.7 mm  yaw   3.3 deg  block moved  0.0 mm
+episode 161: success pos   2.1 mm  yaw   2.7 deg  block moved  0.0 mm
+episode 162: success pos   1.2 mm  yaw   0.8 deg  block moved  3.9 mm
+episode 163: success pos   0.6 mm  yaw   2.3 deg  block moved  0.0 mm
+episode 164: success pos   1.2 mm  yaw   1.9 deg  block moved  0.0 mm
+episode 165: success pos   0.6 mm  yaw   2.4 deg  block moved  0.0 mm
+episode 166: success pos   0.2 mm  yaw   1.3 deg  block moved  0.0 mm
+episode 167: miss    pos  27.5 mm  yaw  46.4 deg  block moved  0.4 mm
+episode 168: success pos   1.7 mm  yaw   2.3 deg  block moved  0.0 mm
+episode 169: success pos   0.4 mm  yaw   0.4 deg  block moved  0.0 mm
+episode 170: success pos   2.6 mm  yaw   4.4 deg  block moved  0.0 mm
+episode 171: success pos   2.1 mm  yaw   9.2 deg  block moved  0.0 mm
+episode 172: success pos   0.9 mm  yaw   1.1 deg  block moved  0.0 mm
+episode 173: success pos   0.9 mm  yaw   0.6 deg  block moved  0.0 mm
+episode 174: success pos   0.8 mm  yaw   0.2 deg  block moved  0.0 mm
+episode 175: success pos   2.4 mm  yaw   1.1 deg  block moved  0.0 mm
+episode 176: success pos   0.9 mm  yaw   2.3 deg  block moved  0.0 mm
+episode 177: success pos   1.9 mm  yaw   3.3 deg  block moved  0.0 mm
+episode 178: success pos   3.1 mm  yaw   4.2 deg  block moved  0.8 mm
+episode 179: success pos   0.5 mm  yaw   0.7 deg  block moved  0.0 mm
+episode 180: success pos   1.1 mm  yaw   1.8 deg  block moved  0.0 mm
+episode 181: success pos   1.0 mm  yaw   1.2 deg  block moved  0.0 mm
+episode 182: success pos   1.3 mm  yaw   1.5 deg  block moved  0.0 mm
+episode 183: success pos   0.8 mm  yaw   1.5 deg  block moved  0.0 mm
+episode 184: success pos   1.1 mm  yaw   4.7 deg  block moved  0.0 mm
+episode 185: success pos   2.0 mm  yaw   4.2 deg  block moved  0.9 mm
+episode 186: success pos   1.5 mm  yaw   4.2 deg  block moved  0.0 mm
+episode 187: success pos   1.0 mm  yaw   0.8 deg  block moved  0.0 mm
+episode 188: miss    pos   5.5 mm  yaw   2.7 deg  block moved 39.2 mm
+episode 189: success pos   2.7 mm  yaw   5.8 deg  block moved  0.0 mm
+episode 190: success pos   0.6 mm  yaw   0.5 deg  block moved  0.0 mm
+episode 191: success pos   1.2 mm  yaw   4.4 deg  block moved  0.0 mm
+episode 192: success pos   0.5 mm  yaw   0.9 deg  block moved  0.0 mm
+episode 193: success pos   1.2 mm  yaw   1.8 deg  block moved  0.0 mm
+episode 194: miss    pos  34.7 mm  yaw  52.1 deg  block moved  0.2 mm
+episode 195: miss    pos  87.1 mm  yaw 137.7 deg  block moved  2.2 mm
+episode 196: success pos   0.8 mm  yaw   2.6 deg  block moved  0.0 mm
+episode 197: success pos   0.9 mm  yaw   0.8 deg  block moved  0.0 mm
+episode 198: success pos   2.3 mm  yaw   5.7 deg  block moved  0.0 mm
+episode 199: success pos   0.6 mm  yaw   1.6 deg  block moved  0.0 mm
+episode 200: success pos   1.1 mm  yaw   2.0 deg  block moved  0.0 mm
+
+200 episodes through the hardware path: success 92.5%, median 1.3 mm / 2.1 deg, block kept in place 96.5%
+

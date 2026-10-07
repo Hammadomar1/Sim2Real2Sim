@@ -64,12 +64,17 @@ The rod draws an 80 mm square 30 mm above the table at 40 mm/s. Ideal servos (si
 Mount the D435i opposite the robot, about 40° down, near (0.62, 0, 0.38) m in the robot frame (the
 `d435i` camera in the scene). Implement `CameraPoseSource` in `s2r2s/hardware/poses.py`. It must return the
 object's (x, y, yaw) in the robot frame at about 30 Hz, accurate to **2 mm / 2°** with under **150 ms** delay
-(`python -m s2r2s.sensitivity`). See ROADMAP.md, section 3, for the recommended pipeline.
+(`python -m s2r2s.sensitivity`). See ROADMAP.md, section 3, for the recommended pipeline. Clutter policies also
+call `read_block()`: the same estimate for the 40 mm block that must stay where it is. Where the block is when a
+trial starts is where it must still be at the end. The block's estimate also drives the controller's rod guard
+(the rod is never commanded within 3 mm of the block), so it must be as good as the T's, and the two must never
+be confused.
 
 ## 5. First policy runs
 
 ```powershell
 python -m s2r2s.hardware.runner --checkpoint runs\tee_v1\best.pt --robot sim --episodes 20      # rehearsal
+python -m s2r2s.hardware.runner --checkpoint runs\clutter_v7\best.pt --robot sim --episodes 20  # with the block
 python -m s2r2s.hardware.runner --checkpoint runs\tee_v1\best.pt --robot so101 --port COM5 `
     --map calibration\joint_map.json --goal 0.20 0.05 90 --max-step-deg 2
 ```
@@ -86,5 +91,5 @@ powering it down. Keep a hand near the power switch during first runs, and start
 ## 6. Trial logs (for Milestone 3)
 
 Every real run writes `trials/<date_time>.json`: the goal, the final pose and errors, and per tick the joints,
-joint targets, rod position, commanded position, camera pose, action and gate stage. The failure-guided
+joint targets, rod position, commanded position, camera pose (and block pose), action and gate stage. The failure-guided
 sampler (Milestone 3) will read these files.
