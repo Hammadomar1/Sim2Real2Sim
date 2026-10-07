@@ -1,0 +1,82 @@
+$ python -m s2r2s.evaluate runs/dock_v4/best.pt --baseline --compare runs/dock_v3/best.pt runs/clutter_box_v2/best.pt --set task.dock_bank_share=0 --out runs/dock_v4/eval_dock_sampled.json
+
+runs/dock_v4/best.pt (iteration 900, 88M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy     dock_v3  clutter_box_v2    scripted
+success rate                                       94.7%       94.2%           69.0%       19.7%
+position error median (mm)                           0.8         1.0             1.4         4.5
+position error p90 (mm)                              1.8         2.0             9.0         5.0
+yaw error median (deg)                               1.1         1.2             2.0         3.3
+yaw error p90 (deg)                                  3.2         3.6             9.8         5.4
+mean E = pos/20mm + yaw/10deg                       0.22        0.24            0.61        0.60
+ever within tolerance                              95.3%       94.2%           73.0%       20.8%
+time to tolerance median (s)                         2.0         2.0             2.6         4.4
+failures (tipped/escaped)                           0.1%        0.0%            0.9%        0.0%
+clutter block disturbed (>10 mm or >10 deg)         2.7%        3.0%           18.1%       24.4%
+  ... when it sat close beside the path             2.7%        3.0%           18.1%       24.4%
+clutter block touched (moved >2 mm)                 8.0%        8.9%           34.3%       31.6%
+  ... first by the rod                              0.1%        0.0%            1.0%        0.2%
+action rate (smoothness, lower=smoother)          0.0533      0.0507          0.0357      0.0883
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+     3-20 mm ( 858 scenes)   policy: 95.0% /  2.6% /  0.1%   dock_v3: 94.3% /  2.9% /  0.0%   clutter_box_v2: 69.9% / 16.6% /  1.2%   scripted: 19.1% / 24.8% /  0.2%
+    20-25 mm (  93 scenes)   policy: 91.4% /  5.4% /  0.0%   dock_v3: 91.4% /  5.4% /  0.0%   clutter_box_v2: 59.1% / 30.1% /  0.0%   scripted: 18.3% / 17.2% /  0.0%
+    25-30 mm (  43 scenes)   policy: 95.3% /  0.0% /  0.0%   dock_v3: 97.7% /  0.0% /  0.0%   clutter_box_v2: 72.1% / 23.3% /  0.0%   scripted: 34.9% / 30.2% /  0.0%
+      >30 mm (   6 scenes)   policy: 100.0% /  0.0% /  0.0%   dock_v3: 100.0% /  0.0% /  0.0%   clutter_box_v2: 66.7% / 16.7% /  0.0%   scripted: 16.7% / 33.3% /  0.0%
+
+
+$ python -m s2r2s.evaluate runs/dock_v4/best.pt --compare runs/dock_v3/best.pt runs/clutter_box_v2/best.pt --set task.dock_bank_share=1 --out runs/dock_v4/eval_dock_level3_starts.json
+
+runs/dock_v4/best.pt (iteration 900, 88M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy     dock_v3  clutter_box_v2
+success rate                                       93.6%       54.6%           72.8%
+position error median (mm)                           0.8         2.4             1.4
+position error p90 (mm)                              1.7        13.3            10.5
+yaw error median (deg)                               1.1         3.0             1.8
+yaw error p90 (deg)                                  3.4        22.5             7.3
+mean E = pos/20mm + yaw/10deg                       0.28        1.02            0.57
+ever within tolerance                              94.0%       66.0%           77.0%
+time to tolerance median (s)                         2.1         2.3             2.9
+failures (tipped/escaped)                           0.6%        0.6%            0.9%
+clutter block disturbed (>10 mm or >10 deg)         2.7%       38.0%           13.1%
+  ... when it sat close beside the path             2.7%       38.0%           13.1%
+clutter block touched (moved >2 mm)                 8.3%       52.7%           31.3%
+  ... first by the rod                              0.8%        1.7%            1.6%
+action rate (smoothness, lower=smoother)          0.0576      0.0606          0.0401
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    -1-20 mm ( 945 scenes)   policy: 94.3% /  2.4% /  0.7%   dock_v3: 55.8% / 37.2% /  1.5%   clutter_box_v2: 73.8% / 12.8% /  1.5%
+    20-25 mm (  36 scenes)   policy: 94.4% /  2.8% /  2.8%   dock_v3: 44.4% / 50.0% /  2.8%   clutter_box_v2: 61.1% / 16.7% /  2.8%
+    25-30 mm (   3 scenes)   policy: 33.3% / 66.7% /  0.0%   dock_v3: 33.3% / 66.7% /  0.0%   clutter_box_v2: 66.7% / 33.3% /  0.0%
+      >30 mm (  16 scenes)   policy: 62.5% /  6.2% /  0.0%   dock_v3: 12.5% / 50.0% / 12.5%   clutter_box_v2: 43.8% / 18.8% /  6.2%
+
+
+$ python -m s2r2s.level3 --record-dock-starts runs/dock_v4/test_starts.npz --record-seeds 20000003
+seed 20000003: 985 docking starts
+wrote runs/dock_v4/test_starts.npz (985 docking starts)
+
+$ python -m s2r2s.evaluate runs/dock_v4/best.pt --compare runs/dock_v3/best.pt runs/clutter_box_v2/best.pt --set task.dock_start_bank=runs/dock_v4/test_starts.npz task.dock_bank_share=1 --out runs/dock_v4/eval_dock_level3_test_starts.json
+
+runs/dock_v4/best.pt (iteration 900, 88M samples) | 1000 episodes, seed 20000003, difficulty 1.0, timestep 5 ms, randomization on
+                                                  policy     dock_v3  clutter_box_v2
+success rate                                       92.7%       57.5%           67.4%
+position error median (mm)                           0.8         2.3             1.4
+position error p90 (mm)                              1.9        12.1            13.1
+yaw error median (deg)                               1.2         2.9             1.8
+yaw error p90 (deg)                                  3.5        21.5             7.4
+mean E = pos/20mm + yaw/10deg                       0.31        0.97            0.60
+ever within tolerance                              93.3%       66.8%           70.3%
+time to tolerance median (s)                         2.1         2.4             2.9
+failures (tipped/escaped)                           0.4%        0.3%            0.3%
+clutter block disturbed (>10 mm or >10 deg)         2.8%       35.4%           16.4%
+  ... when it sat close beside the path             2.8%       35.4%           16.4%
+clutter block touched (moved >2 mm)                 8.7%       54.3%           34.2%
+  ... first by the rod                              2.0%        1.9%            2.6%
+action rate (smoothness, lower=smoother)          0.0584      0.0596          0.0399
+
+by the block's clearance from the T's straight path: success / disturbed / first touched by the rod
+    -1-20 mm ( 928 scenes)   policy: 94.2% /  2.3% /  1.9%   dock_v3: 57.9% / 36.2% /  1.9%   clutter_box_v2: 68.4% / 15.6% /  2.3%
+    20-25 mm (  45 scenes)   policy: 86.7% /  8.9% /  4.4%   dock_v3: 64.4% / 24.4% /  0.0%   clutter_box_v2: 64.4% / 26.7% /  6.7%
+    25-30 mm (   3 scenes)   policy: 33.3% / 33.3% /  0.0%   dock_v3: 33.3% / 33.3% /  0.0%   clutter_box_v2: 66.7% / 33.3% /  0.0%
+      >30 mm (  24 scenes)   policy: 54.2% /  8.3% /  0.0%   dock_v3: 33.3% / 25.0% /  4.2%   clutter_box_v2: 33.3% / 25.0% /  8.3%
+
+

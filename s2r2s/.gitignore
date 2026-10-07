@@ -59,3 +59,18 @@ runs/clutter_box_v2/*
 runs/level2/*
 !runs/level2/final_eval.json
 !runs/level2/final_evals.log
+# Level 3 deliverables: the dock skill (push the box into a corner of the T) and the assembly results.
+!runs/dock_v4/
+runs/dock_v4/*
+!runs/dock_v4/best.pt
+!runs/dock_v4/config.json
+!runs/dock_v4/eval.jsonl
+!runs/dock_v4/progress.jsonl
+!runs/dock_v4/train.log
+!runs/dock_v4/final_eval.json
+!runs/dock_v4/final_evals.log
+!runs/dock_v4/start_bank.npz
+!runs/level3/
+runs/level3/*
+!runs/level3/final_eval.json
+!runs/level3/final_evals.log
