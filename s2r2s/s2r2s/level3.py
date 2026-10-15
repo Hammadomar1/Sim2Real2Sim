@@ -29,7 +29,7 @@ import numpy as np
 import torch
 
 from .dock import compose, corner_offset
-from .env import EnvConfig, PushEnv
+from .env import EnvConfig, PushEnv, apply_overrides
 from .evaluate import TEST_SEED
 from .level2 import BOX, DOCK, TEE, Level2Env, Skill, _yaw_err, execute, summarize_level2, video, view
 from .train import load_policy
@@ -217,11 +217,14 @@ def main(argv=None):
     p.add_argument("--record-dock-starts", default="", metavar="NPZ",
                    help="record where docking starts (--episodes scenes per seed) to this file, for the dock skill")
     p.add_argument("--record-seeds", type=int, nargs="+", default=[1, 2, 3, 4], help="seeds for --record-dock-starts")
+    p.add_argument("--set", nargs="*", default=[], metavar="SECTION.FIELD=VALUE",
+                   help="overrides for the world and every skill, e.g. scene.lightbox=true")
     args = p.parse_args(argv)
     n, device = (1, "cpu") if args.view else (args.episodes, "cuda" if torch.cuda.is_available() else "cpu")
-    tee, box = Skill(args.tee, n, device), Skill(args.box, n, device)
-    dock = Skill(args.dock, n, device, args.dock_policy or None)
+    tee, box = Skill(args.tee, n, device, overrides=args.set), Skill(args.box, n, device, overrides=args.set)
+    dock = Skill(args.dock, n, device, args.dock_policy or None, args.set)
     _, world_cfg, _ = load_policy(args.tee, "cpu")           # camera model and randomisation of the T skill
+    apply_overrides(world_cfg, args.set)
     park = not args.no_park
     world_cfg.task.episode_seconds = 80.0 if park else 60.0              # 20 s per push at most
     dt = world_cfg.task.control_dt

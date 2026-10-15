@@ -1,0 +1,54 @@
+{
+ "args": {
+  "tee": "runs/clutter_v7/best.pt",
+  "box": "runs/clutter_box_v2/best.pt",
+  "dock": "runs/dock_v4/best.pt",
+  "dock_policy": "",
+  "no_park": false,
+  "episodes": 1000,
+  "seed": 20000003,
+  "video": "",
+  "view": false,
+  "out": "runs/level3/lightbox_eval.json",
+  "record_dock_starts": "",
+  "record_seeds": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "set": [
+   "scene.lightbox=true"
+  ]
+ },
+ "episodes": 1000,
+ "success": 0.809,
+ "tee_at_goal": 0.886,
+ "box_at_goal": 0.867,
+ "failure": 0.028,
+ "all_pushes_settled": 0.665,
+ "kept_block_disturbed": 0.059,
+ "kept_block_moved_mm_median": 1.5277965010035706,
+ "time_s_median": 19.25,
+ "three_push_share": 0.366,
+ "success_two_pushes": 0.832807570977918,
+ "success_three_pushes": 0.76775956284153,
+ "tee_first_share": 0.6072555205047319,
+ "success_tee_first": 0.8311688311688312,
+ "success_box_first": 0.8353413654618473,
+ "order_valid": 1.0,
+ "tee_err_median": [
+  3.2136823564558172,
+  3.5343276644049797
+ ],
+ "box_err_median": [
+  0.7621678695809424,
+  0.7588718048672162
+ ],
+ "docked": 0.867,
+ "gap_mm_median": 0.0008107151353454328,
+ "dock_err_median": [
+  0.7621678695809424,
+  0.7588718048672162
+ ]
+}

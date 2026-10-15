@@ -61,13 +61,15 @@ def main(argv=None):
     ap.add_argument("--height", type=float, default=0.03, help="rod tip height above the table (m)")
     ap.add_argument("--speed", type=float, default=0.04, help="m/s (the policy uses up to 0.08)")
     ap.add_argument("--half", type=float, default=0.04, help="half side of the square (m)")
+    ap.add_argument("--lightbox", action="store_true", help="heights above the lightbox mat (SceneConfig.lightbox)")
     ap.add_argument("--out", default=str(PROJECT / "calibration" / "tracking"))
     args = ap.parse_args(argv)
     dt = 0.05
     jmap = JointMap.load(args.map) if args.map else JointMap()
-    kin = PusherKinematics(build_model(SceneConfig(timestep=0.005), visual=False))
+    scene = SceneConfig(timestep=0.005, lightbox=args.lightbox)
+    kin = PusherKinematics(build_model(scene, visual=False))
     realtime = args.robot == "so101"
-    robot = SO101Robot(args.port) if realtime else SimRobot(encoder_noise_deg=0.05)
+    robot = SO101Robot(args.port) if realtime else SimRobot(scene, encoder_noise_deg=0.05)
     path = square_path(half=args.half, speed=args.speed, dt=dt)
     move_to(robot, jmap, kin, (*path[0], args.height), seconds=3.0, realtime=realtime)
     q = jmap.to_sim(robot.read_joints())[None]

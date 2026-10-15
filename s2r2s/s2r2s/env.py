@@ -126,6 +126,13 @@ class RandomizationConfig:
     obs_dropout: float = 0.03
     tool_noise: float = 0.0005
     gate_friction: tuple[float, float] = (0.20, 0.50)
+    # Hardware errors, off by default (the policies so far were trained without them). Joint calibration error:
+    # each episode, the encoders read the true joint angles plus an offset, uniform within +-joint_offset_deg
+    # per joint, so FK, IK and the policy's joint inputs all work in the slightly wrong frame. Backlash: a
+    # dead band between servo command and link, per joint (pan, lift, elbow, wrist flex): the link only moves
+    # once the command has crossed the play, so it lags by up to the play after every reversal.
+    joint_offset_deg: float = 0.0
+    backlash_deg: tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0)
 
 
 @dataclass
@@ -215,6 +222,8 @@ class PushEnv:
         self.cmd_xy = z(2)
         self.q_cmd = z(5)
         self.prev_ctrl = z(m0.nu)
+        self.joint_offset = z(5)           # encoder reading minus true joint angle (calibration error)
+        self.link_target = z(5)            # servo targets after the backlash dead band (true joint frame)
         self.prev_action = z(2)
         self.cmd_deflection = z()           # how far the last command was moved by _guard_command (m)
         self.prev_dist = z()
@@ -352,9 +361,16 @@ class PushEnv:
         q, err, _ = self.kin.solve(np.c_[tool, self.tool_z_cmd[ids]], self.kin.seed(tool), iterations=30)
         if err.max() > 1e-3:
             raise RuntimeError(f"reset IK failed: {err.max():.4f} m")
+        # Joint calibration error: q is what the encoders read; the arm is really at q - offset. (Drawn only
+        # when enabled, so the parameter stream, and with it every scene, is unchanged otherwise.)
+        self.joint_offset[ids] = 0.0
+        if r.enabled and r.joint_offset_deg > 0:
+            self.joint_offset[ids, :4] = self.param_rng.uniform(-1, 1, (n, 4)) * math.radians(r.joint_offset_deg)
+        q_true = q - self.joint_offset[ids]
+        self.link_target[ids] = q_true
         # Physics state: time, qpos, qvel.
         qpos = np.zeros((n, self.idx.nq))
-        qpos[:, self.idx.arm_qpos] = q
+        qpos[:, self.idx.arm_qpos] = q_true
         qpos[:, self.idx.gripper_qpos] = self.cfg.scene.gripper_hold
         o = self.idx.obj_qpos
         qpos[:, o:o + 2] = start
@@ -366,7 +382,7 @@ class PushEnv:
         self.tip[ids], _ = self.kin.forward(q)
         self.qarm[ids] = q
         self.q_cmd[ids] = q
-        self.prev_ctrl[ids, :5] = q
+        self.prev_ctrl[ids, :5] = q_true
         self.prev_ctrl[ids, 5] = self.cfg.scene.gripper_hold
         self.cmd_xy[ids] = tool
         self.prev_action[ids] = 0
@@ -458,7 +474,7 @@ class PushEnv:
         return np.c_[self.state[:, o:o + 2], yaw], self.state[:, o + 2], up_z
 
     def _update_tool(self):
-        self.qarm = self.state[:, self.qpos_adr + self.idx.arm_qpos]
+        self.qarm = self.state[:, self.qpos_adr + self.idx.arm_qpos] + self.joint_offset
         self.tip, _ = self.kin.forward(self.qarm)
 
     def _project_workspace(self, xy):
@@ -489,6 +505,11 @@ class PushEnv:
     def step(self, action):
         t, r = self.cfg.task, self.cfg.rand
         a, q = self.command(action)
+        q = q - self.joint_offset                 # the servos act on the true joints
+        if r.enabled and any(r.backlash_deg):
+            play = np.radians(np.r_[r.backlash_deg, 0.0]) / 2
+            self.link_target = np.clip(self.link_target, q - play, q + play)
+            q = self.link_target
         new_ctrl = np.c_[q, np.full(self.n, self.cfg.scene.gripper_hold)]
         # Servo command latency: the previous command persists for ``delay`` substeps.
         sub = np.arange(self.nsub)[None, :, None]
@@ -512,7 +533,8 @@ class PushEnv:
         self.first_success = np.where((self.first_success < 0) & success, self.step_count, self.first_success)
 
         finite = np.isfinite(self.state).all(-1)
-        tipped = (up_z < math.cos(math.radians(25))) | (height > self.obj_height / 2 + 0.01)
+        dropped = height < self.obj_height / 2 - 0.004      # off the work surface (the lightbox mat has edges)
+        tipped = (up_z < math.cos(math.radians(25))) | (height > self.obj_height / 2 + 0.01) | dropped
         outside = ~self._in_region(pose[:, :2], t.fail_r, t.fail_az)
         failed = tipped | outside | ~finite
         timeout = self.step_count >= self.max_steps
@@ -553,7 +575,7 @@ class PushEnv:
                 "success": success[ids], "failed": failed[ids], "timeout": timeout[ids] & ~failed[ids],
                 "pos_err": pos_err[ids], "yaw_err": yaw_err[ids], "dist": dist[ids],
                 "first_success": self.first_success[ids], "difficulty": self.difficulty_ep[ids],
-                "tipped": tipped[ids], "outside": outside[ids], "nonfinite": ~finite[ids],
+                "tipped": tipped[ids], "dropped": dropped[ids], "outside": outside[ids], "nonfinite": ~finite[ids],
                 "obj_id": self.obj_id[ids].copy(),
                 **self._episode_extras(ids),
             }

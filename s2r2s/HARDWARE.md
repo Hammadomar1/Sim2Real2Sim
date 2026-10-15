@@ -11,6 +11,11 @@ arm (`--robot sim`). The real-arm commands are identical with `--robot so101 --p
 | Policy with the calibrated map | 100 % success (10/10), 1.2 mm / 2.3° |
 | Full hardware path, correct map (20 scenes) | 95 % success, matching the 96.6 % in simulation |
 
+**In the lightbox** (our real setup: the mat is 9.8 mm above the surface the robot stands on), add `--lightbox`
+to `calibrate`, `tracking` and `runner` so the kinematics put z = 0 on the mat top. Without it the rod is
+commanded 4.8 mm into the mat. Policies trained in the lightbox (`runs/tee_lightbox_v1`) carry the setting.
+[LIGHTBOX.md](LIGHTBOX.md) has the measured geometry, the simulator's predictions and the full bring-up order.
+
 ## 0. Install (once)
 
 ```powershell
@@ -36,7 +41,8 @@ the model (30 mm, Ø12 mm), set `pusher_tip_z` / `pusher_radius` in `SceneConfig
 ## 2. Joint mapping: touch nine points
 
 ```powershell
-python -m s2r2s.hardware.calibrate --robot so101 --port COM5 --verify --no-fit-rod
+python -m s2r2s.hardware.calibrate --robot so101 --port COM5 --verify --no-fit-rod             # flat table
+python -m s2r2s.hardware.calibrate --robot so101 --port COM5 --verify --no-fit-rod --lightbox  # points on the mat
 ```
 
 - Mark the nine points the tool prints on the table. They are in the robot base frame: x forward, y to the robot's
@@ -51,7 +57,7 @@ python -m s2r2s.hardware.calibrate --robot so101 --port COM5 --verify --no-fit-r
 ## 3. Tracking test
 
 ```powershell
-python -m s2r2s.hardware.tracking --robot so101 --port COM5 --map calibration/joint_map.json
+python -m s2r2s.hardware.tracking --robot so101 --port COM5 --map calibration/joint_map.json   # add --lightbox in the lightbox
 ```
 
 The rod draws an 80 mm square 30 mm above the table at 40 mm/s. Ideal servos (simulation): lag 0 ms,

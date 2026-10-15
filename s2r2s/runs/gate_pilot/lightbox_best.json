@@ -1,0 +1,72 @@
+{
+ "checkpoint": "runs/gate_pilot/best.pt",
+ "episodes": 1000,
+ "seed": 20000003,
+ "results": {
+  "training scene (flat table, robot on the table)": {
+   "overrides": [],
+   "episodes": 1000,
+   "success": 0.953,
+   "failure": 0.019,
+   "tipped": 0.004,
+   "dropped": 0.0,
+   "outside": 0.015,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 1.3604063171115222,
+   "yaw_err_deg_median": 2.112432895484312,
+   "pos_err_mm_p90": 3.8406453808518037,
+   "yaw_err_deg_p90": 5.907741392468128,
+   "E_mean": 0.9514269577491241,
+   "reached": 0.957,
+   "time_to_goal_s_median": 8.700000000000001,
+   "difficulty_mean": 1.0,
+   "passed_gate": 0.985,
+   "action_rate_mean": 0.038310563227176214
+  },
+  "lightbox (measured geometry)": {
+   "overrides": [
+    "scene.lightbox=true"
+   ],
+   "episodes": 1000,
+   "success": 0.906,
+   "failure": 0.038,
+   "tipped": 0.006,
+   "dropped": 0.004,
+   "outside": 0.032,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 1.6310886961945974,
+   "yaw_err_deg_median": 2.3586559268614624,
+   "pos_err_mm_p90": 5.689811748544724,
+   "yaw_err_deg_p90": 8.499117775467909,
+   "E_mean": 1.4964520521715907,
+   "reached": 0.915,
+   "time_to_goal_s_median": 8.85,
+   "difficulty_mean": 1.0,
+   "passed_gate": 0.98,
+   "action_rate_mean": 0.03860412622102464
+  },
+  "backlash +-0.5 deg, every joint (Menagerie's figure)": {
+   "overrides": [
+    "scene.lightbox=true",
+    "rand.backlash_deg=1,1,1,1"
+   ],
+   "episodes": 1000,
+   "success": 0.862,
+   "failure": 0.05,
+   "tipped": 0.006,
+   "dropped": 0.003,
+   "outside": 0.044,
+   "nonfinite": 0.0,
+   "pos_err_mm_median": 2.374752390635016,
+   "yaw_err_deg_median": 3.0294971838201303,
+   "pos_err_mm_p90": 42.2621056860389,
+   "yaw_err_deg_p90": 22.06609496880294,
+   "E_mean": 1.933896588604633,
+   "reached": 0.886,
+   "time_to_goal_s_median": 9.55,
+   "difficulty_mean": 1.0,
+   "passed_gate": 0.944,
+   "action_rate_mean": 0.04327628766403581
+  }
+ }
+}

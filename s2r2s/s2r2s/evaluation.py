@@ -47,6 +47,7 @@ def summarize(eps: dict) -> dict:
         "success": float(s["success"].mean()),
         "failure": float(s["failed"].mean()),
         "tipped": float(s["tipped"].mean()),
+        **({"dropped": float(s["dropped"].mean())} if "dropped" in s else {}),
         "outside": float(s["outside"].mean()),
         "nonfinite": float(s["nonfinite"].mean()),
         "pos_err_mm_median": float(np.median(pos) * 1e3),

@@ -74,3 +74,16 @@ runs/dock_v4/*
 runs/level3/*
 !runs/level3/final_eval.json
 !runs/level3/final_evals.log
+# Lightbox (LIGHTBOX.md): the lightbox Push-T policy, each skill's lightbox results and the in-box camera study.
+!runs/tee_lightbox_v1/
+runs/tee_lightbox_v1/*
+!runs/tee_lightbox_v1/best.pt
+!runs/tee_lightbox_v1/config.json
+!runs/tee_lightbox_v1/eval.jsonl
+!runs/tee_lightbox_v1/progress.jsonl
+!runs/tee_lightbox_v1/train.log
+!runs/tee_lightbox_v1/lightbox_best.json
+!runs/clutter_v7/lightbox_best.json
+!runs/level2/lightbox_eval.json
+!runs/level3/lightbox_eval.json
+!videos/camera_study_lightbox/
