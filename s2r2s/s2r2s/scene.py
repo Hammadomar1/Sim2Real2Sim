@@ -33,6 +33,16 @@ _TABLE, _OBJECT, _PUSHER, _STATIC = 1, 2, 4, 8
 GATE_WALL_HALF_THICKNESS = 0.005
 GATE_WALL_HALF_HEIGHT = 0.0125
 GATE_WALL_LENGTH = (0.09, 0.11)     # inner / outer wall length from the opening edge (m)
+# Lightbox workspace (NVIDIA's Sim-to-Real SO-101 build, measured on our setup): a white foam-board box
+# 76.2 wide x 50.8 deep x 50.8 high (cm), open at the front where the robot stands, and a black EVA mat
+# 45.7 x 30.5 x 0.5 on a 0.48 foam board, centred left to right. Metres, robot base frame (x forward, y left).
+PAN_AXIS_X = 0.0388                 # the shoulder-pan axis is 38.8 mm in front of the base origin
+LIGHTBOX_BOARD = 0.0048             # 3/16" foam board
+LIGHTBOX_FLOOR_X = (-0.031, 0.477)  # the robot's back edge is flush with the floor's open front edge
+LIGHTBOX_HALF_WIDTH = 0.381
+LIGHTBOX_WALL_HEIGHT = 0.508
+LIGHTBOX_MAT_X = (PAN_AXIS_X + 0.079, PAN_AXIS_X + 0.079 + 0.305)   # near edge 7.9 cm in front of the pan axis
+LIGHTBOX_MAT_HALF_WIDTH = 0.2285
 
 
 @dataclass
@@ -62,6 +72,15 @@ class SceneConfig:
     gate_friction: float = 0.35
     # Clutter: a second free object (name from objects.py) that the policy must not disturb.
     clutter: str = ""
+    # Lightbox workspace (LIGHTBOX_* above): the mat (with real edges), the floor and walls replace the endless
+    # table. z = 0 stays the work surface, the mat top, so the robot base sits mat_height *below* it.
+    lightbox: bool = False
+    mat_height: float = 0.0098          # mat top above the surface the robot stands on (0.48 board + 0.5 mat)
+    # Logitech C920 lens, through a slot in the left wall: 27 cm in front of the back wall, 40 cm above the
+    # robot's standing surface (not the mat), aimed at the mat centre (about 46 deg down).
+    c920_pos: tuple[float, float, float] = (0.2022, 0.3662, 0.40)
+    c920_target: tuple[float, float, float] = (0.2703, 0.0, 0.0)
+    c920_fovy: float = 43.3             # vertical, at 16:9 (1920x1080): the 78 deg diagonal spec is a 16:9 figure
 
     def to_dict(self):
         return asdict(self)
@@ -90,6 +109,42 @@ def _robot_inertials():
 
 
 _INERTIALS = None
+
+
+def _add_box(body, name, x, y, z, rgba, **kw):
+    """Static box from its extents: x, y, z are (min, max) pairs in metres."""
+    body.add_geom(name=name, type=mujoco.mjtGeom.mjGEOM_BOX, rgba=rgba,
+                  size=[(x[1] - x[0]) / 2, (y[1] - y[0]) / 2, (z[1] - z[0]) / 2],
+                  pos=[(x[0] + x[1]) / 2, (y[0] + y[1]) / 2, (z[0] + z[1]) / 2], **kw)
+
+
+def _add_lightbox(spec, cfg: SceneConfig, surface: dict):
+    """The lightbox: the robot on the floor board, the mat stack (foam board + EVA mat) as the work surface.
+
+    The mat top is z = 0, so everything that sits on the table (objects, markers, rod height) keeps its
+    coordinates; only the robot moves, mat_height down. The mat is the "table" geom (its friction is
+    randomised); an object pushed past the mat's near edge drops mat_height onto the floor.
+    """
+    spec.body("base").pos = [0.0, 0.0, -cfg.mat_height]
+    world = spec.worldbody
+    floor = -cfg.mat_height
+    white, black = [0.95, 0.95, 0.93, 1], [0.06, 0.06, 0.06, 1]
+    mx, my = LIGHTBOX_MAT_X, (-LIGHTBOX_MAT_HALF_WIDTH, LIGHTBOX_MAT_HALF_WIDTH)
+    board = min(LIGHTBOX_BOARD, cfg.mat_height - 0.001)
+    _add_box(world, "table", mx, my, (floor + board, 0.0), black, **surface)
+    _add_box(world, "mat_board", mx, my, (floor, floor + board), white, **surface)
+    fx, fy = LIGHTBOX_FLOOR_X, (-LIGHTBOX_HALF_WIDTH, LIGHTBOX_HALF_WIDTH)
+    _add_box(world, "floor", fx, fy, (floor - LIGHTBOX_BOARD, floor), white, **surface)
+    walls = dict(contype=_STATIC, conaffinity=0, condim=3, priority=1, friction=[cfg.table_friction, 0.005, 0.0001])
+    top = floor + LIGHTBOX_WALL_HEIGHT
+    _add_box(world, "wall_back", (fx[1] - LIGHTBOX_BOARD, fx[1]), fy, (floor, top), white, **walls)
+    _add_box(world, "wall_left", fx, (fy[1] - LIGHTBOX_BOARD, fy[1]), (floor, top), white, **walls)
+    _add_box(world, "wall_right", fx, (fy[0], fy[0] + LIGHTBOX_BOARD), (floor, top), white, **walls)
+    world.add_light(pos=[0.25, 0.0, 0.45], dir=[0, 0, -1], diffuse=[0.5, 0.5, 0.5], castshadow=False)
+    cam = (cfg.c920_pos[0], cfg.c920_pos[1], cfg.c920_pos[2] - cfg.mat_height)
+    world.add_camera(name="c920", pos=list(cam), quat=list(_look_at_quat(cam, cfg.c920_target)), fovy=cfg.c920_fovy)
+    if spec.visual.global_.offwidth < 1920:
+        spec.visual.global_.offwidth, spec.visual.global_.offheight = 1920, 1080
 
 
 def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual: bool = True) -> mujoco.MjSpec:
@@ -141,17 +196,21 @@ def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual:
     world = spec.worldbody
     world.add_light(pos=[0.2, -0.3, 1.0], dir=[0, 0.3, -1], diffuse=[0.7, 0.7, 0.7], castshadow=True)
     world.add_light(pos=[0.4, 0.4, 0.8], dir=[-0.3, -0.4, -1], diffuse=[0.4, 0.4, 0.4], castshadow=False)
-    # Table: an infinite collision plane plus a finite visual slab.
-    world.add_geom(name="table", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[0.6, 0.6, 0.01],
-                   contype=_TABLE, conaffinity=0, condim=3, priority=1,
-                   friction=[cfg.table_friction, 0.005, 0.0001], rgba=[0, 0, 0, 0], group=3)
-    if visual:
+    surface = dict(contype=_TABLE, conaffinity=0, condim=3, priority=1, friction=[cfg.table_friction, 0.005, 0.0001])
+    if cfg.lightbox:
+        _add_lightbox(spec, cfg, surface)
+    else:
+        # Table: an infinite collision plane plus a finite visual slab.
+        world.add_geom(name="table", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[0.6, 0.6, 0.01],
+                       rgba=[0, 0, 0, 0], group=3, **surface)
+    if visual and not cfg.lightbox:
         tex = spec.add_texture(name="grid", type=mujoco.mjtTexture.mjTEXTURE_2D,
                                builtin=mujoco.mjtBuiltin.mjBUILTIN_CHECKER,
                                rgb1=[0.82, 0.82, 0.80], rgb2=[0.76, 0.76, 0.74], width=512, height=512)
         spec.add_material(name="table_mat", textures=["", "grid"], texrepeat=[12, 12], reflectance=0.05)
         world.add_geom(name="table_visual", type=mujoco.mjtGeom.mjGEOM_BOX, size=[0.32, 0.40, 0.01],
                        pos=[0.18, 0, -0.0101], contype=0, conaffinity=0, material="table_mat", group=0)
+    if visual:
         # Faint guide showing the reachable pushing annulus (r = 0.12 .. 0.28 m).
         for rad in (0.12, 0.28):
             n = 36
@@ -241,8 +300,8 @@ def build_spec(cfg: SceneConfig | None = None, object_name: str = "tee", visual:
     world.add_camera(name="front", pos=[0.58, -0.30, 0.32], quat=list(_look_at_quat([0.58, -0.30, 0.32], [0.18, 0.0, 0.02])), fovy=45)
     world.add_camera(name="top", pos=[0.20, 0.0, 0.75], quat=list(_look_at_quat([0.20, 0.0, 0.75], [0.20, 0.0, 0.0])), fovy=40)
     if visual:
-        spec.visual.global_.offwidth = 1280
-        spec.visual.global_.offheight = 720
+        spec.visual.global_.offwidth = max(spec.visual.global_.offwidth, 1280)
+        spec.visual.global_.offheight = max(spec.visual.global_.offheight, 720)
     return spec
 
 

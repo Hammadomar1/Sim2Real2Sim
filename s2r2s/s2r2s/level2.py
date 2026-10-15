@@ -37,7 +37,7 @@ import numpy as np
 import torch
 
 from .clutter import ClutterEnv
-from .env import EnvConfig, PushEnv, wrap
+from .env import EnvConfig, PushEnv, apply_overrides, wrap
 from .evaluate import TEST_SEED
 from .objects import OBJECTS
 from .tasks import make_env
@@ -286,10 +286,10 @@ class Skill:
     weights for them (blind to the other block).
     """
 
-    def __init__(self, layout: str, n: int, device: str, policy: str | None = None):
+    def __init__(self, layout: str, n: int, device: str, policy: str | None = None, overrides=()):
         _, cfg, ck = load_policy(layout, device)
         self.policy, _, _ = load_policy(policy or layout, device, dims=ck["dims"])
-        cfg = copy.deepcopy(cfg)
+        cfg = apply_overrides(copy.deepcopy(cfg), overrides)
         cfg.num_envs, cfg.num_threads, cfg.seed = n, 1, 0
         cfg.rand.enabled = False                 # measurements come from the world (camera model, joints)
         self.twin: ClutterEnv = make_env(cfg)
@@ -621,17 +621,20 @@ def main(argv=None):
     p.add_argument("--video", default="", help="render the episodes (use a few, e.g. --episodes 4) to this MP4")
     p.add_argument("--view", action="store_true", help="watch scenes one after another in the MuJoCo viewer")
     p.add_argument("--stats", action="store_true", help="also report what random scenes need (two pushes, three, none)")
+    p.add_argument("--set", nargs="*", default=[], metavar="SECTION.FIELD=VALUE",
+                   help="overrides for the world and every skill, e.g. scene.lightbox=true")
     p.add_argument("--out", default="")
     args = p.parse_args(argv)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     n = args.episodes
     if args.view:
         n, device = 1, "cpu"
-    tee = Skill(args.tee, n, device, args.tee_policy or None)
-    box = Skill(args.box, n, device, args.box_policy or None)
+    tee = Skill(args.tee, n, device, args.tee_policy or None, args.set)
+    box = Skill(args.box, n, device, args.box_policy or None, args.set)
     if args.no_guard:
         tee.twin.cfg.task.rod_guard = box.twin.cfg.task.rod_guard = 0.0
     _, world_cfg, _ = load_policy(args.tee, "cpu")           # camera model and randomisation of the T skill
+    apply_overrides(world_cfg, args.set)
     park = not args.no_park and args.order == "auto"
     world_cfg.task.episode_seconds = 60.0 if park else 40.0              # 20 s per push at most
     dt = world_cfg.task.control_dt

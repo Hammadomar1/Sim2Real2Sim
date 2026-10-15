@@ -2,6 +2,7 @@
 
     python -m s2r2s.camera_study --checkpoint runs/tee_v1/best.pt
     python -m s2r2s.camera_study --scripted
+    python -m s2r2s.camera_study --checkpoint runs/tee_v1/best.pt --lightbox   # mounts inside the lightbox
 
 Runs pushing episodes and, at regular intervals, casts rays from each candidate camera to
 a grid of points on the object's top face. A point is occluded when robot geometry (arm
@@ -39,12 +40,22 @@ CANDIDATES = {
     "behind_robot": (-0.15, 0.00, 0.60), # over the robot's shoulder
 }
 FOVY = 42.5           # RealSense D435i colour stream (69 x 42 deg); a Logitech C920 is similar (~70 x 43)
+# Mounts the lightbox allows (inside its walls; z above the mat, which is 9.8 mm above the floor board).
+LIGHTBOX_CANDIDATES = {
+    "c920_left_wall": (0.2022, 0.3662, 0.3902),   # as built: slot in the left wall, 40 cm above the floor
+    "right_wall": (0.2022, -0.3662, 0.3902),      # the same slot in the right wall
+    "back_wall_low": (0.465, 0.00, 0.25),         # centre of the back wall, opposite the robot (~43 deg down)
+    "back_wall_high": (0.465, 0.00, 0.45),        # ... at the top of the wall
+    "back_left_corner": (0.465, 0.37, 0.40),      # where the back and left walls meet
+    "overhead_rim": (0.20, 0.00, 0.49),           # straight down from the walls' top edge
+}
+LIGHTBOX_FOVY = 43.3  # C920 at 16:9
 
 
-def build_study_model(cfg, object_name):
+def build_study_model(cfg, object_name, candidates=CANDIDATES, fovy=FOVY):
     spec = build_spec(cfg.scene, object_name, visual=True)
-    for name, pos in CANDIDATES.items():
-        spec.worldbody.add_camera(name=f"cand_{name}", pos=list(pos), quat=list(_look_at_quat(pos, TARGET)), fovy=FOVY)
+    for name, pos in candidates.items():
+        spec.worldbody.add_camera(name=f"cand_{name}", pos=list(pos), quat=list(_look_at_quat(pos, TARGET)), fovy=fovy)
     model = spec.compile()
     model.body_sameframe[model.body("object").id] = 0
     return model
@@ -78,8 +89,11 @@ def main(argv=None):
     p.add_argument("--scripted", action="store_true")
     p.add_argument("--episodes", type=int, default=64)
     p.add_argument("--every", type=int, default=2, help="check every k-th control step")
-    p.add_argument("--out", default="videos/camera_study")
+    p.add_argument("--lightbox", action="store_true", help="the lightbox scene and the mounts it allows")
+    p.add_argument("--out", default="")
     args = p.parse_args(argv)
+    candidates, fovy = (LIGHTBOX_CANDIDATES, LIGHTBOX_FOVY) if args.lightbox else (CANDIDATES, FOVY)
+    args.out = args.out or ("videos/camera_study_lightbox" if args.lightbox else "videos/camera_study")
     torch.set_num_threads(4)
     if args.checkpoint:
         policy, cfg, _ = load_policy(args.checkpoint, "cpu")
@@ -87,11 +101,12 @@ def main(argv=None):
     else:
         cfg, agent = EnvConfig(task=TaskConfig(objects=("tee",))), scripted_agent()
     cfg.num_envs, cfg.num_threads, cfg.seed = args.episodes, 8, 77
+    cfg.scene.lightbox = cfg.scene.lightbox or args.lightbox
     cfg.task.difficulty, cfg.task.easy_fraction = 1.0, 0.0
     env = make_env(cfg)
     act = agent(env)
     shape = OBJECTS[cfg.task.objects[0]]
-    model = build_study_model(cfg, shape.name)
+    model = build_study_model(cfg, shape.name, candidates, fovy)
     data = mujoco.MjData(model)
     obj_geoms = np.array([i for i in range(model.ngeom) if model.geom(i).name.startswith("object_")])
     set_marker(model, data, "estimate", (5.0, 5.0, 0.0))     # keep the estimate marker out of the rays
@@ -99,8 +114,8 @@ def main(argv=None):
     groups = np.array([1, 1, 1, 0, 0, 0], dtype=np.uint8)    # objects, pusher, robot meshes
     geomid = np.zeros(len(local), dtype=np.int32)
     dist = np.zeros(len(local))
-    cams = {name: np.array(pos) for name, pos in CANDIDATES.items()}
-    occl = {k: [] for k in CANDIDATES}
+    cams = {name: np.array(pos) for name, pos in candidates.items()}
+    occl = {k: [] for k in candidates}
     nq = env.idx.nq
     obs = env.obs
     for step in range(env.max_steps):
@@ -121,13 +136,13 @@ def main(argv=None):
                 occl[name].append(blocked.mean())
     rows = {}
     print(f"\nArm occlusion of the object's top face, {env.n} episodes, sampled every {args.every * 50} ms "
-          f"({len(occl['overhead'])} views per camera):")
+          f"({len(next(iter(occl.values())))} views per camera):")
     print(f"{'camera':14s}{'mean':>8s}{'>25%':>8s}{'>50%':>8s}{'>90%':>8s}{'mm/px 720p':>12s}{'mm/px 1080p':>13s}")
     for name, v in sorted(occl.items(), key=lambda kv: np.mean(kv[1])):
         v = np.array(v)
         rows[name] = dict(mean=float(v.mean()), over25=float((v > 0.25).mean()), over50=float((v > 0.5).mean()),
-                          over90=float((v > 0.9).mean()), mm_px_720=ground_resolution(CANDIDATES[name], 720),
-                          mm_px_1080=ground_resolution(CANDIDATES[name], 1080), position=CANDIDATES[name])
+                          over90=float((v > 0.9).mean()), mm_px_720=ground_resolution(candidates[name], 720, fovy),
+                          mm_px_1080=ground_resolution(candidates[name], 1080, fovy), position=candidates[name])
         q = rows[name]
         print(f"{name:14s}{q['mean']:8.1%}{q['over25']:8.1%}{q['over50']:8.1%}{q['over90']:8.1%}"
               f"{q['mm_px_720']:12.2f}{q['mm_px_1080']:13.2f}")
@@ -140,7 +155,7 @@ def main(argv=None):
     set_marker(model, data, "goal", env.goal[0])
     mujoco.mj_forward(model, data)
     tiles = []
-    for name in CANDIDATES:
+    for name in candidates:
         r.update_scene(data, camera=f"cand_{name}")
         img = np.ascontiguousarray(r.render())
         label = f"{name}: {rows[name]['mean']:.1%} mean occlusion"

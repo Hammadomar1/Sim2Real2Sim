@@ -2,11 +2,14 @@
 
     python -m s2r2s.hardware.calibrate --robot sim --sim-offsets 4,-6,3,8 --sim-signs 1,1,-1,1   # rehearsal
     python -m s2r2s.hardware.calibrate --robot so101 --port COM5                                 # real arm
+    python -m s2r2s.hardware.calibrate --robot so101 --port COM5 --lightbox                      # ... in the lightbox
 
 Real-arm procedure:
  1. Mark the points on the table (``--points file.csv`` with x,y in metres, or the default 9-point
     grid printed at start). Coordinates are in the robot base frame: x forward, y to the robot's
-    left, origin 38.8 mm behind the shoulder-pan axis (the centre of the rotating base).
+    left, origin 38.8 mm behind the shoulder-pan axis (the centre of the rotating base). In the lightbox
+    (``--lightbox``) the points are on the mat, which is 9.8 mm above the surface the robot stands on:
+    without the flag the fit would try to explain that height with joint offsets.
  2. Torque turns off: support the arm. For each point, rest the rod tip on the mark with the rod
     roughly vertical and press Enter (10 readings are averaged).
  3. The fit tries every combination of joint directions, solves for the joint offsets and the rod
@@ -128,6 +131,7 @@ def main(argv=None):
     ap.add_argument("--verify", action="store_true", help="afterwards, hover 15 mm above each point")
     ap.add_argument("--no-fit-rod", action="store_true",
                     help="trust the rod length in SceneConfig (measure it with calipers): better-conditioned offsets")
+    ap.add_argument("--lightbox", action="store_true", help="the points are on the lightbox mat (SceneConfig.lightbox)")
     ap.add_argument("--sim-offsets", default="4,-6,3,8", help="sim rehearsal: hidden offsets (deg)")
     ap.add_argument("--sim-signs", default="1,1,-1,1", help="sim rehearsal: hidden joint directions")
     ap.add_argument("--sim-rod", type=float, default=0.002, help="sim rehearsal: rod longer than modelled (m)")
@@ -137,15 +141,15 @@ def main(argv=None):
     if args.points:
         xy = np.loadtxt(args.points, delimiter=",", ndmin=2)
         points = np.c_[xy[:, :2], np.zeros(len(xy))]
-    kin = PusherKinematics(build_model(SceneConfig(timestep=0.005), visual=False))
-    print("Touch points (robot base frame, m):")
+    kin = PusherKinematics(build_model(SceneConfig(timestep=0.005, lightbox=args.lightbox), visual=False))
+    print("Touch points (robot base frame, m" + (", on the mat" if args.lightbox else "") + "):")
     for k, p in enumerate(points):
         print(f"  {k + 1}: x={p[0]:.3f}  y={p[1]:+.3f}")
 
     if args.robot == "sim":
         hidden = JointMap(sign=[*map(float, args.sim_signs.split(",")), 1.0],
                           offset_deg=[*map(float, args.sim_offsets.split(",")), 0.0])
-        scene = SceneConfig(timestep=0.005)
+        scene = SceneConfig(timestep=0.005, lightbox=args.lightbox)
         scene.pusher_tip_z -= args.sim_rod
         robot = SimRobot(scene, hidden=hidden, encoder_noise_deg=0.1)
         readings = simulate_touches(robot, points)

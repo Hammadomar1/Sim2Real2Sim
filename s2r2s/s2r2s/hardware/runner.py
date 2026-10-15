@@ -49,9 +49,10 @@ def move_to(robot, jmap: JointMap, kin, xyz, seconds: float = 2.0, dt: float = 0
 
 class PolicyRunner:
     def __init__(self, checkpoint, robot, poses, jmap: JointMap, device: str = "cpu",
-                 max_step_deg: float = 4.0, max_pose_age: float = 0.5, realtime: bool = True):
+                 max_step_deg: float = 4.0, max_pose_age: float = 0.5, realtime: bool = True, lightbox: bool = False):
         self.policy, cfg, _ = load_policy(checkpoint, device)
         cfg = copy.deepcopy(cfg)
+        cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
         cfg.num_envs, cfg.num_threads = 1, 1
         cfg.rand.enabled = False          # real measurements replace the simulated camera and physics randomisation
         self.cfg, self.device = cfg, device
@@ -143,6 +144,7 @@ def save_trial(path: Path, runner: PolicyRunner, meta: dict):
 def dry_run(args):
     """Episodes on SimRobot through the full hardware path (joint map, pose source, safety limits)."""
     _, cfg, _ = load_policy(args.checkpoint, "cpu")
+    cfg.scene.lightbox = cfg.scene.lightbox or args.lightbox
     scenes_cfg = copy.deepcopy(cfg)
     scenes_cfg.num_envs, scenes_cfg.seed, scenes_cfg.num_threads = args.episodes, args.seed, 4
     scenes_cfg.task.difficulty, scenes_cfg.task.easy_fraction = 1.0, 0.0
@@ -151,7 +153,8 @@ def dry_run(args):
     jmap = JointMap.load(args.map) if args.map else JointMap()
     robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
     gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
-    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False)
+    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False,
+                          lightbox=args.lightbox)
     stats = []
     for i in range(args.episodes):
         robot.place(scenes.tip[i, :2], scenes.object_pose()[i])
@@ -197,7 +200,7 @@ def real_run(args):
     except NotImplementedError as error:
         robot.close()
         raise SystemExit(f"{error}\nUntil then, rehearse with --robot sim.")
-    runner = PolicyRunner(args.checkpoint, robot, poses, jmap, max_step_deg=args.max_step_deg)
+    runner = PolicyRunner(args.checkpoint, robot, poses, jmap, max_step_deg=args.max_step_deg, lightbox=args.lightbox)
     kin = runner.twin.kin
     goal = np.array([args.goal[0], args.goal[1], math.radians(args.goal[2])])
     try:
@@ -232,6 +235,8 @@ def main(argv=None):
     ap.add_argument("--hidden-map", default="", help="sim dry run: the simulated arm's true (miscalibrated) map")
     ap.add_argument("--goal", type=float, nargs=3, default=(0.20, 0.05, 90.0), metavar=("X", "Y", "YAW_DEG"))
     ap.add_argument("--tool-start", type=float, nargs=2, default=(0.15, -0.10), metavar=("X", "Y"))
+    ap.add_argument("--lightbox", action="store_true",
+                    help="the arm stands in the lightbox, 9.8 mm below the mat (implied by policies trained there)")
     args = ap.parse_args(argv)
     if args.robot == "sim":
         dry_run(args)

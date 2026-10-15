@@ -327,6 +327,46 @@ Video: `videos/level3_grid.mp4` (four scenes, all assembled; two use a parking p
 faint orange outline in the T's goal corner, and the status line shows the T's error and the box's distance
 from its corner.
 
+## The lightbox: our real table (`lightbox.py`, [LIGHTBOX.md](LIGHTBOX.md))
+
+The real setup is NVIDIA's SO-101 lightbox: a foam-board box with a black EVA mat whose top is **9.8 mm above the
+surface the robot stands on**, and a Logitech C920 in the left wall. `--set scene.lightbox=true` (or
+`SceneConfig(lightbox=True)`) builds it from our measurements, with z = 0 kept on the mat top. The hardware tools
+take `--lightbox`.
+
+`python -m s2r2s.lightbox <checkpoint>` grades a policy on the same 1,000 held-out scenes in the training scene,
+in the lightbox, and in the lightbox under what is not measured yet (mat height and friction, camera latency and
+noise, joint calibration error, backlash). Push-T, success:
+
+| condition (lightbox unless stated) | `tee_v1` (flat table) | `tee_lightbox_v1` |
+|---|---|---|
+| training scene (flat table, robot standing on it) | 96.6 % | **98.9 %** |
+| lightbox, measured geometry | 93.8 % | **98.5 %** |
+| lightbox, controller not told about the mat (rod 4.8 mm into it) | 23.5 % | **69.4 %** |
+| mat friction 0.70 | 91.6 % | **98.5 %** |
+| camera latency 150–200 ms | 89.0 % | **98.1 %** |
+| joint calibration error up to 1° per joint | 87.6 % | **97.2 %** |
+| backlash ±0.5°, every joint (Menagerie's figure) | 79.8 % | **98.8 %** |
+| all at once: calibration ≤1°, backlash ±0.5°, μ 0.2–0.9, latency 0–150 ms | 71.3 % | **97.7 %** |
+
+- Told nothing about the mat, the controller drives the rod into it (23.5 %). With it, the flat-table policies keep
+  most of their performance: clutter 93.5 %, gate 90.6 %, Level 2 92.4 %, Level 3 80.9 %.
+- The flat-table Push-T policy loses 2.8 points through its joint-angle inputs alone: given the joint angles of a
+  robot level with the mat, it scores 97.6 %.
+- Backlash and joint calibration error are now in the simulator (`rand.backlash_deg`, `rand.joint_offset_deg`,
+  off by default), and they cost the most.
+- `tee_lightbox_v1` is `tee_v1` fine-tuned for 30 minutes in the lightbox with both, mat friction 0.2–0.9 and camera
+  latency 0–150 ms: 98.5 % in the lightbox, 97.7 % with every error at once, and 98.9 % even on the flat table.
+- The C920's as-built left-wall slot is the second-worst mount for arm occlusion (29 % of views more than half hidden;
+  the middle of the back wall, low: 1.9 %).
+
+```powershell
+python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt                           # the full check (about 5 minutes)
+python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt --set rand.table_friction=0.6,0.6   # at a measured value
+python -m s2r2s.train --run tee_lightbox_v2 --init runs\tee_v1\best.pt --no-curriculum --minutes 30 --set scene.lightbox=true rand.joint_offset_deg=1.0 rand.backlash_deg=1,1,1,1 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+python -m s2r2s.camera_study --checkpoint runs\tee_lightbox_v1\best.pt --lightbox  # arm occlusion from mounts in the box
+```
+
 ## Quick start (Windows, PowerShell)
 
 ```powershell
@@ -461,5 +501,6 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/play.py`, `record.py`, `visual.py` | Viewer, videos |
 | `s2r2s/sensitivity.py` | How good the camera pipeline must be: degrade the camera model, re-evaluate |
 | `s2r2s/camera_study.py` | Arm-occlusion study for choosing the real camera mount |
+| `s2r2s/lightbox.py` | Grade a policy in the lightbox scene and under its unmeasured quantities (see LIGHTBOX.md) |
 | `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner: see [HARDWARE.md](HARDWARE.md) |
 | `tests/` | Regression tests |
