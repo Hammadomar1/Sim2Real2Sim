@@ -25,6 +25,7 @@ import torch
 from .env import EnvConfig, TaskConfig
 from .evaluation import policy_agent, scripted_agent
 from .objects import OBJECTS
+from .occlusion import LIGHTBOX_MOUNTS, top_face_points
 from .scene import _look_at_quat, build_spec, set_marker
 from .tasks import make_env
 from .train import load_policy
@@ -40,15 +41,7 @@ CANDIDATES = {
     "behind_robot": (-0.15, 0.00, 0.60), # over the robot's shoulder
 }
 FOVY = 42.5           # RealSense D435i colour stream (69 x 42 deg); a Logitech C920 is similar (~70 x 43)
-# Mounts the lightbox allows (inside its walls; z above the mat, which is 9.8 mm above the floor board).
-LIGHTBOX_CANDIDATES = {
-    "c920_left_wall": (0.2022, 0.3662, 0.3902),   # as built: slot in the left wall, 40 cm above the floor
-    "right_wall": (0.2022, -0.3662, 0.3902),      # the same slot in the right wall
-    "back_wall_low": (0.465, 0.00, 0.25),         # centre of the back wall, opposite the robot (~43 deg down)
-    "back_wall_high": (0.465, 0.00, 0.45),        # ... at the top of the wall
-    "back_left_corner": (0.465, 0.37, 0.40),      # where the back and left walls meet
-    "overhead_rim": (0.20, 0.00, 0.49),           # straight down from the walls' top edge
-}
+LIGHTBOX_CANDIDATES = LIGHTBOX_MOUNTS     # mounts inside the lightbox (occlusion.py)
 LIGHTBOX_FOVY = 43.3  # C920 at 16:9
 
 
@@ -59,21 +52,6 @@ def build_study_model(cfg, object_name, candidates=CANDIDATES, fovy=FOVY):
     model = spec.compile()
     model.body_sameframe[model.body("object").id] = 0
     return model
-
-
-def top_face_points(shape, n=5):
-    """Grid of points (object frame) 0.5 mm above the object's top face."""
-    z = shape.height + 0.0005
-    pts = []
-    if shape.disk_radius > 0:
-        for r in np.linspace(0, shape.disk_radius * 0.9, n):
-            for a in np.linspace(0, 2 * math.pi, 2 * n, endpoint=False):
-                pts.append((r * math.cos(a), r * math.sin(a), z))
-    for cx, cy, hx, hy in shape.centred_boxes:
-        for u in np.linspace(-0.9, 0.9, n):
-            for v in np.linspace(-0.9, 0.9, n):
-                pts.append((cx + u * hx, cy + v * hy, z))
-    return np.array(pts)
 
 
 def ground_resolution(pos, height_px, fovy_deg=FOVY):

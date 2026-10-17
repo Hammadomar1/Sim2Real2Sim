@@ -1,0 +1,184 @@
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v1/best.pt --out runs/level3/lightbox_skills_eval.json --set scene.lightbox=true rand.backlash_deg=0,0,0,0 rand.joint_offset_deg=0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_lightbox_v1/best.pt
+  assembled (T at its goal, box in its corner)     87.2%
+    T at its goal                                  91.0%
+    box nested in the corner (3 mm, 5 deg)         93.1%
+  every push settled at its target                 63.1%
+  a block that had to stay moved >10 mm            3.1%
+  failures (a block left the band)                 1.0%
+  time to finish, median (s)                       18.6
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                94.0%
+    assembled when the box goes first              87.1%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.1 mm 3.2 deg / 0.6 mm 0.6 deg
+per-episode results: runs/level3/lightbox_skills_eval.json
+(85 s)
+
+$ python -m s2r2s.level3 --out runs/level3/lightbox_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt | dock skill runs/dock_v4/best.pt
+  assembled (T at its goal, box in its corner)     53.4%
+    T at its goal                                  74.9%
+    box nested in the corner (3 mm, 5 deg)         63.9%
+  every push settled at its target                 21.7%
+  a block that had to stay moved >10 mm            16.7%
+  failures (a block left the band)                 4.8%
+  time to finish, median (s)                       21.2
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                55.3%
+    assembled when the box goes first              57.8%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        4.3 mm 4.5 deg / 1.7 mm 1.8 deg
+per-episode results: runs/level3/lightbox_errors_eval.json
+(84 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v1/best.pt --out runs/level3/lightbox_skills_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_lightbox_v1/best.pt
+  assembled (T at its goal, box in its corner)     77.3%
+    T at its goal                                  85.8%
+    box nested in the corner (3 mm, 5 deg)         86.3%
+  every push settled at its target                 54.9%
+  a block that had to stay moved >10 mm            9.5%
+  failures (a block left the band)                 1.5%
+  time to finish, median (s)                       20.9
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                81.6%
+    assembled when the box goes first              74.7%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.3 mm 3.4 deg / 1.2 mm 1.1 deg
+per-episode results: runs/level3/lightbox_skills_errors_eval.json
+(72 s)
+
+$ python -m s2r2s.level3 --out runs/level3/lightbox_all_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt | dock skill runs/dock_v4/best.pt
+  assembled (T at its goal, box in its corner)     50.4%
+    T at its goal                                  70.9%
+    box nested in the corner (3 mm, 5 deg)         61.4%
+  every push settled at its target                 19.4%
+  a block that had to stay moved >10 mm            20.1%
+  failures (a block left the band)                 8.0%
+  time to finish, median (s)                       23.2
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                55.1%
+    assembled when the box goes first              51.4%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        4.7 mm 4.7 deg / 1.9 mm 1.9 deg
+per-episode results: runs/level3/lightbox_all_errors_eval.json
+(75 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v1/best.pt --out runs/level3/lightbox_skills_all_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_lightbox_v1/best.pt
+  assembled (T at its goal, box in its corner)     74.5%
+    T at its goal                                  86.2%
+    box nested in the corner (3 mm, 5 deg)         81.3%
+  every push settled at its target                 51.8%
+  a block that had to stay moved >10 mm            9.4%
+  failures (a block left the band)                 2.7%
+  time to finish, median (s)                       21.4
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                79.5%
+    assembled when the box goes first              70.3%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.4 mm 3.6 deg / 1.2 mm 1.2 deg
+per-episode results: runs/level3/lightbox_skills_all_errors_eval.json
+(73 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_v4/best.pt --out runs/level3/lightbox_skills_dock_v4_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_v4/best.pt
+  assembled (T at its goal, box in its corner)     61.1%
+    T at its goal                                  80.7%
+    box nested in the corner (3 mm, 5 deg)         69.7%
+  every push settled at its target                 22.1%
+  a block that had to stay moved >10 mm            12.7%
+  failures (a block left the band)                 1.5%
+  time to finish, median (s)                       20.2
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                64.7%
+    assembled when the box goes first              62.7%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.7 mm 3.9 deg / 1.6 mm 1.6 deg
+per-episode results: runs/level3/lightbox_skills_dock_v4_errors_eval.json
+(77 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v1/best.pt --record-dock-starts runs/dock_lightbox_v2/start_bank.npz --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+seed 1: 979 docking starts
+seed 2: 979 docking starts
+seed 3: 970 docking starts
+seed 4: 984 docking starts
+wrote runs/dock_lightbox_v2/start_bank.npz (3912 docking starts)
+(302 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v1/best.pt --record-dock-starts runs/dock_lightbox_v2/test_starts.npz --record-seeds 20000003 --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+seed 20000003: 979 docking starts
+wrote runs/dock_lightbox_v2/test_starts.npz (979 docking starts)
+(79 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v2/best.pt --out runs/level3/lightbox_skills_dock_v2_eval.json --set scene.lightbox=true rand.backlash_deg=0,0,0,0 rand.joint_offset_deg=0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_lightbox_v2/best.pt
+  assembled (T at its goal, box in its corner)     86.2%
+    T at its goal                                  91.5%
+    box nested in the corner (3 mm, 5 deg)         90.9%
+  every push settled at its target                 62.3%
+  a block that had to stay moved >10 mm            3.3%
+  failures (a block left the band)                 1.1%
+  time to finish, median (s)                       18.4
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                94.8%
+    assembled when the box goes first              82.3%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.2 mm 3.1 deg / 0.7 mm 0.6 deg
+per-episode results: runs/level3/lightbox_skills_dock_v2_eval.json
+(92 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v2/best.pt --out runs/level3/lightbox_skills_dock_v2_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_lightbox_v2/best.pt
+  assembled (T at its goal, box in its corner)     76.0%
+    T at its goal                                  85.5%
+    box nested in the corner (3 mm, 5 deg)         84.9%
+  every push settled at its target                 55.0%
+  a block that had to stay moved >10 mm            9.7%
+  failures (a block left the band)                 1.5%
+  time to finish, median (s)                       20.9
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                81.8%
+    assembled when the box goes first              74.3%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.3 mm 3.6 deg / 1.1 mm 1.0 deg
+per-episode results: runs/level3/lightbox_skills_dock_v2_errors_eval.json
+(90 s)
+
+$ python -m s2r2s.level3 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --dock runs/dock_lightbox_v2/best.pt --out runs/level3/lightbox_skills_dock_v2_all_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+
+Level 3: 1000 assembly scenes (seed 20000003), with parking | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt | dock skill runs/dock_lightbox_v2/best.pt
+  assembled (T at its goal, box in its corner)     75.2%
+    T at its goal                                  86.8%
+    box nested in the corner (3 mm, 5 deg)         81.6%
+  every push settled at its target                 52.6%
+  a block that had to stay moved >10 mm            9.6%
+  failures (a block left the band)                 3.1%
+  time to finish, median (s)                       21.3
+  scenes with a parking push                       36.6%
+  T placed first                                   60.7%
+    assembled when the T goes first                79.7%
+    assembled when the box goes first              73.1%
+  gap between the pieces at the end, median (mm)   0.0
+  final error median: T / box to its corner        3.6 mm 3.4 deg / 1.3 mm 1.2 deg
+per-episode results: runs/level3/lightbox_skills_dock_v2_all_errors_eval.json
+(90 s)
+
