@@ -39,7 +39,7 @@ import numpy as np
 
 from ..objects import OBJECTS
 from ..scene import LIGHTBOX_MAT_HALF_WIDTH, LIGHTBOX_MAT_X, SceneConfig, SceneIndex, build_spec
-from .arm_mask import ArmMask
+from .arm_mask import ArmMask, ViewPredictor
 from .vision import CameraModel, DEFAULT_COLOURS, EstimatorConfig, PoseEstimator, draw
 
 PROJECT = Path(__file__).resolve().parents[2]
@@ -74,11 +74,13 @@ class SimCamera:
     """The lightbox C920 in the simulator.
 
     ``markers``: ``camera_calibrate.Marker`` s lying on the mat (extrinsics);
-    ``board``: a ChArUco board (``camera_calibrate.board()``) on a movable body (intrinsics).
+    ``board``: a ChArUco board (``camera_calibrate.board()``) on a movable body (intrinsics);
+    ``rod_marker``: the ArUco marker taped to the rod (``rod_marker.RodMarker``: backlash and latency measurements).
     """
 
     def __init__(self, scene: SceneConfig | None = None, object_name: str = "tee", width: int = 1920, height: int = 1080,
-                 degradation: Degradation | None = None, markers=(), board=None, texture_dir: Path | None = None):
+                 degradation: Degradation | None = None, markers=(), board=None, texture_dir: Path | None = None,
+                 rod_marker=None):
         scene = copy.deepcopy(scene) if scene is not None else SceneConfig(lightbox=True, clutter="box")
         scene.lightbox = True
         self.scene, self.object_name, self.width, self.height = scene, object_name, width, height
@@ -104,10 +106,20 @@ class SimCamera:
             for g in spec.geoms:
                 if g.name.startswith(prefix):
                     g.material, g.rgba = f"{prefix}matte", list(SIM_RGBA[name])
-        if markers or board is not None:
+        if markers or board is not None or rod_marker is not None:
             from .camera_calibrate import marker_image
             tex_dir = Path(texture_dir or PROJECT / "runs" / "camera_sim" / "textures")
             tex_dir.mkdir(parents=True, exist_ok=True)
+        if rod_marker is not None:         # a card on the rod, flat (gripper +z is up when the rod is vertical)
+            mk = rod_marker
+            png = tex_dir / f"rod_marker_{mk.id}_{mk.size * 1e3:.0f}_{mk.margin * 1e3:.0f}.png"
+            cv2.imwrite(str(png), marker_image(mk.id, mk.size, mk.margin, px_per_mm=8))
+            spec.add_texture(name="rod_marker", type=mujoco.mjtTexture.mjTEXTURE_2D, file=str(png))
+            mat = spec.add_material(name="rod_marker", textures=["", "rod_marker"], texuniform=False, texrepeat=[1, 1])
+            mat.specular, mat.shininess = 0.0, 0.0
+            half = mk.size / 2 + mk.margin
+            spec.body("gripper").add_geom(name="rod_marker", type=mujoco.mjtGeom.mjGEOM_BOX, size=[half, half, 0.0005],
+                                          pos=list(mk.sim_pos), material="rod_marker", contype=0, conaffinity=0)
         for mk in markers:
             png = tex_dir / f"marker_{mk.id}_{mk.size * 1e3:.0f}_{mk.margin * 1e3:.0f}.png"
             cv2.imwrite(str(png), marker_image(mk.id, mk.size, mk.margin, px_per_mm=8))
@@ -262,6 +274,7 @@ class RenderedPoseSource:
         names = tuple(n for n in (self.sim.object_name, scene.clutter) if n)
         self.estimator = PoseEstimator(cam, DEFAULT_COLOURS, names)
         self.arm_mask = ArmMask(cam, self.estimator.grid, scene, margin=0.006)
+        self.view = ViewPredictor(cam, scene, names, margin=0.006)
         self.object_name, self.block_name = self.sim.object_name, scene.clutter
         self.rng = np.random.default_rng(seed)
         self.reset()

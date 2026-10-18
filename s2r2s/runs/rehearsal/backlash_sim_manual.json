@@ -1,0 +1,92 @@
+{
+ "robot": "sim",
+ "probe": "manual",
+ "rows": [
+  {
+   "reach": 0.2,
+   "joint": "pan",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 2.812854652988905,
+   "encoders_deg": 0.6197318946600876,
+   "encoders_sd_deg": 0.003107823361937132,
+   "probe": "manual",
+   "probe_deg": 1.0153386336422499,
+   "probe_sd_deg": null
+  },
+  {
+   "reach": 0.2,
+   "joint": "lift",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 1.4276793281313613,
+   "encoders_deg": 0.9809460265939541,
+   "encoders_sd_deg": 0.008906017890529949,
+   "probe": "manual",
+   "probe_deg": 1.003026360180121,
+   "probe_sd_deg": null
+  },
+  {
+   "reach": 0.2,
+   "joint": "elbow",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.451706063718994,
+   "encoders_deg": 0.7962570628719681,
+   "encoders_sd_deg": 0.02072860923634498,
+   "probe": "manual",
+   "probe_deg": 0.8233609547094303,
+   "probe_sd_deg": null
+  },
+  {
+   "reach": 0.2,
+   "joint": "wrist",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.3527774930811045,
+   "encoders_deg": 1.1918364007414566,
+   "encoders_sd_deg": 0.02936347880576009,
+   "probe": "manual",
+   "probe_deg": 1.5023364987370944,
+   "probe_sd_deg": null
+  }
+ ],
+ "summary": {
+  "pan": {
+   "encoders_deg": 0.6197318946600876,
+   "probe_deg": 1.0153386336422499,
+   "hidden_deg": 0.39560673898216225,
+   "tip_mm": 2.8559999999999994
+  },
+  "lift": {
+   "encoders_deg": 0.9809460265939541,
+   "probe_deg": 1.003026360180121,
+   "hidden_deg": 0.0220803335861669,
+   "tip_mm": 1.432
+  },
+  "elbow": {
+   "encoders_deg": 0.7962570628719681,
+   "probe_deg": 0.8233609547094303,
+   "hidden_deg": 0.027103891837462202,
+   "tip_mm": 2.842
+  },
+  "wrist": {
+   "encoders_deg": 1.1918364007414566,
+   "probe_deg": 1.5023364987370944,
+   "hidden_deg": 0.3105000979956378,
+   "tip_mm": 5.036999999999999
+  }
+ },
+ "set": [
+  "rand.backlash_deg=0.6,1,0.8,1.2",
+  "rand.joint_offset_deg=0.2"
+ ],
+ "sim_backlash_deg": [
+  0.6,
+  1.0,
+  0.8,
+  1.2
+ ],
+ "sim_slack_deg": [
+  0.4,
+  0.0,
+  0.0,
+  0.3
+ ]
+}

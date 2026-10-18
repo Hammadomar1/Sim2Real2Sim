@@ -197,9 +197,14 @@ ahead: each step removes one suspect from the list when a real push goes wrong.
    and when it also fits the rod length (no `--no-fit-rod`) the rod ends 1 mm into the mat. Step 3 catches that.
 3. *Rod height.* Hover at commanded heights +2, +1, 0 and −1 mm over the nine points (`--verify` shows the
    points); paper should slide under at +1 mm and catch at −1 mm. This checks mat height and calibration together.
-4. *Backlash.* At reaches of 15, 20 and 25 cm, bring the rod onto a mark from the left, then from the right (and
-   from the front and back), with a pen or the camera. The gap ÷ reach is the play. ±0.5° ≈ ±1.7 mm at 20 cm.
-   Re-run `python -m s2r2s.lightbox` with `--set rand.backlash_deg=<play>,...` to see what it costs.
+4. *Backlash:* `python -m s2r2s.hardware.backlash --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`
+   (HARDWARE.md §3). At reaches of 15, 20 and 25 cm each joint comes to the same target from both sides, three
+   times. The encoders give the play they see. The rod's actual motion gives the play they miss: from the C920 and
+   a marker on the rod once C1–C3 are done (re-run it then), or from pencil marks you measure (`--probe manual`)
+   before that. Pass: every joint's play, encoders and actual, within the 1° (±0.5°) that `tee_lightbox_v1` and the
+   lightbox skills were trained with. Then run the `python -m s2r2s.lightbox ... --set rand.backlash_deg=...` it
+   prints to see what the measured play costs. In rehearsal (simulated arm, known play) it finds the dead band to
+   0.03° and the total to 0.04°. ±0.5° ≈ ±1.7 mm at 20 cm for the pan joint.
 5. *Tracking:* `python -m s2r2s.hardware.tracking --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`.
    Pass: lag ≤ 100 ms, joint error after the lag ≤ 1°.
 
@@ -219,8 +224,12 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
    and 0.45 mm / 0.63° for the box. The T comes back in 87 % of frames, down to a quarter of it visible. Of 11,057
    accepted estimates over four runs (true or simulated calibration, left or back wall, with and without tracking),
    none is off by more than 2 mm, and three by more than 2° (at most 2.3°). About 33 ms per frame on this laptop.
-5. Latency: move the rod at a known speed and cross-correlate its camera track with FK. Pass: ≤ 150 ms
-   (100–150 ms: −1 point for `tee_v1`; 150–200 ms: −5; 200–300 ms: −18). Keep the capture buffer at one frame.
+5. Latency: `python -m s2r2s.hardware.latency --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`
+   (HARDWARE.md §4). The pan joint swings the rod, with the rod marker, at up to 71 mm/s. The marker's track in the
+   camera, against the encoders, gives the camera's latency (exposure to arrival). The pose estimator's time per
+   frame is added to it. Pass: end-to-end ≤ 150 ms (100–150 ms: −1 point for `tee_v1`; 150–200 ms: −5; 200–300 ms:
+   −18). Then run the `--set rand.obs_latency_steps=...` row it prints. In rehearsal (rendered frames stamped 120 ms
+   and 70 ms late) it finds 120.0 and 70.1 ms. Keep the capture buffer at one frame.
 6. Occlusion: `python -m s2r2s.camera_study --checkpoint runs\tee_lightbox_v1\best.pt --lightbox` casts rays from mounts inside the
    box to the T's top face (12,800 views each). Mean share hidden by the arm / share of views more than half hidden:
    back wall, centre, 25 cm above the mat **9.6 % / 1.9 %**; right-wall slot 17.2 % / 4.8 %; back-left corner 18.8 % / 6.8 %;
@@ -284,7 +293,13 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
    scene vs between scenes).
 
 **E. Policy trials**
-1. Rehearse on the simulated arm: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot sim --episodes 20`.
+1. Rehearse on the simulated arm: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot sim --episodes 20`,
+   then through the camera path: `... --camera render --episodes 8` (the C920 rendered from its mount, 100 s per
+   episode). When the camera loses the T for 2 s (`--max-pose-age`), the runner lifts the rod out of the arm's
+   shadow, lowers it once the T is back in view and hands back to the policy (HARDWARE.md §5). A start where the arm
+   hides the T begins from a clear point nearby. Rendered from the left-wall slot (8 held-out scenes),
+   `tee_lightbox_v1` solves all 8 with the 2 s default and 6 with `--max-pose-age 0.5`, which steps in too
+   often. The runner before this change started only 5 of them and solved 4.
 2. Real: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot so101 --port COM5 --map calibration\joint_map.json --max-step-deg 2`,
    20–30 logged trials from held-out scenes. Compare with `python -m s2r2s.lightbox` re-run at the *measured*
    friction, latency, noise and backlash: that is the simulator's prediction for this table.
@@ -303,17 +318,20 @@ must know the mat height); policies trained in the lightbox carry it in their co
   the link (the STS3215's encoder sits on its output shaft), so the policy can see the play and correct it. Gravity
   holds the lift, elbow and wrist against one side of their play, so this overstates them; the pan joint carries no
   such load. Play the encoders cannot see (a loose horn, a printed coupling) acts like the calibration-error rows.
-  Measure (B4) and set per-joint values.
+  `hardware.backlash` (B4) measures both per joint, at three reaches, under the arm's own gravity load, and prints
+  the per-joint `rand.backlash_deg` and the `rand.joint_offset_deg` they amount to.
 - Arm occlusion is modelled (C6): the left-wall slot costs the current policies 29–30 points. A 35-minute fine-tune
   (`tee_occlusion_v1`) recovers most of it for Push-T (95.8 %). The clutter, box and dock skills have no such
   fine-tune: move the camera, or fine-tune them the same way. The actor is not told that its estimate is stale.
   A "frames since the last fresh pose" input (the runner knows it) might close the rest of the gap.
-- The camera pose estimator is tested on rendered images only: C4 and C5 on the real camera are next.
-- The runner holds the arm still when the T has not been seen for 0.5 s (`--max-pose-age`). With the left-wall
-  camera the arm can stop where it hides the T, and then nothing changes until the trial ends. A rendered rehearsal
-  (`runner --robot sim --camera render`) of `clutter_v7` did exactly that; the same scene with `--max-pose-age 5`
-  was solved. `tee_lightbox_v1` solved 4 of 5 rendered episodes at 0.5 s and 5 of 5 at 5 s. In 3 of the 8 scenes
-  the arm hid the T at its start position, so they never started. Moving the camera avoids both; a longer limit,
-  or backing the rod away instead of freezing, are the alternatives.
+- The camera pose estimator, the backlash tool's camera probe and the latency tool are tested on rendered images
+  only: C4 and C5 on the real camera are next. The latency tool cannot see delay in the joint readings themselves
+  (LeRobot's read is stamped halfway through).
+- The runner no longer deadlocks when the arm hides the T: it backs the rod out of the arm's shadow, waits for the
+  camera and hands back (HARDWARE.md §5), and trials whose start hides the T begin from a clear point. After it
+  hands back, though, the policy can push from the same place and lose the T again. In one rendered scene,
+  `tee_lightbox_v1` lost it 7 times when the runner stepped in after 0.5 s. That is why the default waits 2 s
+  (`--max-pose-age`): the policy closes most short losses itself. The actor is still not told that it acts on a
+  stale pose. Moving the camera (C6) is the real fix.
 - The arm has no collision geometry except the rod. The walls are out of reach, but a wrist camera mount (if the
   real arm carries one) is not checked against the forearm.

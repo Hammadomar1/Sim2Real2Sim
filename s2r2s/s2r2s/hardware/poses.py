@@ -57,6 +57,8 @@ class CameraPoseSource:
     set_arm(q) tells it the arm's joint angles (simulator radians, as the runner reads them every tick): each
     frame is then fitted with the arm masked out (``arm_mask.ArmMask``), and poses are returned down to a
     quarter of the object visible instead of 60 %. ``scene`` must match the real setup (lightbox, rod).
+    ``view`` (``arm_mask.ViewPredictor``) predicts what the camera would see with the arm elsewhere: the runner uses
+    it to move the rod out of the way when the object is lost.
 
     read_block() asks more of a frame (``block_min_visible``, 60 % of the block visible): a missing block estimate
     costs nothing (the runner keeps the last one and the block should not move), while a wrong one moves the
@@ -68,7 +70,7 @@ class CameraPoseSource:
     def __init__(self, source=None, camera=None, colours=None, object_name: str = "tee", block_name: str = "box",
                  config=None, max_age: float = 0.3, scene=None, arm_margin: float = 0.006, max_arm_age: float = 0.2,
                  block_min_visible: float = 0.6):
-        from .arm_mask import ArmMask
+        from .arm_mask import ArmMask, ViewPredictor
         from .camera import C920
         from .vision import EXTRINSICS, INTRINSICS, COLOURS, CameraModel, Colours, PoseEstimator
         needed = ([(INTRINSICS, "intrinsics"), (EXTRINSICS, "extrinsics")] if camera is None else []) + \
@@ -81,7 +83,9 @@ class CameraPoseSource:
         names = [n for n in (object_name, block_name) if n in colours.objects]
         self.object_name, self.block_name = object_name, block_name
         self.estimator = PoseEstimator(camera, colours, names, config)
-        self.arm_mask = ArmMask(camera, self.estimator.grid, scene or SceneConfig(timestep=0.005, lightbox=True), arm_margin)
+        scene = scene or SceneConfig(timestep=0.005, lightbox=True)
+        self.arm_mask = ArmMask(camera, self.estimator.grid, scene, arm_margin)
+        self.view = ViewPredictor(camera, scene, names, margin=arm_margin)     # where the arm would hide less
         self.max_age, self.max_arm_age, self.block_min_visible = max_age, max_arm_age, block_min_visible
         self._arm = None                      # (joint angles, stamp) from set_arm
         self.source = source if source is not None else C920()

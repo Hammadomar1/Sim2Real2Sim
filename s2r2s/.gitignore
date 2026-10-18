@@ -142,6 +142,11 @@ runs/tee_occlusion_v1/*
 runs/camera_sim/*
 !runs/camera_sim/eval*.json
 !runs/camera_sim/eval*_worst.png
+# Rendered runner rehearsals (HARDWARE.md section 5) and the bring-up tools' rehearsal summaries (sections 3-4).
+!runs/camera_sim/rehearsal_*.log
+!runs/rehearsal/
+runs/rehearsal/*
+!runs/rehearsal/*.json
 calibration/c920_intrinsics_frames/
 calibration/print/
 calibration/c920_*.png

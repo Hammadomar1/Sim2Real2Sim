@@ -94,3 +94,37 @@ class ArmMask:
         for h in hulls:                                  # one by one: fillPoly fills several by the even-odd rule
             cv2.fillPoly(self.canvas, [h], 1, cv2.LINE_8, shift=4)
         return cv2.dilate(self.canvas, self.grow) > 0
+
+
+class ViewPredictor:
+    """What the camera would see with the arm somewhere else: the share of an object's silhouette that the arm,
+    at given joint angles, leaves in view, or the share of the work band it hides. The pose estimator's geometry
+    (``ArmMask``, ``Template.silhouette``) on a coarse grid (2 mm, ~1 ms per arm pose), so the runner can choose
+    where to move the rod when the camera has lost the object (``runner.PolicyRunner``)."""
+
+    def __init__(self, camera: CameraModel, scene: SceneConfig, objects=("tee",), res: float = 0.002,
+                 margin: float = 0.006, band=((0.12, 0.30), math.radians(60))):
+        from ..objects import OBJECTS
+        from .vision import MAT_REGION, Template
+        self.templates = {n: Template.from_shape(OBJECTS[n]) for n in objects if n}
+        self.grid = PlaneGrid(MAT_REGION, res, max(t.height for t in self.templates.values()))
+        self.arm = ArmMask(camera, self.grid, scene, margin)
+        xyz = self.grid.points()
+        r, a = np.hypot(xyz[..., 0], xyz[..., 1]), np.abs(np.arctan2(xyz[..., 1], xyz[..., 0]))
+        self.band = (r >= band[0][0]) & (r <= band[0][1]) & (a <= band[1])     # where objects are pushed
+
+    def silhouette(self, name: str, pose) -> np.ndarray:
+        canvas = np.zeros((self.grid.rows, self.grid.cols), np.uint8)
+        for p in self.templates[name].silhouette(pose, self.arm.foot, self.arm.cz, self.grid.z):
+            cv2.fillPoly(canvas, [np.round(self.grid.to_px(p) * 16).astype(np.int32)], 1, cv2.LINE_8, shift=4)
+        return canvas > 0
+
+    def visible(self, q_arm, name: str, pose) -> float:
+        """Share of the object ``name`` at ``pose`` (x, y, yaw) in view with the arm at ``q_arm`` (radians)."""
+        sil = self.silhouette(name, pose)
+        n = int(sil.sum())
+        return 1.0 - float((sil & self.arm(q_arm)).sum()) / n if n else 0.0
+
+    def band_hidden(self, q_arm) -> float:
+        """Share of the work band the arm at ``q_arm`` hides."""
+        return float((self.band & self.arm(q_arm)).sum()) / max(int(self.band.sum()), 1)
