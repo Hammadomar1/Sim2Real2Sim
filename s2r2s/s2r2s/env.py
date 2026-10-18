@@ -27,6 +27,7 @@ import numpy as np
 
 from .kinematics import PusherKinematics
 from .objects import OBJECTS, object_tables
+from .occlusion import FacePoints, OcclusionCamera
 from .scene import SceneConfig, SceneIndex, build_model
 
 TWO_PI = 2 * math.pi
@@ -133,6 +134,18 @@ class RandomizationConfig:
     # once the command has crossed the play, so it lags by up to the play after every reversal.
     joint_offset_deg: float = 0.0
     backlash_deg: tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0)
+    # Arm occlusion (occlusion.py), off by default: "" or a camera mount ("c920", "c920_left_wall", "right_wall",
+    # "back_wall_low", ... or "x,y,z" in metres). Each control step, rays from that camera to a grid of
+    # occlusion_grid x occlusion_grid points per rectangle of the object's top face find the share the arm hides;
+    # a frame with less than occlusion_threshold visible is dropped (the actor keeps the last estimate), and
+    # the others are shifted by occlusion_bias times the offset of the visible part's centroid. Applied
+    # whenever a camera is set, like the scene geometry (not a random draw). occlusion_fast: rays hit the
+    # arm's collision boxes instead of its meshes (6x faster, for training; see OcclusionCamera).
+    occlusion_camera: str = ""
+    occlusion_threshold: float = 0.5
+    occlusion_bias: float = 0.0
+    occlusion_grid: int = 3
+    occlusion_fast: bool = False
 
 
 @dataclass
@@ -237,6 +250,16 @@ class PushEnv:
         self.pose_hist = z(max(r.obs_latency_steps[1], 1) + 2, 3)
         self.obs_pose = z(3)               # camera estimate shown to the actor
         self.prev_obs_pose = z(3)
+        # Arm occlusion (rand.occlusion_camera): per frame (newest first) and tracked object (the object, then
+        # the clutter block), the visible share of its top face and the shift of the visible part's centroid.
+        self.occluder = None
+        if r.occlusion_camera:
+            self.occluder = OcclusionCamera(cfg.scene, r.occlusion_camera, t.objects[0], nthread, r.occlusion_fast)
+            self.faces = FacePoints(list(t.objects) + ([t.clutter] if t.clutter else []), r.occlusion_grid)
+        self.view_hist = np.zeros((n, self.pose_hist.shape[1], 1 + bool(t.clutter), 3))
+        self.occluded_steps = np.zeros(n, dtype=np.int64)   # object frames lost to occlusion this episode ...
+        self.occluded_run = np.zeros(n, dtype=np.int64)     # ... the current run of them ...
+        self.occluded_longest = np.zeros(n, dtype=np.int64) # ... and the longest
         self.first_success = np.full(n, -1)
         self.tip = z(3)                    # cached FK of the measured joints
         self.qarm = z(5)
@@ -395,6 +418,8 @@ class PushEnv:
         self.pose_hist[ids] = pose[:, None, :]
         self.obs_pose[ids] = pose
         self.prev_obs_pose[ids] = pose
+        self.view_hist[ids] = [1.0, 0.0, 0.0]
+        self.occluded_steps[ids] = self.occluded_run[ids] = self.occluded_longest[ids] = 0
         self.prev_dist[ids] = self._task_distance(pose, ids)
 
     # --------------------------------------------------------- task hooks
@@ -431,6 +456,30 @@ class PushEnv:
     def _guard_command(self, cmd_xy):
         """Task-specific limits on the commanded rod position (base: none)."""
         return cmd_xy
+
+    def _camera_targets(self):
+        """Objects the camera tracks: planar poses (n, 3) and face-point types (n,) (base: the object)."""
+        return [(self.object_pose(), self.obj_id)]
+
+    # ---------------------------------------------------------------- camera
+    def _update_view(self, finite):
+        """Arm occlusion of the current frame (newest entry of ``view_hist``), for every tracked object."""
+        self.view_hist = np.roll(self.view_hist, 1, axis=1)
+        self.view_hist[:, 0] = [1.0, 0.0, 0.0]
+        ok = np.flatnonzero(finite)
+        targets = [(pose[ok], kind[ok]) for pose, kind in self._camera_targets()]
+        qpos = self.state[ok, self.qpos_adr:self.qpos_adr + self.idx.nq]
+        self.view_hist[ok, 0] = self.occluder.view(qpos, targets, self.faces)
+
+    def _occluded(self, seen, target):
+        """The frame the actor gets now (``latency`` steps old) for a tracked object: shift ``seen`` (n, 3) in place
+        towards the visible part, and return which frames the arm hides (dropped)."""
+        if self.occluder is None:
+            return np.zeros(self.n, dtype=bool)
+        r = self.cfg.rand
+        v = self.view_hist[np.arange(self.n), self.latency, target]
+        seen[:, :2] += r.occlusion_bias * v[:, 1:]
+        return v[:, 0] < r.occlusion_threshold
 
     # ------------------------------------------------------------- geometry
     def _symmetric_goal_yaw(self, yaw, goal_yaw, obj_id):
@@ -521,7 +570,10 @@ class PushEnv:
         self.step_count += 1
 
         pose, height, up_z = self._object_pose()
+        finite = np.isfinite(self.state).all(-1)
         self._update_tool()
+        if self.occluder is not None:
+            self._update_view(finite)
         self._after_physics()
         tip = self.tip
         dist = self._keypoint_distance(pose, self.goal, self.obj_id)
@@ -532,7 +584,6 @@ class PushEnv:
         success = self._task_success((pos_err <= t.success_pos) & (yaw_err <= t.success_yaw))
         self.first_success = np.where((self.first_success < 0) & success, self.step_count, self.first_success)
 
-        finite = np.isfinite(self.state).all(-1)
         dropped = height < self.obj_height / 2 - 0.004      # off the work surface (the lightbox mat has edges)
         tipped = (up_z < math.cos(math.radians(25))) | (height > self.obj_height / 2 + 0.01) | dropped
         outside = ~self._in_region(pose[:, :2], t.fail_r, t.fail_az)
@@ -553,11 +604,15 @@ class PushEnv:
         self.pose_hist[:, 0] = np.where(finite[:, None], pose, self.pose_hist[:, 1])
         self.prev_obs_pose = self.obs_pose.copy()
         seen = self.pose_hist[np.arange(self.n), self.latency].copy()
+        keep = self._occluded(seen, 0)
+        self.occluded_steps += keep
+        self.occluded_run = np.where(keep, self.occluded_run + 1, 0)
+        self.occluded_longest = np.maximum(self.occluded_longest, self.occluded_run)
         if r.enabled:
             seen[:, :2] += self.noise_rng.normal(0, r.obs_pos_noise, (self.n, 2))
             seen[:, 2] = wrap(seen[:, 2] + self.noise_rng.normal(0, r.obs_yaw_noise, self.n))
-            keep = self.noise_rng.random(self.n) < r.obs_dropout
-            seen[keep] = self.obs_pose[keep]
+            keep |= self.noise_rng.random(self.n) < r.obs_dropout
+        seen[keep] = self.obs_pose[keep]
         self.obs_pose = seen
 
         done = failed | timeout
@@ -579,6 +634,9 @@ class PushEnv:
                 "obj_id": self.obj_id[ids].copy(),
                 **self._episode_extras(ids),
             }
+            if self.occluder is not None:
+                info["episode"]["occluded"] = self.occluded_steps[ids] / np.maximum(self.step_count[ids], 1)
+                info["episode"]["occluded_longest_s"] = self.occluded_longest[ids] * t.control_dt
             self.state[ids[~finite[ids]]] = 0.0
             self.reset(ids)
         self.obs = self._observe()

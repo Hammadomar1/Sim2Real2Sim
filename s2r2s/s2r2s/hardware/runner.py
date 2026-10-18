@@ -2,6 +2,7 @@
 
     python -m s2r2s.hardware.runner --checkpoint runs/tee_v1/best.pt --robot sim --episodes 20       # dry run
     python -m s2r2s.hardware.runner --checkpoint runs/gate_pilot/best.pt --robot sim --episodes 20
+    python -m s2r2s.hardware.runner --checkpoint runs/tee_lightbox_v1/best.pt --robot sim --camera render   # C920 pipeline
     python -m s2r2s.hardware.runner --checkpoint runs/tee_v1/best.pt --robot so101 --port COM5 \\
         --map calibration/joint_map.json --goal 0.20 0.05 90         # real arm (needs the camera)
 
@@ -83,22 +84,36 @@ class PolicyRunner:
         Clutter policies: where the block is now is where it must still be at the end.
         """
         self.twin.set_goal(np.asarray(goal, float))
+        self._tell_arm(self.jmap.to_sim(self.robot.read_joints()))
         pose = self._first_pose(self.poses.read, "object", timeout)
         extra = {"block": self._first_pose(self.poses.read_block, "block", timeout)[None]} if self.clutter else {}
         if gate is not None:
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=pose[2])
         q = self.jmap.to_sim(self.robot.read_joints())
         self.twin.sync_measurements(q[None], pose[None], first=True, **extra)
-        self.last_seen = time.monotonic()
+        self.ticks = 0
+        self.last_seen = self._clock()
         self.log = []
+
+    def _clock(self) -> float:
+        """Seconds for the lost-object check: wall time on the real arm, control ticks in a dry run (which runs
+        faster or slower than real time)."""
+        return time.monotonic() if self.realtime else self.ticks * self.dt
+
+    def _tell_arm(self, q):
+        """The camera pose source masks the arm out (arm_mask.py) at these joint angles; the simulated one has no use for them."""
+        if hasattr(self.poses, "set_arm"):
+            self.poses.set_arm(q)
 
     def tick(self):
         t0 = time.monotonic()
+        self.ticks += 1
         q = self.jmap.to_sim(self.robot.read_joints())
+        self._tell_arm(q)
         pose, _ = self.poses.read()
         if pose is not None:
-            self.last_seen = t0
-        stale = (t0 - self.last_seen) > self.max_pose_age
+            self.last_seen = self._clock()
+        stale = (self._clock() - self.last_seen) > self.max_pose_age
         extra = {}
         if self.clutter:                 # a missing block estimate keeps the last one
             block, _ = self.poses.read_block()
@@ -154,8 +169,12 @@ def dry_run(args):
     robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
     gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
     runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False,
-                          lightbox=args.lightbox)
-    stats = []
+                          lightbox=args.lightbox, max_pose_age=args.max_pose_age)
+    camera = None
+    if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.1 s per tick)
+        from .camera_sim import RenderedPoseSource
+        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed)
+    stats, dropped, unseen = [], [], []
     for i in range(args.episodes):
         robot.place(scenes.tip[i, :2], scenes.object_pose()[i])
         gate = None
@@ -163,10 +182,21 @@ def dry_run(args):
             gate = dict(centre=scenes.gate_centre[i], angle=scenes.gate_angle[i], width=scenes.gate_width[i],
                         side=scenes.gate_side[i])
             robot.place_gate(gate["centre"], gate["angle"], gate["width"])
+            if camera is not None:
+                camera.place_gate(gate["centre"], gate["angle"], gate["width"])
         if clutter_task:
             robot.place_block(scenes.clutter_home[i])
-        runner.poses = SimPoseSource(robot, latency_steps=1, seed=args.seed + i)
-        runner.start(scenes.goal[i], gate)
+        if camera is not None:
+            camera.reset()
+            runner.poses = camera
+        else:
+            runner.poses = SimPoseSource(robot, latency_steps=1, seed=args.seed + i)
+        try:
+            runner.start(scenes.goal[i], gate)
+        except RuntimeError as error:          # the rendered camera cannot see the object at this start
+            unseen.append(i)
+            print(f"episode {i + 1:3d}: not started ({error}: the arm hides it at its start position)", flush=True)
+            continue
         for _ in range(scenes.max_steps):
             runner.tick()
         pos, yaw = runner.errors(robot.object_pose())
@@ -182,25 +212,34 @@ def dry_run(args):
                 gate=None if gate is None else {k: np.asarray(v).tolist() for k, v in gate.items()},
                 final=robot.object_pose().tolist(), pos_err=pos, yaw_err=yaw, success=bool(ok),
                 **({"block_home": scenes.clutter_home[i].tolist(), "block_moved": moved} if clutter_task else {})))
+        if camera is not None:
+            dropped.append(camera.counts["dropped"].get(camera.object_name, 0) / max(camera.counts["frames"], 1))
         print(f"episode {i + 1:3d}: {'success' if ok else 'miss   '} pos {pos * 1e3:5.1f} mm  yaw {math.degrees(yaw):5.1f} deg"
               + (f"  passed gate {bool(stats[-1][3])}" if gate_task else "")
               + (f"  block moved {moved * 1e3:4.1f} mm" if clutter_task else ""), flush=True)
+    if unseen:
+        print(f"\n{len(unseen)} of {args.episodes} episodes could not start: the arm hid the object from the camera "
+              f"at its start position (episodes {[i + 1 for i in unseen]}); the {len(stats)} that started:")
+    if not stats:
+        return
     s = np.array(stats, dtype=float)
-    print(f"\n{args.episodes} episodes through the hardware path: success {s[:, 0].mean():.1%}, "
+    print(f"\n{len(stats)} episodes through the hardware path: success {s[:, 0].mean():.1%}, "
           f"median {np.median(s[:, 1]) * 1e3:.1f} mm / {math.degrees(np.median(s[:, 2])):.1f} deg"
           + (f", passed gate {s[:, 3].mean():.1%}" if gate_task else "")
-          + (f", block kept in place {s[:, 3].mean():.1%}" if clutter_task else ""))
+          + (f", block kept in place {s[:, 3].mean():.1%}" if clutter_task else "")
+          + (f"; rendered C920, {np.mean(dropped):.1%} of frames without a pose" if camera is not None else ""))
 
 
 def real_run(args):
     jmap = JointMap.load(args.map)
     robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
-    try:
-        poses = CameraPoseSource()
-    except NotImplementedError as error:
+    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, lightbox=args.lightbox,
+                          max_pose_age=args.max_pose_age)
+    try:      # the camera masks the arm out using the policy's own scene (lightbox, rod)
+        poses = runner.poses = CameraPoseSource(scene=runner.cfg.scene, block_name=runner.cfg.task.clutter or "box")
+    except FileNotFoundError as error:
         robot.close()
-        raise SystemExit(f"{error}\nUntil then, rehearse with --robot sim.")
-    runner = PolicyRunner(args.checkpoint, robot, poses, jmap, max_step_deg=args.max_step_deg, lightbox=args.lightbox)
+        raise SystemExit(f"{error}\nSee HARDWARE.md section 4. Until then, rehearse with --robot sim.")
     kin = runner.twin.kin
     goal = np.array([args.goal[0], args.goal[1], math.radians(args.goal[2])])
     try:
@@ -218,7 +257,10 @@ def real_run(args):
         meta = dict(checkpoint=args.checkpoint, goal=goal.tolist(), final=None if pose is None else pose.tolist())
         if pose is not None:
             meta["pos_err"], meta["yaw_err"] = runner.errors(pose)
+        meta["camera"] = poses.summary()
         save_trial(Path(args.log_dir or PROJECT / "trials") / time.strftime("%Y%m%d_%H%M%S"), runner, meta)
+        print(f"camera: {meta['camera']}")
+        poses.close()
         robot.close()
 
 
@@ -235,6 +277,10 @@ def main(argv=None):
     ap.add_argument("--hidden-map", default="", help="sim dry run: the simulated arm's true (miscalibrated) map")
     ap.add_argument("--goal", type=float, nargs=3, default=(0.20, 0.05, 90.0), metavar=("X", "Y", "YAW_DEG"))
     ap.add_argument("--tool-start", type=float, nargs=2, default=(0.15, -0.10), metavar=("X", "Y"))
+    ap.add_argument("--max-pose-age", type=float, default=0.5,
+                    help="hold the arm still when the object has not been seen for this long (s)")
+    ap.add_argument("--camera", choices=["sim", "render"], default="sim",
+                    help="sim dry run: the training camera model, or the C920 pipeline on rendered frames (lightbox)")
     ap.add_argument("--lightbox", action="store_true",
                     help="the arm stands in the lightbox, 9.8 mm below the mat (implied by policies trained there)")
     args = ap.parse_args(argv)

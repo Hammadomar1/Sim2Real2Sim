@@ -5,7 +5,9 @@ sources of measurements differ:
 
     robots.py      SO101Robot (LeRobot, real arm) and SimRobot (MuJoCo, same interface)
     joint_map.py   LeRobot degrees  <->  MuJoCo radians (sign and offset per joint)
-    poses.py       where the object pose comes from (simulated camera now, RealSense later)
+    poses.py       where the object pose comes from (simulated camera, or the C920: CameraPoseSource)
+    vision.py      the C920 pose estimator; camera.py capture; arm_mask.py the arm in the camera's view
+    camera_calibrate.py  camera settings, intrinsics, extrinsics, object colours; camera_sim.py tests on renders
     calibrate.py   touch known points with the rod tip -> fitted joint offsets/signs
     tracking.py    command a path, measure how well the rod tip follows it
     runner.py      run a trained policy in a 20 Hz loop, with safety limits and trial logs

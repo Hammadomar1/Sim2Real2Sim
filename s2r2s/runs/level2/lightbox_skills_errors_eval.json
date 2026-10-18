@@ -1,0 +1,48 @@
+{
+ "args": {
+  "tee": "runs/clutter_lightbox_v1/best.pt",
+  "box": "runs/clutter_box_lightbox_v1/best.pt",
+  "tee_policy": "",
+  "box_policy": "",
+  "no_park": false,
+  "order": "auto",
+  "no_guard": false,
+  "episodes": 1000,
+  "seed": 20000003,
+  "video": "",
+  "view": false,
+  "stats": false,
+  "set": [
+   "scene.lightbox=true",
+   "rand.backlash_deg=1,1,1,1",
+   "rand.joint_offset_deg=1.0",
+   "rand.table_friction=0.2,0.5",
+   "rand.obs_latency_steps=0,2"
+  ],
+  "out": "runs/level2/lightbox_skills_errors_eval.json"
+ },
+ "episodes": 1000,
+ "success": 0.899,
+ "tee_at_goal": 0.939,
+ "box_at_goal": 0.945,
+ "failure": 0.01,
+ "all_pushes_settled": 0.851,
+ "kept_block_disturbed": 0.032,
+ "kept_block_moved_mm_median": 0.0032806057993806413,
+ "time_s_median": 12.55,
+ "three_push_share": 0.006,
+ "success_two_pushes": 0.8983903420523138,
+ "success_three_pushes": 1.0,
+ "tee_first_share": 0.5181086519114688,
+ "success_tee_first": 0.8563106796116505,
+ "success_box_first": 0.9436325678496869,
+ "order_valid": 1.0,
+ "tee_err_median": [
+  2.018334568373427,
+  2.802861433971299
+ ],
+ "box_err_median": [
+  1.4197220454276305,
+  2.585008514028482
+ ]
+}

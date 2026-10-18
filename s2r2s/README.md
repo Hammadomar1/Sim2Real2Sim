@@ -44,7 +44,8 @@ model on. The scripted baseline runs on the *same* scenes but with the *true* ob
   | 4 mm / 4° | 76.0 % | 200–300 ms | 81.1 % | 50 % | 94.3 % |
   | 8 mm / 8° | 22.7 % | 300–400 ms | 50.8 % | | |
 
-  Target for the real pipeline: **≤2 mm / 2° noise and ≤150 ms latency**. Brief occlusions are harmless.
+  Target for the real pipeline: **≤2 mm / 2° noise and ≤150 ms latency**. Scattered dropped frames are harmless;
+  long gaps, when the arm hides the object for seconds, are not (see the lightbox camera mount below).
 - **Videos** (`videos/`): `tee_policy_grid.mp4` (four random scenes), `tee_policy_kicks.mp4` (the object is knocked away
   every 5 s and the policy recovers), `tee_d435i_view.mp4` (the view from the planned real camera).
 
@@ -357,14 +358,31 @@ noise, joint calibration error, backlash). Push-T, success:
   off by default), and they cost the most.
 - `tee_lightbox_v1` is `tee_v1` fine-tuned for 30 minutes in the lightbox with both, mat friction 0.2–0.9 and camera
   latency 0–150 ms: 98.5 % in the lightbox, 97.7 % with every error at once, and 98.9 % even on the flat table.
-- The C920's as-built left-wall slot is the second-worst mount for arm occlusion (29 % of views more than half hidden;
-  the middle of the back wall, low: 1.9 %).
+- The Level 2 and 3 skills were retrained the same way (`clutter_lightbox_v1`, `clutter_box_lightbox_v1`,
+  `dock_lightbox_v1`, 35–40 minutes each). With every error at once, clutter goes from 80.7 to 91.0 %, the box skill
+  from 87.1 to 94.2 % and the dock skill from 63.1 to 88.3 %. Levels 2 and 3, same worlds for both sets of skills:
+
+  | world (lightbox) | Level 2, flat-table skills | Level 2, lightbox skills | Level 3, flat-table skills | Level 3, lightbox skills |
+  |---|---|---|---|---|
+  | measured geometry | 92.4 % | **93.7 %** | 80.9 % | **87.2 %** |
+  | + joint calibration error ≤1°, backlash ±0.5° | 83.1 % | **89.9 %** | 53.4 % | **77.3 %** |
+  | + mat friction 0.2–0.9, camera latency 0–150 ms (every error) | 78.8 % | **89.6 %** | 50.4 % | **74.5 %** |
+
+  Docking is most of the Level 3 gain and still its main loss with errors (box docked 81.3 %). Levels 2 and 3 take
+  the world's randomisation from the T skill's checkpoint, so set it explicitly when the T skill is a lightbox skill
+  (LIGHTBOX.md, "The lightbox skills for Levels 2 and 3").
+- The C920's as-built left-wall slot hides more than half the T in 31 % of frames, in gaps lasting seconds. With those
+  frames dropped (`rand.occlusion_camera=c920`), Push-T falls from 98.5 % to 69.2 % and clutter from 93.5 % to 63.4 %.
+  The middle of the back wall, 25 cm up, hides 1.7 % of frames and costs nothing: move the camera there (LIGHTBOX.md, C6).
+  If it must stay on the left wall, `tee_occlusion_v1` (fine-tuned 35 minutes with the occlusion on) scores 95.8 % there.
 
 ```powershell
-python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt                           # the full check (about 5 minutes)
+python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt                           # the full check (about 8 minutes)
+python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt --only 1 24 25 26          # the arm hiding the T, per camera mount
 python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt --set rand.table_friction=0.6,0.6   # at a measured value
 python -m s2r2s.train --run tee_lightbox_v2 --init runs\tee_v1\best.pt --no-curriculum --minutes 30 --set scene.lightbox=true rand.joint_offset_deg=1.0 rand.backlash_deg=1,1,1,1 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
 python -m s2r2s.camera_study --checkpoint runs\tee_lightbox_v1\best.pt --lightbox  # arm occlusion from mounts in the box
+python -m s2r2s.level3 --tee runs\clutter_lightbox_v1\best.pt --box runs\clutter_box_lightbox_v1\best.pt --dock runs\dock_lightbox_v1\best.pt --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3   # Level 3, every error
 ```
 
 ## Quick start (Windows, PowerShell)
@@ -501,6 +519,7 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/play.py`, `record.py`, `visual.py` | Viewer, videos |
 | `s2r2s/sensitivity.py` | How good the camera pipeline must be: degrade the camera model, re-evaluate |
 | `s2r2s/camera_study.py` | Arm-occlusion study for choosing the real camera mount |
+| `s2r2s/occlusion.py` | Arm occlusion in the camera model (`rand.occlusion_camera`): ray-cast visible share, hidden frames dropped |
 | `s2r2s/lightbox.py` | Grade a policy in the lightbox scene and under its unmeasured quantities (see LIGHTBOX.md) |
 | `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner: see [HARDWARE.md](HARDWARE.md) |
 | `tests/` | Regression tests |

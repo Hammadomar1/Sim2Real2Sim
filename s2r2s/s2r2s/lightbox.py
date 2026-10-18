@@ -1,5 +1,8 @@
 """Will a trained policy work in the real lightbox?  Same held-out scenes, training scene vs lightbox, and
-the lightbox under the quantities we have not measured yet (mat height, mat friction, camera latency).
+the lightbox under the quantities we have not measured yet (mat height, mat friction, camera latency), the
+hardware errors, and the arm hiding the object from the camera at each candidate mount (occlusion.py;
+"hidden" = share of the object's frames lost to the arm, "gap p90 s" = 90th percentile of each episode's
+longest run of them).
 
     python -m s2r2s.lightbox runs/tee_v1/best.pt
     python -m s2r2s.lightbox runs/clutter_v7/best.pt --episodes 1000
@@ -54,9 +57,22 @@ CONDITIONS = [
     ("backlash +-1 deg, every joint", LIGHTBOX + ["rand.backlash_deg=2,2,2,2"]),
     ("all at once (cal 1 deg, backlash 0.5, mu .2-.9, 0-150 ms)", LIGHTBOX + [
         "rand.joint_offset_deg=1.0", "rand.backlash_deg=1,1,1,1", "rand.table_friction=0.2,0.9", "rand.obs_latency_steps=0,3"]),
+    # Arm occlusion (occlusion.py): frames with less than half the top face visible are dropped (by default).
+    ("30 % of frames dropped at random (trained on 3 %)", LIGHTBOX + ["rand.obs_dropout=0.3"]),
+    ("arm occlusion, C920 in the left-wall slot (as built)", LIGHTBOX + ["rand.occlusion_camera=c920"]),
+    ("arm occlusion, C920 in the right-wall slot", LIGHTBOX + ["rand.occlusion_camera=right_wall"]),
+    ("arm occlusion, C920 on the back wall, 25 cm up", LIGHTBOX + ["rand.occlusion_camera=back_wall_low"]),
+    ("left wall, estimator copes with 25 % of the T visible", LIGHTBOX + ["rand.occlusion_camera=c920", "rand.occlusion_threshold=0.25"]),
+    ("left wall, estimator needs 75 % visible", LIGHTBOX + ["rand.occlusion_camera=c920", "rand.occlusion_threshold=0.75"]),
+    ("left wall, estimate pulled to the visible part", LIGHTBOX + ["rand.occlusion_camera=c920", "rand.occlusion_bias=1.0"]),
+    ("back wall, estimator needs 75 % visible", LIGHTBOX + ["rand.occlusion_camera=back_wall_low", "rand.occlusion_threshold=0.75"]),
+    ("back wall, estimate pulled to the visible part", LIGHTBOX + ["rand.occlusion_camera=back_wall_low", "rand.occlusion_bias=1.0"]),
+    ("right wall, estimator needs 75 % visible", LIGHTBOX + ["rand.occlusion_camera=right_wall", "rand.occlusion_threshold=0.75"]),
+    ("right wall, estimate pulled to the visible part", LIGHTBOX + ["rand.occlusion_camera=right_wall", "rand.occlusion_bias=1.0"]),
 ]
 COLUMNS = [("success", "solved", "{:7.1%}"), ("pos_err_mm_median", "mm", "{:6.1f}"), ("yaw_err_deg_median", "deg", "{:6.1f}"),
-           ("failure", "failed", "{:7.1%}"), ("dropped", "off mat", "{:8.1%}"), ("disturbed", "block moved", "{:12.1%}")]
+           ("failure", "failed", "{:7.1%}"), ("dropped", "off mat", "{:8.1%}"), ("disturbed", "block moved", "{:12.1%}"),
+           ("occluded", "hidden", "{:7.1%}"), ("occluded_longest_s_p90", "gap p90 s", "{:10.1f}")]
 
 
 def main(argv=None):
@@ -66,11 +82,13 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=TEST_SEED)
     p.add_argument("--only", nargs="*", type=int, default=[], help="row numbers to run (default: all)")
     p.add_argument("--set", nargs="*", default=[], metavar="SECTION.FIELD=VALUE", help="applied to every row")
+    p.add_argument("--threads", type=int, default=0, help="simulation threads (default: all; fewer next to a training run)")
     p.add_argument("--out", default="")
     args = p.parse_args(argv)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     policy, base, ck = load_policy(args.checkpoint, device)
     base.rand, base.scene.lightbox = RandomizationConfig(), False      # rows set the conditions, not the checkpoint
+    base.num_threads = args.threads
     agent = policy_agent(policy, device)
     rows = [(k, c) for k, c in enumerate(CONDITIONS) if not args.only or k in args.only]
     print(f"{args.checkpoint}: {args.episodes} held-out scenes (seed {args.seed}) per row, same scenes in every row")

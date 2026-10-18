@@ -1,0 +1,105 @@
+$ python -m s2r2s.level2 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --out runs/level2/lightbox_skills_eval.json --set scene.lightbox=true rand.backlash_deg=0,0,0,0 rand.joint_offset_deg=0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt
+  both blocks at their goals                 93.7%
+    T at its goal                            96.7%
+    box at its goal                          95.9%
+  every push settled at its target           89.4%
+  a block that had to stay moved >10 mm      0.7%
+  failures (a block left the band)           0.8%
+  time to finish, median (s)                 11.9
+  scenes with a parking push                 0.6%
+  success with two pushes                    93.7%
+  success with three pushes                  100.0%
+  two pushes: T first                        51.8%
+    success when the T goes first            92.0%
+    success when the box goes first          95.4%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                1.9 mm 2.3 deg / 1.3 mm 2.4 deg
+per-episode results: runs/level2/lightbox_skills_eval.json
+(45 s)
+
+$ python -m s2r2s.level2 --out runs/level2/lightbox_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 83.1%
+    T at its goal                            88.8%
+    box at its goal                          91.3%
+  every push settled at its target           81.1%
+  a block that had to stay moved >10 mm      3.4%
+  failures (a block left the band)           2.2%
+  time to finish, median (s)                 13.9
+  scenes with a parking push                 0.6%
+  success with two pushes                    83.0%
+  success with three pushes                  100.0%
+  two pushes: T first                        51.8%
+    success when the T goes first            78.4%
+    success when the box goes first          87.9%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                2.7 mm 3.3 deg / 1.7 mm 2.4 deg
+per-episode results: runs/level2/lightbox_errors_eval.json
+(42 s)
+
+$ python -m s2r2s.level2 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --out runs/level2/lightbox_skills_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.5 rand.obs_latency_steps=0,2
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt
+  both blocks at their goals                 89.9%
+    T at its goal                            93.9%
+    box at its goal                          94.5%
+  every push settled at its target           85.1%
+  a block that had to stay moved >10 mm      3.2%
+  failures (a block left the band)           1.0%
+  time to finish, median (s)                 12.6
+  scenes with a parking push                 0.6%
+  success with two pushes                    89.8%
+  success with three pushes                  100.0%
+  two pushes: T first                        51.8%
+    success when the T goes first            85.6%
+    success when the box goes first          94.4%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                2.0 mm 2.8 deg / 1.4 mm 2.6 deg
+per-episode results: runs/level2/lightbox_skills_errors_eval.json
+(45 s)
+
+$ python -m s2r2s.level2 --out runs/level2/lightbox_all_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_v7/best.pt | box skill runs/clutter_box_v2/best.pt
+  both blocks at their goals                 78.8%
+    T at its goal                            85.2%
+    box at its goal                          88.2%
+  every push settled at its target           76.9%
+  a block that had to stay moved >10 mm      5.5%
+  failures (a block left the band)           5.1%
+  time to finish, median (s)                 14.5
+  scenes with a parking push                 0.6%
+  success with two pushes                    78.7%
+  success with three pushes                  100.0%
+  two pushes: T first                        51.8%
+    success when the T goes first            74.4%
+    success when the box goes first          83.3%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                3.0 mm 3.6 deg / 2.0 mm 2.6 deg
+per-episode results: runs/level2/lightbox_all_errors_eval.json
+(39 s)
+
+$ python -m s2r2s.level2 --tee runs/clutter_lightbox_v1/best.pt --box runs/clutter_box_lightbox_v1/best.pt --out runs/level2/lightbox_skills_all_errors_eval.json --set scene.lightbox=true rand.backlash_deg=1,1,1,1 rand.joint_offset_deg=1.0 rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3
+
+Level 2: 1000 two-block scenes (seed 20000003), with parking, order auto, rod guard on | T skill runs/clutter_lightbox_v1/best.pt | box skill runs/clutter_box_lightbox_v1/best.pt
+  both blocks at their goals                 89.6%
+    T at its goal                            93.8%
+    box at its goal                          94.2%
+  every push settled at its target           85.7%
+  a block that had to stay moved >10 mm      2.4%
+  failures (a block left the band)           1.8%
+  time to finish, median (s)                 12.9
+  scenes with a parking push                 0.6%
+  success with two pushes                    89.5%
+  success with three pushes                  100.0%
+  two pushes: T first                        51.8%
+    success when the T goes first            86.2%
+    success when the box goes first          93.1%
+  plans that keep the 15 mm rule             100.0%
+  final error median, T / box                1.9 mm 2.6 deg / 1.6 mm 2.8 deg
+per-episode results: runs/level2/lightbox_skills_all_errors_eval.json
+(39 s)
+

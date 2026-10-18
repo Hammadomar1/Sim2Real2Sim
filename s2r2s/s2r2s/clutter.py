@@ -313,17 +313,21 @@ class ClutterEnv(PushEnv):
         self.first_touch[ids] = 0
 
     # ----------------------------------------------------------- task hooks
+    def _camera_targets(self):
+        return super()._camera_targets() + [(self.clutter_pose(), np.full(self.n, len(self.cfg.task.objects)))]
+
     def _after_physics(self):
         r = self.cfg.rand
         pose = self.clutter_pose()
         self.clutter_hist = np.roll(self.clutter_hist, 1, axis=1)
         self.clutter_hist[:, 0] = pose
         seen = self.clutter_hist[np.arange(self.n), self.latency].copy()
+        keep = self._occluded(seen, 1)
         if r.enabled:
             seen[:, :2] += self.noise_rng.normal(0, r.obs_pos_noise, (self.n, 2))
             seen[:, 2] = wrap(seen[:, 2] + self.noise_rng.normal(0, r.obs_yaw_noise, self.n))
-            keep = self.noise_rng.random(self.n) < r.obs_dropout
-            seen[keep] = self.clutter_obs[keep]
+            keep |= self.noise_rng.random(self.n) < r.obs_dropout
+        seen[keep] = self.clutter_obs[keep]
         self.clutter_obs = seen
 
     def _reward_extra(self):
