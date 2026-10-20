@@ -13,7 +13,7 @@ inside the reachable annulus at its fixed height. When the object has not been s
 seconds (2 s: the policy closes most shorter gaps itself by pushing on), the runner lifts the rod and
 moves it a few cm out of the camera's way until the object is seen again, then hands back to the policy
 (--on-lost hold: hold still instead); after --recover-seconds it gives up. A trial whose start position
-hides the object starts from a clear one nearby. Ctrl+C lifts the rod and exits.
+hides the object (or the clutter block) starts from a clear one nearby. Ctrl+C lifts the rod and exits.
 """
 from __future__ import annotations
 
@@ -63,9 +63,9 @@ class PolicyRunner:
     ``recover_seconds`` it gives up: the rod stays lifted and ``tick`` returns ``"lost"``. ``on_lost="hold"``:
     hold the arm still instead (the old behaviour; with the left-wall C920 it can freeze where it hides the T).
 
-    A trial that cannot start because the arm hides the object at its start position (``start``) moves the rod to
-    the pose that hides least of the band, finds the object, then starts from the nearest clear point from which it
-    stays in view.
+    A trial that cannot start because the arm hides the object (or the clutter block) at its start position
+    (``start``) moves the rod to the pose that hides least of the band, finds them, then starts from the nearest
+    clear point from which the object stays in view.
     """
 
     def __init__(self, checkpoint, robot, poses, jmap: JointMap, device: str = "cpu",
@@ -99,35 +99,37 @@ class PolicyRunner:
         """A clutter policy: it also needs the camera's pose of the block that must stay in place."""
         return hasattr(self.twin, "clutter_home")
 
-    @staticmethod
-    def _first_pose(read, timeout):
+    def _first_poses(self, timeout):
+        """The object's pose and, for clutter policies, the block's, from frames within ``timeout`` (each None
+        while unseen; ``read_block`` gives the block in the frame ``read`` took)."""
         deadline = time.monotonic() + timeout
-        pose, _ = read()
-        while pose is None and time.monotonic() < deadline:
-            pose, _ = read()
-        return pose
+        pose = block = None
+        while True:
+            p, _ = self.poses.read()
+            pose = pose if p is None else p
+            if self.clutter:
+                b, _ = self.poses.read_block()
+                block = block if b is None else b
+            if (pose is not None and (block is not None or not self.clutter)) or time.monotonic() >= deadline:
+                return pose, block
 
     def start(self, goal, gate: dict | None = None, timeout: float = 2.0, clear_seconds: float = 10.0):
         """Begin a trial: goal (x, y, yaw) and, for gate policies, the gate (centre, angle, width, side).
 
         Clutter policies: where the block is now is where it must still be at the end. When the camera does not
-        see the object within ``timeout`` (the arm hides it), the rod is moved to a clear start first
-        (``_clear_start``); RuntimeError if the object stays unseen.
+        see the object, or the block, within ``timeout`` (the arm hides it), the rod is moved to a clear start
+        first (``_clear_start``); RuntimeError if they stay unseen.
         """
         self.twin.set_goal(np.asarray(goal, float))
         self.log, self.events, self.mode = [], [], "policy"
         self.start_shift, self.block_seen, self.clear_t0 = 0.0, -1e9, self._clock()
         self._tell_arm(self.jmap.to_sim(self.robot.read_joints()))
-        pose = self._first_pose(self.poses.read, timeout)
-        if pose is None:
+        pose, block = self._first_poses(timeout)
+        if pose is None or (self.clutter and block is None):
             pose = self._clear_start(gate, clear_seconds)
+            block = self.twin.clutter_obs[0].copy() if self.clutter else None     # seen on the way
         extra = {}
         if self.clutter:
-            block = self._first_pose(self.poses.read_block, timeout)
-            if block is None and self.block_seen > self.clear_t0:      # seen while the rod moved to a clear start
-                block = self.twin.clutter_obs[0].copy()
-            if block is None:
-                raise RuntimeError("no block pose from the camera")
             extra["block"] = block[None]
         if gate is not None:
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=pose[2])
@@ -427,8 +429,9 @@ class PolicyRunner:
         return False
 
     def _clear_start(self, gate, seconds: float) -> np.ndarray:
-        """The arm hides the object at its start position: lift the rod and move it where it hides least (the park
-        point), find the object, then lower it at the nearest clear point from which it should stay in view."""
+        """The arm hides the object (or the clutter block) at its start position: lift the rod and move it where it
+        hides least (the park point), find both, then lower it at the nearest clear point from which the object
+        should stay in view (the block's start pose is known by then)."""
         self.mode = "start"
         if gate is not None:              # the walls must be known before checking clearances
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=0.0)
@@ -441,7 +444,8 @@ class PolicyRunner:
         self._move_until([np.r_[tip0[:2], self._lift_z(tip0[:2])], np.r_[self._park_point(), high]], seconds, fresh,
                          early=True)
         if not fresh():
-            raise RuntimeError("no object pose from the camera, also with the arm out of the way")
+            raise RuntimeError(f"no {'object or block' if self.clutter else 'object'} pose from the camera, also "
+                               "with the arm out of the way")
         # With a shadow predictor the planned start may still do (the arm came from elsewhere); without one it is
         # known to hide the object, and the alternatives step out further.
         tried = [] if self.view is not None else [tip0[:2].copy()]

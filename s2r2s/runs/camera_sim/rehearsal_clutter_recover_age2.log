@@ -1,0 +1,13 @@
+episode   1: success pos   1.7 mm  yaw   0.6 deg  block moved  0.0 mm
+episode   2: success pos   4.0 mm  yaw   5.9 deg  block moved  0.0 mm  started 20 mm from the planned start
+episode   3: success pos   1.9 mm  yaw   6.5 deg  block moved  1.4 mm  lost 1x, resumed 1
+episode   4: success pos   1.6 mm  yaw   3.1 deg  block moved  0.0 mm  started 60 mm from the planned start
+episode   5: success pos   2.1 mm  yaw   6.7 deg  block moved  0.0 mm
+episode   6: success pos   1.3 mm  yaw   0.5 deg  block moved  0.0 mm
+episode   7: success pos   2.7 mm  yaw   5.8 deg  block moved  0.0 mm
+episode   8: success pos   1.5 mm  yaw   5.3 deg  block moved  0.0 mm
+
+2 episodes started away from the planned start, where the arm hid the object (40 mm on average)
+object lost 1 times in 1 episodes (--on-lost recover): resumed 1 after 1.2 s median, gave up 0
+
+8 episodes through the hardware path: success 100.0%, median 1.8 mm / 5.5 deg, block kept in place 100.0%; rendered C920, 6.7% of frames without a pose

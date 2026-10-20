@@ -15,36 +15,51 @@ from s2r2s.kinematics import PusherKinematics
 from s2r2s.scene import SceneConfig, build_model
 
 
-@pytest.fixture(scope="module")
-def untrained(tmp_path_factory):
-    """A policy checkpoint (untrained: the recovery does not depend on what the policy does)."""
+def _untrained(path, task=None):
+    """A policy checkpoint (untrained: the recovery does not depend on what the policy does), and its scene."""
     import torch
     from s2r2s.env import EnvConfig
     from s2r2s.ppo import ActorCritic, PPOConfig
     from s2r2s.tasks import make_env
-    cfg = EnvConfig(num_envs=1, num_threads=1)
+    cfg = EnvConfig(num_envs=1, num_threads=1) if task is None else EnvConfig(num_envs=1, num_threads=1, task=task)
     env = make_env(cfg)
     dims = (env.num_obs, env.num_critic_obs, env.num_actions)
     torch.manual_seed(0)
-    path = tmp_path_factory.mktemp("policy") / "untrained.pt"
     torch.save({"ppo": {"policy": ActorCritic(*dims, PPOConfig()).state_dict()}, "env_cfg": cfg.to_dict(),
                 "ppo_cfg": PPOConfig().to_dict(), "iteration": 0, "samples": 0, "dims": dims}, path)
-    return path
+    return path, cfg.scene
+
+
+@pytest.fixture(scope="module")
+def untrained(tmp_path_factory):
+    return _untrained(tmp_path_factory.mktemp("policy") / "untrained.pt")[0]
+
+
+@pytest.fixture(scope="module")
+def clutter_untrained(tmp_path_factory):
+    """A clutter (box) checkpoint and its scene."""
+    from s2r2s.env import TaskConfig
+    return _untrained(tmp_path_factory.mktemp("policy") / "clutter.pt", TaskConfig(clutter="box"))
 
 
 class Blinkered(SimPoseSource):
     """The training camera model, blind while the rod tip is within ``radius`` of ``spot`` (the arm hides the
-    object there)."""
+    object there; with ``block``, the clutter block instead)."""
 
-    def __init__(self, robot, spot=None, radius=0.02, **kw):
+    def __init__(self, robot, spot=None, radius=0.02, block=False, **kw):
         super().__init__(robot, dropout=0.0, **kw)
-        self.spot, self.radius = spot, radius
+        self.spot, self.radius, self.block = spot, radius, block
+
+    def _hidden(self):
+        return self.spot is not None and np.linalg.norm(self.robot.tool_tip()[:2] - self.spot) < self.radius
 
     def read(self):
         pose, t = super().read()
-        if self.spot is not None and np.linalg.norm(self.robot.tool_tip()[:2] - self.spot) < self.radius:
-            return None, t
-        return pose, t
+        return (None, t) if self._hidden() and not self.block else (pose, t)
+
+    def read_block(self):
+        pose, t = super().read_block()
+        return (None, t) if self._hidden() and self.block else (pose, t)
 
 
 def _runner(untrained, **kw):
@@ -75,22 +90,17 @@ def test_runner_backs_off_until_it_sees_the_object_then_resumes(untrained):
     assert runner.fresh_age == 0.5        # lowering and handing back need a pose this recent, whatever the trigger
 
 
-def test_clutter_runner_backs_off_clear_of_the_block(tmp_path):
-    import torch
-    from s2r2s.env import EnvConfig, TaskConfig
-    from s2r2s.ppo import ActorCritic, PPOConfig
-    from s2r2s.tasks import make_env
-    cfg = EnvConfig(num_envs=1, num_threads=1, task=TaskConfig(clutter="box"))
-    env = make_env(cfg)
-    dims = (env.num_obs, env.num_critic_obs, env.num_actions)
-    torch.manual_seed(0)
-    torch.save({"ppo": {"policy": ActorCritic(*dims, PPOConfig()).state_dict()}, "env_cfg": cfg.to_dict(),
-                "ppo_cfg": PPOConfig().to_dict(), "iteration": 0, "samples": 0, "dims": dims}, tmp_path / "clutter.pt")
-    robot = SimRobot(cfg.scene)
+def _clutter_runner(clutter_untrained, **kw):
+    path, scene = clutter_untrained
+    robot = SimRobot(scene)
     robot.place((0.18, -0.06), (0.21, -0.02, 0.3))
     robot.place_block((0.15, -0.10, 0.2))                   # right behind the rod, toward the robot
-    poses = Blinkered(robot, seed=1)
-    runner = PolicyRunner(tmp_path / "clutter.pt", robot, poses, JointMap(), realtime=False)
+    poses = Blinkered(robot, seed=1, **kw)
+    return robot, poses, PolicyRunner(path, robot, poses, JointMap(), realtime=False)
+
+
+def test_clutter_runner_backs_off_clear_of_the_block(clutter_untrained):
+    robot, poses, runner = _clutter_runner(clutter_untrained)
     runner.start(np.array([0.21, 0.04, 1.0]))
     poses.spot = robot.tool_tip()[:2].copy()
     for _ in range(120):
@@ -99,6 +109,18 @@ def test_clutter_runner_backs_off_clear_of_the_block(tmp_path):
     assert first["result"] == "resumed"
     at = np.array([first["at"]])
     assert runner.twin._block_clearance(at, runner.twin.clutter_obs[:1])[0] - 0.006 >= 0.009
+    assert runner.block_moved(robot.block_pose(), (0.15, -0.10, 0.2))[0] < 0.002
+
+
+def test_clutter_runner_starts_clear_when_the_arm_hides_the_block(clutter_untrained):
+    """The camera sees the T but not the block at the start (rendered rehearsal, 1 scene in 8): the trial starts
+    from a clear start, with the block's start pose from what the camera saw on the way."""
+    robot, poses, runner = _clutter_runner(clutter_untrained, block=True)
+    poses.spot, poses.radius = robot.tool_tip()[:2].copy(), 0.03
+    runner.start(np.array([0.21, 0.04, 1.0]))
+    assert runner.log and runner.log[0]["mode"] == "start"
+    assert runner.twin.clutter_home[0, :2] == pytest.approx((0.15, -0.10), abs=0.004)
+    assert runner.tick() == "policy"
     assert runner.block_moved(robot.block_pose(), (0.15, -0.10, 0.2))[0] < 0.002
 
 

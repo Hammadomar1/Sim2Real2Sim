@@ -246,9 +246,10 @@ Safety built into the runner:
   `--recover-seconds` (8 s) it gives up and ends the trial with the rod lifted. `--on-lost hold` holds the arm
   still instead, as before. With the C920 in the left-wall slot, holding can deadlock: the arm stops where it hides
   the T and keeps hiding it.
-- **Hidden start:** when the arm hides the object at its start position, the rod first goes (lifted) to where the
-  arm hides least of the band. Once the object is found, the rod comes down at the nearest clear point from which
-  it should stay in view. The trial log records how far that is from the planned start (`start_shift`).
+- **Hidden start:** when the arm hides the object at its start position, or a clutter policy's block (whose start
+  pose is where it must stay), the rod first goes (lifted) to where the arm hides least of the band. Once both are
+  found, the rod comes down at the nearest clear point from which the object should stay in view. The trial log
+  records how far that is from the planned start (`start_shift`).
 - **Logs:** every tick has its `mode` (`policy`, `retreat`, `lower`, `lost`, `start`); every trial has its
   `recoveries`: where the object was lost, how long it took and how it ended.
 - **Stopping:** Ctrl+C lifts the rod (up to 4 cm, as high as a vertical rod reaches there) and exits.
@@ -279,6 +280,30 @@ Rendered rehearsal, C920 in the left-wall slot, the same 8 held-out scenes (`run
 Eight scenes are few (one episode is 12 points), but the direction is clear, so **the default is 2 s**. With
 `--max-pose-age 0.5` the policy acts on a stale pose for at most half a second, at the cost of the interruptions
 above. Moving the camera (LIGHTBOX.md C6) removes most of the losses either way.
+
+The clutter policy `clutter_lightbox_v1` (push the T, keep the box in place), same camera and 8 scenes
+(`runs\camera_sim\rehearsal_clutter_*.log`). The trial logs (`--log-dir`) were checked tick by tick against the
+box's true start pose:
+
+| runner | started | solved, box kept | frames without a pose | object lost (in episodes) | resumed / gave up | runner moves: closest to the box |
+|---|---|---|---|---|---|---|
+| recover after 0.5 s, before the hidden-block start | 7 | 7 | 5.8 % | 5 (3) | 5 / 0 | 34 mm |
+| hold still after 0.5 s (`--on-lost hold --max-pose-age 0.5`), clear start | 8 | 7 | 26.2 % | | | 34 mm |
+| recover after 0.5 s (`--max-pose-age 0.5`) | 8 | **8** | 14.1 % | 15 (4) | 14 / 0 | 34 mm |
+| recover after 2 s (`--max-pose-age 2`) | 8 | **8** | 6.7 % | 1 (1) | 1 / 0 | 34 mm |
+
+1. **A hidden block now gets a clear start too.** In one scene the arm hid the box, not the T, at the planned
+   start. Only a hidden T triggered the clear start, so that trial stopped ("no block pose from the camera"). Now
+   it starts 20 mm away and is solved in every run.
+2. **No runner move came near the box.** Across 28 retreats and clear starts, the rod stayed at least 34 mm from
+   the box (a clear start; retreats 36 mm), never flew over it and came down at least 36 mm from it. The box moved
+   in one episode, 1.4 mm (the limit is 10 mm), and before the runner stepped in: the policy pushed the T against it.
+3. The rest is as with `tee_lightbox_v1`. After 0.5 s, two scenes lost the T 6 times each: the policy pushed back to
+   where the arm hides it. Both were still solved. After 2 s the runner stepped in once. Holding still missed one scene.
+4. The clear start's first move, lifted and straight to the park point, is not checked against the box or the T:
+   while the arm hides them, their poses are not known. In 400 sampled scenes, the shadow predictor has the arm
+   hiding one of them at the planned start in 142. In 6 % of those, that move passes over the box 4–5 mm above it.
+   In 6 %, over the T.
 
 `--camera render` rehearses the camera path too: every tick, the simulated arm's scene is rendered as the C920 sees
 it (100 ms late) and goes through the same estimator and arm mask as `CameraPoseSource`. It takes about 0.25 s per
