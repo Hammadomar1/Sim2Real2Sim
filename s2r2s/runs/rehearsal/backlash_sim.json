@@ -1,0 +1,180 @@
+{
+ "robot": "sim",
+ "probe": "camera",
+ "rows": [
+  {
+   "reach": 0.15,
+   "joint": "pan",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 1.9401900269917414,
+   "encoders_deg": 0.6197318941548554,
+   "encoders_sd_deg": 0.0031078233619371105,
+   "probe": "camera",
+   "probe_deg": 1.036377231519129,
+   "probe_sd_deg": 0.11661712750561867
+  },
+  {
+   "reach": 0.15,
+   "joint": "lift",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 1.427679328131361,
+   "encoders_deg": 0.9809318606601458,
+   "encoders_sd_deg": 0.008906017890518533,
+   "probe": "camera",
+   "probe_deg": 0.9644364634597685,
+   "probe_sd_deg": 0.05133531166026625
+  },
+  {
+   "reach": 0.15,
+   "joint": "elbow",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.231640228507766,
+   "encoders_deg": 0.7962835719755117,
+   "encoders_sd_deg": 0.0207286092363754,
+   "probe": "camera",
+   "probe_deg": 0.7717935961611537,
+   "probe_sd_deg": 0.04342835410172214
+  },
+  {
+   "reach": 0.15,
+   "joint": "wrist",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.3527774930811036,
+   "encoders_deg": 1.1918364009510256,
+   "encoders_sd_deg": 0.029363478805748206,
+   "probe": "camera",
+   "probe_deg": 1.497786283036262,
+   "probe_sd_deg": 0.02304022188246421
+  },
+  {
+   "reach": 0.2,
+   "joint": "pan",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 2.812854652988905,
+   "encoders_deg": 0.602449350896683,
+   "encoders_sd_deg": 0.015298894690659122,
+   "probe": "camera",
+   "probe_deg": 1.0135234639320092,
+   "probe_sd_deg": 0.02483095850683397
+  },
+  {
+   "reach": 0.2,
+   "joint": "lift",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 1.4276793281313613,
+   "encoders_deg": 1.0055142938736452,
+   "encoders_sd_deg": 0.008086785223652975,
+   "probe": "camera",
+   "probe_deg": 0.926276502564717,
+   "probe_sd_deg": 0.021562931996954717
+  },
+  {
+   "reach": 0.2,
+   "joint": "elbow",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.451706063718994,
+   "encoders_deg": 0.8293144419506889,
+   "encoders_sd_deg": 0.03447204853601977,
+   "probe": "camera",
+   "probe_deg": 0.8055193393065029,
+   "probe_sd_deg": 0.03067541606909025
+  },
+  {
+   "reach": 0.2,
+   "joint": "wrist",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.3527774930811045,
+   "encoders_deg": 1.185010183321752,
+   "encoders_sd_deg": 0.0009075729725197117,
+   "probe": "camera",
+   "probe_deg": 1.4730580713068218,
+   "probe_sd_deg": 0.031066483607564425
+  },
+  {
+   "reach": 0.25,
+   "joint": "pan",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.68551927898607,
+   "encoders_deg": 0.5879262002991025,
+   "encoders_sd_deg": 0.035960131204297766,
+   "probe": "camera",
+   "probe_deg": 1.0138823787055145,
+   "probe_sd_deg": 0.036806070631879184
+  },
+  {
+   "reach": 0.25,
+   "joint": "lift",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 1.4276793281313618,
+   "encoders_deg": 0.9990054551888448,
+   "encoders_sd_deg": 0.007900432737287114,
+   "probe": "camera",
+   "probe_deg": 0.9890689786745583,
+   "probe_sd_deg": 0.08216261619212364
+  },
+  {
+   "reach": 0.25,
+   "joint": "elbow",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.276820339405728,
+   "encoders_deg": 0.8122427595706515,
+   "encoders_sd_deg": 0.023317364537373722,
+   "probe": "camera",
+   "probe_deg": 0.826382287696307,
+   "probe_sd_deg": 0.0188420121563595
+  },
+  {
+   "reach": 0.25,
+   "joint": "wrist",
+   "swing_deg": 3.0000000000000004,
+   "lever_mm_per_deg": 3.3527774930811045,
+   "encoders_deg": 1.1881541353654013,
+   "encoders_sd_deg": 0.028245049694279906,
+   "probe": "camera",
+   "probe_deg": 1.470404270110358,
+   "probe_sd_deg": 0.018820421284893953
+  }
+ ],
+ "summary": {
+  "pan": {
+   "encoders_deg": 0.6197318941548554,
+   "probe_deg": 1.036377231519129,
+   "hidden_deg": 0.425956178406412,
+   "tip_mm": 3.7366830533434294
+  },
+  "lift": {
+   "encoders_deg": 1.0055142938736452,
+   "probe_deg": 0.9890689786745583,
+   "hidden_deg": 0.0,
+   "tip_mm": 1.4120733349496657
+  },
+  "elbow": {
+   "encoders_deg": 0.8293144419506889,
+   "probe_deg": 0.826382287696307,
+   "hidden_deg": 0.014139528125655443,
+   "tip_mm": 2.7804159879271735
+  },
+  "wrist": {
+   "encoders_deg": 1.1918364009510256,
+   "probe_deg": 1.497786283036262,
+   "hidden_deg": 0.30594988208523644,
+   "tip_mm": 5.021744139209583
+  }
+ },
+ "set": [
+  "rand.backlash_deg=0.6,1,0.85,1.2",
+  "rand.joint_offset_deg=0.2"
+ ],
+ "sim_backlash_deg": [
+  0.6,
+  1.0,
+  0.8,
+  1.2
+ ],
+ "sim_slack_deg": [
+  0.4,
+  0.0,
+  0.0,
+  0.3
+ ]
+}

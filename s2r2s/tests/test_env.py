@@ -97,3 +97,33 @@ def test_scenes_do_not_depend_on_randomization_or_noise():
     b = make(32, seed=9, randomize=False)
     assert np.allclose(a.object_pose(), b.object_pose()) and np.allclose(a.goal, b.goal)
     assert np.allclose(a.tool_position()[:, :2], b.tool_position()[:, :2], atol=1e-6)
+
+
+def test_servo_ramp_moves_the_targets_in_equal_steps():
+    cfg = EnvConfig(num_envs=8, seed=2, num_threads=4, task=TaskConfig(easy_fraction=0.0, servo_ramp=True),
+                    rand=RandomizationConfig(enabled=True))
+    env = PushEnv(cfg)
+    for _ in range(3):
+        prev = env.prev_ctrl.copy()
+        env.step(np.tile([0.7, -0.4], (env.n, 1)))
+        new, d = env.prev_ctrl, env.delay[:, None, None]
+        sub = np.arange(env.nsub)[None, :, None]
+        frac = np.clip((sub + 1 - d) / (env.nsub - d), 0, 1)       # hold during the latency, then equal steps
+        assert np.allclose(env.ctrl, prev[:, None, :] + frac * (new - prev)[:, None, :])
+        assert np.allclose(env.ctrl[:, -1], new)
+
+
+def test_servo_ramp_keeps_the_rod_near_the_commanded_speed():
+    tips = {}
+    for ramp in (False, True):
+        cfg = EnvConfig(num_envs=16, seed=3, num_threads=4, task=TaskConfig(easy_fraction=0.0, servo_ramp=ramp),
+                        rand=RandomizationConfig(enabled=False))
+        env = PushEnv(cfg)
+        qa = env.qpos_adr + env.idx.arm_qpos
+        speeds = []
+        for _ in range(10):                              # constant command, 0.08 m/s, mostly in free space
+            env.step(np.tile([0.0, 1.0], (env.n, 1)))
+            tip = env.kin.forward(env.out[:, :, qa].reshape(-1, 5))[0][:, :2].reshape(env.n, env.nsub, 2)
+            speeds.append(np.linalg.norm(np.diff(tip, axis=1), axis=-1) / cfg.scene.timestep)
+        tips[ramp] = np.concatenate(speeds, 1)[:, 5:]   # past the first steps
+    assert np.percentile(tips[True], 95) < 0.15 < np.percentile(tips[False], 95)

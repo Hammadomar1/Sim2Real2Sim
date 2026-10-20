@@ -1,0 +1,18 @@
+{
+ "robot": "sim",
+ "camera_ms": 119.98592049317024,
+ "estimator_ms": 29.364200003328733,
+ "estimator_measured": true,
+ "end_to_end_ms": 149.35012049649896,
+ "pass": true,
+ "obs_latency_steps": [
+  2,
+  4
+ ],
+ "residual_deg": 0.11214300029303027,
+ "scale": 0.993602743684357,
+ "frames": 360,
+ "marker_frames": 360,
+ "peak_speed_mm_s": 70.7102324202491,
+ "sim_delay_ms": 120.0
+}

@@ -1,6 +1,6 @@
 """Calibrate the lightbox C920 for the pose estimator, then check it live (LIGHTBOX.md phase C).
 
-    python -m s2r2s.hardware.camera_calibrate boards       # print these: ChArUco board, mat markers (calibration/print/)
+    python -m s2r2s.hardware.camera_calibrate boards       # print these: ChArUco board, mat markers, rod marker (calibration/print/)
     python -m s2r2s.hardware.camera_calibrate settings     # fix focus, exposure, white balance -> c920_settings.json
     python -m s2r2s.hardware.camera_calibrate intrinsics   # wave the ChArUco board in view -> c920_intrinsics.json
     python -m s2r2s.hardware.camera_calibrate extrinsics   # markers at known places on the mat -> c920_extrinsics.json
@@ -296,6 +296,10 @@ def cmd_boards(args):
             cv2.rectangle(sheet, (x - 1, y - 1), (x + img.shape[1], y + img.shape[0]), 170, 2)   # cut line
             cv2.putText(sheet, f"id {m.id}: {m.where}", (x, y + img.shape[0] + 80), cv2.FONT_HERSHEY_SIMPLEX, 2.2, 0, 4)
         page(sheet, (210, 297), f"mat_markers_A4_{p // 6 + 1}")
+    from .rod_marker import ROD_MARKER as rod            # backlash.py and latency.py: taped to the rod
+    page(marker_image(rod.id, rod.size, rod.margin), (210, 297), "rod_marker")
+    print(f"rod_marker.pdf: id {rod.id}, {rod.size * 1e3:.0f} mm, for backlash.py and latency.py (glue it to card, tape it "
+          f"flat to the rod 5-10 mm above the tip; see rod_marker.py)")
     print(f"wrote {out}: print the PDFs at 100 % scale. Cut each marker along its grey line and lay it with the small\n"
           f"triangle pointing away from the robot, its white border flush with the mat edges (positions: {args.layout}).\n"
           f"Measure the printed board squares and marker black squares;\n"
@@ -540,7 +544,7 @@ def main(argv=None):
     common.add_argument("--settings", default=str(CALIBRATION / "c920_settings.json"))
     common.add_argument("--images", nargs="*", default=None, help="saved images (files or folders) instead of the camera")
     common.add_argument("--out", default="")
-    p = sub.add_parser("boards", parents=[common], help="printable ChArUco board and mat markers")
+    p = sub.add_parser("boards", parents=[common], help="printable ChArUco board, mat markers and rod marker")
     p.add_argument("--layout", default=str(MARKERS))
     p = sub.add_parser("settings", parents=[common], help="fix focus, exposure and white balance")
     p.add_argument("--backend", default="", choices=["", "dshow", "msmf", "v4l2", "any"])

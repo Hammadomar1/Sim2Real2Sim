@@ -23,11 +23,17 @@ class SimRobot:
 
     ``hidden`` is the robot's *true* joint map, unknown to the software under test: give it offsets
     or flipped signs to mimic an arm before calibration. Physics advances only when a command is
-    sent (one control period per command), so tests run faster than real time.
+    sent (one control period per command, or ``seconds`` of it), so tests run faster than real time.
+
+    Play, per joint (pan, lift, elbow, wrist flex[, roll]; degrees, full width): ``backlash_deg`` is a dead band
+    between the command and the link that the encoder sees (it reads the link), the simulator's
+    ``rand.backlash_deg``; ``slack_deg`` is play between the encoder's shaft and the link that the encoder cannot
+    see (a loose horn or coupling): the shaft goes where commanded, the link stops up to half the slack short.
     """
 
     def __init__(self, scene: SceneConfig | None = None, object_name: str = "tee", hidden: JointMap | None = None,
-                 control_dt: float = 0.05, encoder_noise_deg: float = 0.0, seed: int = 0):
+                 control_dt: float = 0.05, encoder_noise_deg: float = 0.0, seed: int = 0,
+                 backlash_deg=(0.0,) * 5, slack_deg=(0.0,) * 5):
         self.scene = scene or SceneConfig(timestep=0.005)
         self.model = build_model(self.scene, object_name, visual=False)
         self.object_height = OBJECTS[object_name].height
@@ -39,6 +45,8 @@ class SimRobot:
         self.noise = encoder_noise_deg
         self.rng = np.random.default_rng(seed)
         self.torque = True
+        pad = lambda v: np.radians(np.r_[np.asarray(v, float), np.zeros(5)][:5])
+        self.play, self.slack = pad(backlash_deg), pad(slack_deg)
         self.block_height = OBJECTS[self.scene.clutter].height if self.scene.clutter else 0.0
         self.place((0.15, -0.10), (0.2, 0.0, 0.0))
 
@@ -55,9 +63,14 @@ class SimRobot:
         self.data.qpos[o:o + 7] = [x, y, self.object_height / 2, math.cos(yaw / 2), 0, 0, math.sin(yaw / 2)]
         self.data.ctrl[self.idx.arm_act] = q[0]
         self.data.ctrl[self.idx.gripper_act] = self.scene.gripper_hold
+        self._settle_play(q[0])
         if self.scene.clutter:          # a clutter scene: the block waits out of reach until place_block()
             self.place_block((0.31, -0.22, 0.0))
         mujoco.mj_forward(self.model, self.data)
+
+    def _settle_play(self, q):
+        """Play taken up nowhere in particular: shaft and link where the arm is."""
+        self.shaft, self.link = np.array(q, float), np.array(q, float)
 
     def place_block(self, pose):
         """Clutter scenes: put the block that must not be disturbed at (x, y, yaw)."""
@@ -76,19 +89,27 @@ class SimRobot:
         self.data.qpos[self.idx.arm_qpos] = q_rad
         self.data.qvel[:] = 0.0
         self.data.ctrl[self.idx.arm_act] = q_rad
+        self._settle_play(q_rad)
         mujoco.mj_forward(self.model, self.data)
 
     # -- robot interface
     def read_joints(self) -> np.ndarray:
-        deg = self.hidden.to_robot(self.data.qpos[self.idx.arm_qpos])
+        q = self.data.qpos[self.idx.arm_qpos] + (self.shaft - self.link)     # the encoder sits on the shaft
+        deg = self.hidden.to_robot(q)
         return deg + (self.rng.normal(0, self.noise, 5) if self.noise else 0.0)
 
-    def send_joints(self, deg):
+    def send_joints(self, deg, seconds: float | None = None):
+        """Set the servo targets (degrees, robot frame) and advance the physics by ``seconds`` (default: one
+        control period)."""
         if self.torque:
             lo = self.model.actuator_ctrlrange[self.idx.arm_act, 0]
             hi = self.model.actuator_ctrlrange[self.idx.arm_act, 1]
-            self.data.ctrl[self.idx.arm_act] = np.clip(self.hidden.to_sim(deg), lo, hi)
-        mujoco.mj_step(self.model, self.data, nstep=self.nsub)
+            q = np.clip(self.hidden.to_sim(deg), lo, hi)
+            self.shaft = np.clip(self.shaft, q - self.play / 2, q + self.play / 2)            # dead band, seen
+            self.link = np.clip(self.link, self.shaft - self.slack / 2, self.shaft + self.slack / 2)   # unseen
+            self.data.ctrl[self.idx.arm_act] = self.link
+        nstep = self.nsub if seconds is None else max(1, round(seconds / self.scene.timestep))
+        mujoco.mj_step(self.model, self.data, nstep=nstep)
 
     def set_torque(self, on: bool):
         self.torque = on
@@ -143,7 +164,8 @@ class SO101Robot:
         obs = self.robot.get_observation()
         return np.array([obs[f"{name}.pos"] for name in ARM_JOINTS], dtype=float)
 
-    def send_joints(self, deg):
+    def send_joints(self, deg, seconds: float | None = None):
+        """Write the goal positions (degrees); ``seconds`` is for the simulated arm (real time passes by itself)."""
         action = {f"{name}.pos": float(v) for name, v in zip(ARM_JOINTS, deg)}
         action["gripper.pos"] = self.gripper
         self.robot.send_action(action)

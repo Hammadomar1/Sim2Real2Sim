@@ -1,0 +1,12 @@
+episode   1: not started (no object pose from the camera: the arm hides it at its start position)
+episode   2: not started (no object pose from the camera: the arm hides it at its start position)
+episode   3: success pos   2.2 mm  yaw   3.8 deg
+episode   4: success pos   0.8 mm  yaw   4.9 deg
+episode   5: success pos   3.3 mm  yaw   4.2 deg
+episode   6: success pos   1.9 mm  yaw   6.1 deg
+episode   7: not started (no object pose from the camera: the arm hides it at its start position)
+episode   8: success pos   1.0 mm  yaw   1.6 deg
+
+3 of 8 episodes could not start: the arm hid the object from the camera at its start position (episodes [1, 2, 7]); the 5 that started:
+
+5 episodes through the hardware path: success 100.0%, median 1.9 mm / 4.2 deg; rendered C920, 9.5% of frames without a pose

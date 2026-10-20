@@ -65,6 +65,50 @@ The rod draws an 80 mm square 30 mm above the table at 40 mm/s. Ideal servos (si
 ~100 ms, or the joints lag by more than ~1°, the simulator's servo model (gains, delay randomisation in
 `RandomizationConfig`) must be updated and the policy retrained before trusting results.
 
+### Backlash (LIGHTBOX.md B4)
+
+```powershell
+python -m s2r2s.hardware.backlash --robot sim                     # rehearsal: a known dead band and slack
+python -m s2r2s.hardware.backlash --robot so101 --port COM5 --map calibration\joint_map.json --lightbox
+python -m s2r2s.hardware.backlash --robot so101 --port COM5 --map calibration\joint_map.json --lightbox --check-marker
+```
+
+At 15, 20 and 25 cm straight ahead, with the rod 25 mm above the mat, each joint (pan, lift, elbow, wrist flex)
+swings 3° to one side and comes back to the same target. It settles, is measured, and then does the same from the
+other side, three times. The difference between the two sides is the joint's play, measured two ways:
+- **Encoders** (always): what the joint readings show, a dead band between command and link. This is what the
+  simulator's `rand.backlash_deg` models (full width: `1` is ±0.5°), and the policy sees it in its joint inputs.
+- **The rod's actual motion**: play the encoders cannot see (a loose horn, a printed coupling) acts like joint
+  calibration error. With the C920 calibrated (§4) the camera measures it (`--probe camera`, the default then): print
+  `calibration\print\rod_marker.pdf` (`camera_calibrate boards`; ArUco id 20, 30 mm), glue it to card and tape it
+  flat to the rod 5–10 mm above the tip, sticking out towards the camera. Take it off before pushing anything.
+  `--check-marker` first: it saves the camera's view at each test pose and says whether the marker is seen. The
+  marker's image motion, divided by how far one degree of the joint moves it (from its solvePnP position and the
+  arm's kinematics), is the joint's play. Without the camera (`--probe manual`, the default then), the tool waits
+  after each approach while you mark the rod's position (a sharp pencil line on paper under the tip, or a dial
+  gauge), then asks for the distance between the two marks and divides it by the joint's lever arm.
+
+It prints the play per joint in degrees and at the rod tip, and the `--set` for `python -m s2r2s.lightbox`:
+`rand.backlash_deg=` the encoders' share, and `rand.joint_offset_deg=` half the largest share they miss (add the
+calibration residual from §2). The rows go to `calibration\backlash.json`. On the real arm a run takes about two
+minutes (72 approaches), plus the prompts with `--probe manual`.
+
+Rehearsal on the simulated arm, with a dead band of 0.6 / 1.0 / 0.8 / 1.2° and slack the encoders cannot see of
+0.4 / 0 / 0 / 0.3° (pan / lift / elbow / wrist; largest over the three reaches; manual at 20 cm only;
+`runs\rehearsal\backlash_sim*.json`):
+
+| joint | dead band | encoders | dead band + slack | camera (rendered, left-wall slot) | manual (simulated pencil) |
+|---|---|---|---|---|---|
+| pan | 0.60° | 0.62° | 1.00° | 1.04° | 1.02° |
+| lift | 1.00° | 1.01° | 1.00° | 0.99° | 1.00° |
+| elbow | 0.80° | 0.83° | 0.80° | 0.83° | 0.82° |
+| wrist | 1.20° | 1.19° | 1.50° | 1.50° | 1.50° |
+
+The encoders' errors are their noise (0.05° per reading in the simulation; without it they are exact). The simulated
+marker sticks out 30 mm to the gripper's left, 7 mm above the tip. From the left-wall slot it is seen at all three
+test poses. Over the wider band it is seen at 6 of 7 poses, and at 5 of 7 from the back wall. Where the gripper or
+its wrist-camera mount hangs over the marker, it is not seen: check with `--check-marker`.
+
 ## 4. Camera: the C920 pose estimator
 
 `CameraPoseSource` (`s2r2s/hardware/poses.py`) gives the runner the T's (x, y, yaw) in the robot frame (z = 0 the
@@ -150,28 +194,120 @@ recovered the camera within 0.41 mm / 0.04° and the vertical field of view with
 **Delay.** On this laptop (idle) a frame takes 33 ms median (39 ms p95) from its arrival: the arm mask and both
 objects. The capture thread decodes the MJPG frame in another 5 ms, in parallel, so the estimator keeps up with
 30 fps. The trial logs record the processing time (`camera` in each file). The C920's own delay (exposure,
-compression, USB) comes on top: measure it (LIGHTBOX.md C5).
+compression, USB) comes on top: measure it (LIGHTBOX.md C5), as follows.
+
+### Latency (LIGHTBOX.md C5)
+
+```powershell
+python -m s2r2s.hardware.latency --robot sim                      # rehearsal: frames stamped 120 ms late
+python -m s2r2s.hardware.latency --robot so101 --port COM5 --map calibration\joint_map.json --lightbox
+```
+
+Tape the rod marker to the rod (backlash, §3) and put the T on the mat in view, away from the rod. The pan joint
+swings the rod ±8° at 0.5 Hz for 12 s, 20 cm out and 25 mm above the mat: 71 mm/s at the peak (the policies push at
+up to 80 mm/s). The joints are read at 20 Hz and stamped halfway through each read. The camera thread stamps every
+frame as it arrives (the stamp `CameraPoseSource` uses), and the marker is found in every frame. The marker's azimuth
+about the pan axis is the encoders' pan angle, late by the camera's latency. The tool fits the delay that explains one
+by the other best (least squares, scale and offset free, −100 to 500 ms): that is the time from exposure to arrival.
+It then times the pose estimator on frames from the run (arm mask on, as `CameraPoseSource` runs it; 33 ms is assumed
+without calibrated colours) and adds the two: **end-to-end, pass ≤ 150 ms**. It also prints
+`--set rand.obs_latency_steps=lo,hi` for `python -m s2r2s.lightbox`: when the runner reads a pose, it is end-to-end
+to end-to-end + one frame old. Results go to `calibration\latency.json`, the raw tracks to `.npz`.
+
+Rehearsal (`runs\rehearsal\latency_sim*.json`): rendered frames stamped 120 ± 5 ms after they were taken, from the
+left-wall slot. The tool finds 120.0 ms (fit residual 0.11°, scale 0.994). The estimator adds 29 ms: 149 ms, just
+inside the limit. With another rehearsal running alongside, the estimator took 42 ms and the total failed at
+162 ms, so measure with nothing else running. With 70 ± 10 ms from the back wall it finds 70.1 ms: 109 ms
+end-to-end. A C920 at 120 ms leaves almost no margin for the estimator.
 
 ## 5. First policy runs
 
 ```powershell
 python -m s2r2s.hardware.runner --checkpoint runs\tee_v1\best.pt --robot sim --episodes 20      # rehearsal
 python -m s2r2s.hardware.runner --checkpoint runs\clutter_v7\best.pt --robot sim --episodes 20  # with the block
-python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot sim --camera render --episodes 5
+python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot sim --camera render --episodes 8
 python -m s2r2s.hardware.runner --checkpoint runs\tee_v1\best.pt --robot so101 --port COM5 `
     --map calibration\joint_map.json --goal 0.20 0.05 90 --max-step-deg 2
 ```
 
 Safety built into the runner:
 - **Speed:** every tick, joint targets move at most `--max-step-deg` from the measured joints. LeRobot also caps them.
+- **Smooth targets:** each tick's target goes to the servos in five equal steps from the last one, 10 ms apart
+  (`--ramp-hz 100`), as the simulator does in training (`task.servo_ramp`). Sent in one jump (`--no-ramp`), a target
+  is reached at the servo's full speed and the arm lurches 20 times a second. If the bus cannot keep up (the trial
+  log's tick times run late), lower `--ramp-hz` to 50.
 - **Workspace:** the rod stays inside the reachable ring, at its fixed height.
-- **Lost object:** the arm holds still when the object hasn't been seen for `--max-pose-age` seconds (0.5 s).
-  With the C920 in the left-wall slot this can deadlock: the arm stops where it hides the T and keeps hiding it.
-  In a rendered rehearsal of `clutter_v7` (`--camera render`, below) the arm froze over the T for the last 11 s;
-  the same scene with `--max-pose-age 5` was solved. `tee_lightbox_v1` solved 4 of 5 rendered episodes at 0.5 s
-  and 5 of 5 at 5 s. Three more of the 8 scenes could not start at all: the arm hid the T at its start position.
-  Move the camera (LIGHTBOX.md C6) or allow a longer gap, with a hand near the power switch.
-- **Stopping:** Ctrl+C lifts the rod 4 cm and exits.
+- **Lost object:** when the object hasn't been seen for `--max-pose-age` seconds (2 s), the runner takes over the
+  rod. Until then the policy pushes on with the last pose it had: it closes most short losses itself (below). The
+  runner then lifts the rod 25 mm (5 mm above the objects) and moves it a few centimetres away from the last known pose, at
+  the policy's speed limit. The new point is inside the reach ring, at least 1 cm from the object, the block and the
+  gate's walls, and the lifted path never passes over them. There the runner waits for the camera (a pose at most
+  0.5 s old, whatever `--max-pose-age`), lowers the rod and hands back to the policy, restarting the controller from
+  fresh measurements. With the C920 (`CameraPoseSource`,
+  or `--camera render`), the point is the nearest one from which the arm's predicted shadow leaves at least 60 % of
+  the object in view (`arm_mask.ViewPredictor`, the estimator's own arm mask). Without the camera, it is away from
+  the object and toward the robot. When the object stays unseen, the runner tries further points. After
+  `--recover-seconds` (8 s) it gives up and ends the trial with the rod lifted. `--on-lost hold` holds the arm
+  still instead, as before. With the C920 in the left-wall slot, holding can deadlock: the arm stops where it hides
+  the T and keeps hiding it.
+- **Hidden start:** when the arm hides the object at its start position, or a clutter policy's block (whose start
+  pose is where it must stay), the rod first goes (lifted) to where the arm hides least of the band. Once both are
+  found, the rod comes down at the nearest clear point from which the object should stay in view. The trial log
+  records how far that is from the planned start (`start_shift`).
+- **Logs:** every tick has its `mode` (`policy`, `retreat`, `lower`, `lost`, `start`); every trial has its
+  `recoveries`: where the object was lost, how long it took and how it ended.
+- **Stopping:** Ctrl+C lifts the rod (up to 4 cm, as high as a vertical rod reaches there) and exits.
+
+Rendered rehearsal, C920 in the left-wall slot, the same 8 held-out scenes (`runs\camera_sim\rehearsal_*.log`),
+`tee_lightbox_v1` unless stated:
+
+| runner | started | solved | frames without a pose | object lost (in episodes) | resumed / gave up |
+|---|---|---|---|---|---|
+| before this change: hold still after 0.5 s | 5 | 4 | 18.2 % | | |
+| before this change: hold still after 5 s | 5 | 5 | 9.5 % | | |
+| hold still after 0.5 s (`--on-lost hold --max-pose-age 0.5`), clear start | 8 | 5 | 37.8 % | | |
+| hold still after 5 s (`--on-lost hold --max-pose-age 5`), clear start | 8 | 8 | 8.1 % | | |
+| recover after 0.5 s (`--max-pose-age 0.5`) | 8 | 6 | 17.3 % | 19 (5) | 18 / 0 |
+| **recover after 2 s (default)** | 8 | **8** | 7.7 % | 1 (1) | 1 / 0 |
+| `tee_occlusion_v1`, recover after 0.5 s | 8 | 7 | 12.4 % | 12 (3) | 12 / 0 |
+
+(A loss that is neither resumed nor given up was still in progress when the episode ended.) What this says:
+1. **The clear start fixes the scenes that could not start.** In 3 of the 8 the arm hid the T at its start position.
+   They now start 20–60 mm from the planned start, and most are solved.
+2. **Recovery never deadlocked and never gave up,** but after 0.5 s it steps in too often. Once it hands back, the
+   policy pushes from the same place again and the arm hides the T again: in one scene 7 times, and it missed. Given
+   2 s, the policy mostly uncovers the T itself: the losses while pushing are short. With a 2 s trigger the runner
+   stepped in once in all 8 episodes and every scene was solved. Holding still for 5 s also solved all 8 here, but
+   when the T is still hidden after 5 s, that arm stays frozen where it hides it.
+3. `tee_occlusion_v1`, fine-tuned with the left wall's occlusion, loses the T less often.
+
+Eight scenes are few (one episode is 12 points), but the direction is clear, so **the default is 2 s**. With
+`--max-pose-age 0.5` the policy acts on a stale pose for at most half a second, at the cost of the interruptions
+above. Moving the camera (LIGHTBOX.md C6) removes most of the losses either way.
+
+The clutter policy `clutter_lightbox_v1` (push the T, keep the box in place), same camera and 8 scenes
+(`runs\camera_sim\rehearsal_clutter_*.log`). The trial logs (`--log-dir`) were checked tick by tick against the
+box's true start pose:
+
+| runner | started | solved, box kept | frames without a pose | object lost (in episodes) | resumed / gave up | runner moves: closest to the box |
+|---|---|---|---|---|---|---|
+| recover after 0.5 s, before the hidden-block start | 7 | 7 | 5.8 % | 5 (3) | 5 / 0 | 34 mm |
+| hold still after 0.5 s (`--on-lost hold --max-pose-age 0.5`), clear start | 8 | 7 | 26.2 % | | | 34 mm |
+| recover after 0.5 s (`--max-pose-age 0.5`) | 8 | **8** | 14.1 % | 15 (4) | 14 / 0 | 34 mm |
+| recover after 2 s (`--max-pose-age 2`) | 8 | **8** | 6.7 % | 1 (1) | 1 / 0 | 34 mm |
+
+1. **A hidden block now gets a clear start too.** In one scene the arm hid the box, not the T, at the planned
+   start. Only a hidden T triggered the clear start, so that trial stopped ("no block pose from the camera"). Now
+   it starts 20 mm away and is solved in every run.
+2. **No runner move came near the box.** Across 28 retreats and clear starts, the rod stayed at least 34 mm from
+   the box (a clear start; retreats 36 mm), never flew over it and came down at least 36 mm from it. The box moved
+   in one episode, 1.4 mm (the limit is 10 mm), and before the runner stepped in: the policy pushed the T against it.
+3. The rest is as with `tee_lightbox_v1`. After 0.5 s, two scenes lost the T 6 times each: the policy pushed back to
+   where the arm hides it. Both were still solved. After 2 s the runner stepped in once. Holding still missed one scene.
+4. The clear start's first move, lifted and straight to the park point, is not checked against the box or the T:
+   while the arm hides them, their poses are not known. In 400 sampled scenes, the shadow predictor has the arm
+   hiding one of them at the planned start in 142. In 6 % of those, that move passes over the box 4–5 mm above it.
+   In 6 %, over the T.
 
 `--camera render` rehearses the camera path too: every tick, the simulated arm's scene is rendered as the C920 sees
 it (100 ms late) and goes through the same estimator and arm mask as `CameraPoseSource`. It takes about 0.25 s per

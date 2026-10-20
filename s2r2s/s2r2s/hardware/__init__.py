@@ -10,7 +10,10 @@ sources of measurements differ:
     camera_calibrate.py  camera settings, intrinsics, extrinsics, object colours; camera_sim.py tests on renders
     calibrate.py   touch known points with the rod tip -> fitted joint offsets/signs
     tracking.py    command a path, measure how well the rod tip follows it
-    runner.py      run a trained policy in a 20 Hz loop, with safety limits and trial logs
+    backlash.py    play per joint, approaching a target from both sides (encoders, camera or pencil marks)
+    latency.py     camera latency: a rod marker swung by the pan joint, camera track against the encoders
+    rod_marker.py  the ArUco marker on the rod that backlash.py and latency.py track
+    runner.py      run a trained policy in a 20 Hz loop, with safety limits, lost-object recovery and trial logs
 
 Every tool works against SimRobot today, so the pipeline is tested before the arm is ready.
 """

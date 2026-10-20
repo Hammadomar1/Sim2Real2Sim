@@ -170,6 +170,59 @@ python -m s2r2s.evaluate runs\dock_lightbox_v1\best.pt --set task.dock_start_ban
 Every command and its output are in `runs/level2/lightbox_evals.log` and `runs/level3/lightbox_evals.log`, the
 summaries in `runs/level2/lightbox_*eval.json` and `runs/level3/lightbox_*eval.json`.
 
+## Smooth motion: ramped servo targets
+
+In the videos the arm shook. Measured at every 5 ms physics step, the rod tip moved in a 20 Hz sawtooth: up to
+360 mm/s at the 99th percentile (640 mm/s at most) although the policy never asks for more than 80 mm/s, and about
+1 mm of wobble around its path. The policy was not the cause: a perfect camera, no randomisation and the scripted
+pusher all showed it. The controller sent each joint a new position target every 50 ms, and the simulated servos
+reached each one within a few milliseconds and overshot, so the arm lurched 20 times a second. On the real arm the
+same stepped targets would hit the gearboxes the same way, and the camera noise the policy reacts to adds to it.
+
+The fix is in the controller, shared with the hardware: the joint targets now move from the previous command to the
+new one in equal steps over the control period (after the simulated servo delay), `task.servo_ramp`, on for every
+run trained from now on (checkpoints saved before it load with it off, as they were trained). The hardware runner
+sends the same ramp at about 100 Hz (HARDWARE.md §5).
+
+The four lightbox skills were then fine-tuned for 20 minutes each from their earlier versions, with the ramp on and
+the same hardware errors as before: `tee_lightbox_v2`, `clutter_lightbox_v2`, `clutter_box_lightbox_v2` and
+`dock_lightbox_v3` (`dock_lightbox_v2` is the earlier start-bank experiment). 1,000 held-out scenes per cell.
+*Wobble* is the RMS distance of the rod tip from the straight line between where it was at the start and at the end
+of each 50 ms period, *speed* the 99th percentile of its speed over every 5 ms physics step
+(`python -m s2r2s.lightbox <checkpoint> --smoothness`); both in the lightbox row:
+
+| skill, old → ramped | lightbox | every hardware error | wobble | rod speed, p99 |
+|---|---|---|---|---|
+| Push-T, `tee_lightbox_v1` → `tee_lightbox_v2` | 98.5 → **99.2 %** | 97.7 → **98.2 %** | 1.08 → **0.56 mm** | 331 → **242 mm/s** |
+| clutter, `clutter_lightbox_v1` → `clutter_lightbox_v2` | 95.3 → **95.9 %** | 91.0 → **92.6 %** | 1.09 → **0.56 mm** | 338 → **245 mm/s** |
+| box, `clutter_box_lightbox_v1` → `clutter_box_lightbox_v2` | 96.7 → **97.3 %** | 94.2 → **95.9 %** | 1.02 → **0.55 mm** | 322 → **240 mm/s** |
+| dock, `dock_lightbox_v1` → `dock_lightbox_v3` | 92.5 → **95.9 %** | 88.3 → **90.8 %** | 0.96 → **0.52 mm** | 323 → **239 mm/s** |
+
+Levels 2 and 3, old skills → ramped skills, in the same three lightbox worlds as above
+(`runs\level*\lightbox_skills_v2*_eval.json`):
+
+| world | Level 2 | Level 3 |
+|---|---|---|
+| measured geometry, no hardware errors | 93.7 → **95.6 %** | 87.2 → **91.2 %** |
+| + joint calibration error ≤ 1°, backlash ±0.5° | 89.9 → **93.0 %** | 77.3 → **83.8 %** |
+| + mat friction 0.2–0.9, camera latency 0–150 ms (every error) | 89.6 → **91.5 %** | 74.5 → **81.9 %** |
+
+- **Ramping alone is safe for the old policies.** Without retraining, `tee_lightbox_v1` with ramped targets scores
+  98.8 % in the lightbox and 98.1 % with every error (98.5 and 97.7 % stepped). The fine-tunes add the rest.
+- **The shaking halves under training conditions and drops five-fold without noise.** With a perfect camera and no
+  randomisation, the ramp takes the wobble from 0.85 to 0.17 mm; under training conditions, from about 1.1 to
+  0.55 mm. The rest has two sources: the simulated servo delay (0–25 ms) holds each ramp before it starts, and the
+  policy reacts to camera noise (its commands change 2.5 times more per step than with a perfect camera). If the real
+  arm still shakes, a pose filter in the estimator or a smoothness cost in training is next.
+- **The rod still briefly exceeds 80 mm/s** (p99 about 240 mm/s): when the tip falls behind, the commanded point runs
+  up to 15 mm ahead (the anti-windup limit), and the ramp spreads that catch-up over one period.
+- **Hardware path:** `tee_lightbox_v2` through the runner on the simulated arm, ramped at 100 Hz: 20 of 20,
+  median 1.2 mm / 1.2°.
+- Retrain: `python -m s2r2s.train --run tee_lightbox_v2 --init runs\tee_lightbox_v1\best.pt --init-std 0.1
+  --no-curriculum --minutes 20 --set scene.lightbox=true rand.joint_offset_deg=1.0 rand.backlash_deg=1,1,1,1
+  rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3 task.servo_ramp=true`, and the same for the others with
+  their task flags (each run's `config.json`).
+
 ## Bring-up, in order
 
 Every step names its command, what passes, and the simulation number that justifies the threshold. Do not skip
@@ -197,11 +250,18 @@ ahead: each step removes one suspect from the list when a real push goes wrong.
    and when it also fits the rod length (no `--no-fit-rod`) the rod ends 1 mm into the mat. Step 3 catches that.
 3. *Rod height.* Hover at commanded heights +2, +1, 0 and −1 mm over the nine points (`--verify` shows the
    points); paper should slide under at +1 mm and catch at −1 mm. This checks mat height and calibration together.
-4. *Backlash.* At reaches of 15, 20 and 25 cm, bring the rod onto a mark from the left, then from the right (and
-   from the front and back), with a pen or the camera. The gap ÷ reach is the play. ±0.5° ≈ ±1.7 mm at 20 cm.
-   Re-run `python -m s2r2s.lightbox` with `--set rand.backlash_deg=<play>,...` to see what it costs.
+4. *Backlash:* `python -m s2r2s.hardware.backlash --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`
+   (HARDWARE.md §3). At reaches of 15, 20 and 25 cm each joint comes to the same target from both sides, three
+   times. The encoders give the play they see. The rod's actual motion gives the play they miss: from the C920 and
+   a marker on the rod once C1–C3 are done (re-run it then), or from pencil marks you measure (`--probe manual`)
+   before that. Pass: every joint's play, encoders and actual, within the 1° (±0.5°) that `tee_lightbox_v1` and the
+   lightbox skills were trained with. Then run the `python -m s2r2s.lightbox ... --set rand.backlash_deg=...` it
+   prints to see what the measured play costs. In rehearsal (simulated arm, known play) it finds the dead band to
+   0.03° and the total to 0.04°. ±0.5° ≈ ±1.7 mm at 20 cm for the pan joint.
 5. *Tracking:* `python -m s2r2s.hardware.tracking --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`.
-   Pass: lag ≤ 100 ms, joint error after the lag ≤ 1°.
+   Pass: lag ≤ 100 ms, joint error after the lag ≤ 1°. Watch the arm too: during policy runs the runner ramps its
+   targets at 100 Hz (*Smooth motion* above). If the real servos still buzz or lurch, the simulator's servo model is
+   off and needs a step-response measurement before more training.
 
 **C. The camera**
 All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4); files in `calibration/`.
@@ -219,8 +279,12 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
    and 0.45 mm / 0.63° for the box. The T comes back in 87 % of frames, down to a quarter of it visible. Of 11,057
    accepted estimates over four runs (true or simulated calibration, left or back wall, with and without tracking),
    none is off by more than 2 mm, and three by more than 2° (at most 2.3°). About 33 ms per frame on this laptop.
-5. Latency: move the rod at a known speed and cross-correlate its camera track with FK. Pass: ≤ 150 ms
-   (100–150 ms: −1 point for `tee_v1`; 150–200 ms: −5; 200–300 ms: −18). Keep the capture buffer at one frame.
+5. Latency: `python -m s2r2s.hardware.latency --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`
+   (HARDWARE.md §4). The pan joint swings the rod, with the rod marker, at up to 71 mm/s. The marker's track in the
+   camera, against the encoders, gives the camera's latency (exposure to arrival). The pose estimator's time per
+   frame is added to it. Pass: end-to-end ≤ 150 ms (100–150 ms: −1 point for `tee_v1`; 150–200 ms: −5; 200–300 ms:
+   −18). Then run the `--set rand.obs_latency_steps=...` row it prints. In rehearsal (rendered frames stamped 120 ms
+   and 70 ms late) it finds 120.0 and 70.1 ms. Keep the capture buffer at one frame.
 6. Occlusion: `python -m s2r2s.camera_study --checkpoint runs\tee_lightbox_v1\best.pt --lightbox` casts rays from mounts inside the
    box to the T's top face (12,800 views each). Mean share hidden by the arm / share of views more than half hidden:
    back wall, centre, 25 cm above the mat **9.6 % / 1.9 %**; right-wall slot 17.2 % / 4.8 %; back-left corner 18.8 % / 6.8 %;
@@ -284,12 +348,18 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
    scene vs between scenes).
 
 **E. Policy trials**
-1. Rehearse on the simulated arm: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot sim --episodes 20`.
-2. Real: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v1\best.pt --robot so101 --port COM5 --map calibration\joint_map.json --max-step-deg 2`,
+1. Rehearse on the simulated arm: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v2\best.pt --robot sim --episodes 20`,
+   then through the camera path: `... --camera render --episodes 8` (the C920 rendered from its mount, 100 s per
+   episode). When the camera loses the T for 2 s (`--max-pose-age`), the runner lifts the rod out of the arm's
+   shadow, lowers it once the T is back in view and hands back to the policy (HARDWARE.md §5). A start where the arm
+   hides the T begins from a clear point nearby. Rendered from the left-wall slot (8 held-out scenes),
+   `tee_lightbox_v1` solves all 8 with the 2 s default and 6 with `--max-pose-age 0.5`, which steps in too
+   often. The runner before this change started only 5 of them and solved 4.
+2. Real: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v2\best.pt --robot so101 --port COM5 --map calibration\joint_map.json --max-step-deg 2`,
    20–30 logged trials from held-out scenes. Compare with `python -m s2r2s.lightbox` re-run at the *measured*
    friction, latency, noise and backlash: that is the simulator's prediction for this table.
 3. Then clutter, the gate (build the wall), and Levels 2 and 3 (they need the planner in the runner), with the
-   lightbox skills `clutter_lightbox_v1`, `clutter_box_lightbox_v1` and `dock_lightbox_v1`.
+   lightbox skills `clutter_lightbox_v2`, `clutter_box_lightbox_v2` and `dock_lightbox_v3` (ramped targets).
 
 Policies trained on the flat table run in the lightbox only with `--lightbox` on the hardware tools (the kinematics
 must know the mat height); policies trained in the lightbox carry it in their config.
@@ -303,17 +373,20 @@ must know the mat height); policies trained in the lightbox carry it in their co
   the link (the STS3215's encoder sits on its output shaft), so the policy can see the play and correct it. Gravity
   holds the lift, elbow and wrist against one side of their play, so this overstates them; the pan joint carries no
   such load. Play the encoders cannot see (a loose horn, a printed coupling) acts like the calibration-error rows.
-  Measure (B4) and set per-joint values.
+  `hardware.backlash` (B4) measures both per joint, at three reaches, under the arm's own gravity load, and prints
+  the per-joint `rand.backlash_deg` and the `rand.joint_offset_deg` they amount to.
 - Arm occlusion is modelled (C6): the left-wall slot costs the current policies 29–30 points. A 35-minute fine-tune
   (`tee_occlusion_v1`) recovers most of it for Push-T (95.8 %). The clutter, box and dock skills have no such
   fine-tune: move the camera, or fine-tune them the same way. The actor is not told that its estimate is stale.
   A "frames since the last fresh pose" input (the runner knows it) might close the rest of the gap.
-- The camera pose estimator is tested on rendered images only: C4 and C5 on the real camera are next.
-- The runner holds the arm still when the T has not been seen for 0.5 s (`--max-pose-age`). With the left-wall
-  camera the arm can stop where it hides the T, and then nothing changes until the trial ends. A rendered rehearsal
-  (`runner --robot sim --camera render`) of `clutter_v7` did exactly that; the same scene with `--max-pose-age 5`
-  was solved. `tee_lightbox_v1` solved 4 of 5 rendered episodes at 0.5 s and 5 of 5 at 5 s. In 3 of the 8 scenes
-  the arm hid the T at its start position, so they never started. Moving the camera avoids both; a longer limit,
-  or backing the rod away instead of freezing, are the alternatives.
+- The camera pose estimator, the backlash tool's camera probe and the latency tool are tested on rendered images
+  only: C4 and C5 on the real camera are next. The latency tool cannot see delay in the joint readings themselves
+  (LeRobot's read is stamped halfway through).
+- The runner no longer deadlocks when the arm hides the T: it backs the rod out of the arm's shadow, waits for the
+  camera and hands back (HARDWARE.md §5), and trials whose start hides the T begin from a clear point. After it
+  hands back, though, the policy can push from the same place and lose the T again. In one rendered scene,
+  `tee_lightbox_v1` lost it 7 times when the runner stepped in after 0.5 s. That is why the default waits 2 s
+  (`--max-pose-age`): the policy closes most short losses itself. The actor is still not told that it acts on a
+  stale pose. Moving the camera (C6) is the real fix.
 - The arm has no collision geometry except the rod. The walls are out of reach, but a wrist camera mount (if the
   real arm carries one) is not checked against the forearm.

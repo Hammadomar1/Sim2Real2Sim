@@ -72,6 +72,7 @@ CONDITIONS = [
 ]
 COLUMNS = [("success", "solved", "{:7.1%}"), ("pos_err_mm_median", "mm", "{:6.1f}"), ("yaw_err_deg_median", "deg", "{:6.1f}"),
            ("failure", "failed", "{:7.1%}"), ("dropped", "off mat", "{:8.1%}"), ("disturbed", "block moved", "{:12.1%}"),
+           ("rod_wobble_mm_rms", "wobble mm", "{:10.2f}"), ("rod_speed_mm_s_p99", "speed p99", "{:10.0f}"),
            ("occluded", "hidden", "{:7.1%}"), ("occluded_longest_s_p90", "gap p90 s", "{:10.1f}")]
 
 
@@ -83,6 +84,8 @@ def main(argv=None):
     p.add_argument("--only", nargs="*", type=int, default=[], help="row numbers to run (default: all)")
     p.add_argument("--set", nargs="*", default=[], metavar="SECTION.FIELD=VALUE", help="applied to every row")
     p.add_argument("--threads", type=int, default=0, help="simulation threads (default: all; fewer next to a training run)")
+    p.add_argument("--smoothness", action="store_true",
+                   help="also measure the rod tip's wobble within each control period and its peak speed (slower)")
     p.add_argument("--out", default="")
     args = p.parse_args(argv)
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -96,7 +99,7 @@ def main(argv=None):
     results = {}
     for k, (label, overrides) in rows:
         cfg = apply_overrides(copy.deepcopy(base), overrides + args.set)
-        r = run_episodes(cfg, agent, args.episodes, args.seed)
+        r = run_episodes(cfg, agent, args.episodes, args.seed, smoothness=args.smoothness)
         results[label] = {"overrides": overrides + args.set, **r}
         cells = "".join(fmt.format(r[key]) if key in r else " " * len(fmt.format(0.0)) for key, _, fmt in COLUMNS)
         print(f"{k:3d} {label:58s}{cells}", flush=True)
