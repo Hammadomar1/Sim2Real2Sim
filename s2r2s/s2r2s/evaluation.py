@@ -89,8 +89,13 @@ def clutter_breakdown(rows: list[dict], edges=(20, 25, 30, np.inf)) -> list[dict
 
 
 def run_episodes(env_cfg: EnvConfig, agent: AgentFactory, episodes: int, seed: int,
-                 difficulty: float = 1.0, record: bool = False) -> dict:
-    """Run exactly one episode in each of ``episodes`` worlds."""
+                 difficulty: float = 1.0, record: bool = False, smoothness: bool = False) -> dict:
+    """Run exactly one episode in each of ``episodes`` worlds.
+
+    ``smoothness``: also measure how the rod tip really moves, at every physics step: its peak speed (p99) and its
+    wobble, the RMS distance from the straight line between where it was at the start and at the end of each
+    control period (a servo that jumps to each new target and overshoots strays far from that line).
+    """
     cfg = copy.deepcopy(env_cfg)
     cfg.num_envs, cfg.seed = episodes, seed
     cfg.task.difficulty, cfg.task.easy_fraction = difficulty, 0.0
@@ -102,12 +107,25 @@ def run_episodes(env_cfg: EnvConfig, agent: AgentFactory, episodes: int, seed: i
     eps, rows = {}, [None] * env.n
     rate = np.zeros(env.n)
     prev_a = np.zeros((env.n, 2))
+    if smoothness:
+        qa = env.qpos_adr + env.idx.arm_qpos
+        true_tip = lambda q: env.kin.forward(q.reshape(-1, 5))[0][:, :2].reshape(*q.shape[:-1], 2)
+        last_tip = true_tip(env.state[:, qa])
+        frac = (np.arange(env.nsub + 1) / env.nsub)[None, :, None]
+        wobble_sq, wobble_n, speeds = 0.0, 0, []
     obs = env.obs
     for _ in range(env.max_steps):
         a = act(obs)
         rate += np.where(done_once, 0.0, ((a - prev_a) ** 2).sum(-1))
         prev_a = a
         obs, _, _, info = env.step(a)
+        if smoothness:          # env.out holds this step's physics, before any reset
+            path = np.concatenate([last_tip[:, None], true_tip(env.out[:, :, qa])], 1)
+            live = ~done_once
+            dev = np.linalg.norm(path - (path[:, :1] + frac * (path[:, -1:] - path[:, :1])), axis=-1)[live, 1:-1]
+            wobble_sq, wobble_n = wobble_sq + (dev ** 2).sum(), wobble_n + dev.size
+            speeds.append(np.linalg.norm(np.diff(path, axis=1), axis=-1)[live].ravel() / cfg.scene.timestep)
+            last_tip = true_tip(env.state[:, qa])
         if "episode" in info:
             ids = info["terminal_ids"]
             fresh = ~done_once[ids]
@@ -121,6 +139,9 @@ def run_episodes(env_cfg: EnvConfig, agent: AgentFactory, episodes: int, seed: i
             break
     out = summarize(eps)
     out["action_rate_mean"] = float(rate.mean() / env.max_steps)
+    if smoothness:
+        out["rod_wobble_mm_rms"] = float(np.sqrt(wobble_sq / max(wobble_n, 1)) * 1e3)
+        out["rod_speed_mm_s_p99"] = float(np.percentile(np.concatenate(speeds), 99) * 1e3)
     if record:
         for i, r in enumerate(rows):
             r.update(start=starts[i].tolist(), goal=goals[i].tolist(),

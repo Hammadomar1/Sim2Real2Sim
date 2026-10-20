@@ -232,6 +232,10 @@ python -m s2r2s.hardware.runner --checkpoint runs\tee_v1\best.pt --robot so101 -
 
 Safety built into the runner:
 - **Speed:** every tick, joint targets move at most `--max-step-deg` from the measured joints. LeRobot also caps them.
+- **Smooth targets:** each tick's target goes to the servos in five equal steps from the last one, 10 ms apart
+  (`--ramp-hz 100`), as the simulator does in training (`task.servo_ramp`). Sent in one jump (`--no-ramp`), a target
+  is reached at the servo's full speed and the arm lurches 20 times a second. If the bus cannot keep up (the trial
+  log's tick times run late), lower `--ramp-hz` to 50.
 - **Workspace:** the rod stays inside the reachable ring, at its fixed height.
 - **Lost object:** when the object hasn't been seen for `--max-pose-age` seconds (2 s), the runner takes over the
   rod. Until then the policy pushes on with the last pose it had: it closes most short losses itself (below). The

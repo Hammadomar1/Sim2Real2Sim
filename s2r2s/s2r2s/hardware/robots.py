@@ -23,7 +23,7 @@ class SimRobot:
 
     ``hidden`` is the robot's *true* joint map, unknown to the software under test: give it offsets
     or flipped signs to mimic an arm before calibration. Physics advances only when a command is
-    sent (one control period per command), so tests run faster than real time.
+    sent (one control period per command, or ``seconds`` of it), so tests run faster than real time.
 
     Play, per joint (pan, lift, elbow, wrist flex[, roll]; degrees, full width): ``backlash_deg`` is a dead band
     between the command and the link that the encoder sees (it reads the link), the simulator's
@@ -98,7 +98,9 @@ class SimRobot:
         deg = self.hidden.to_robot(q)
         return deg + (self.rng.normal(0, self.noise, 5) if self.noise else 0.0)
 
-    def send_joints(self, deg):
+    def send_joints(self, deg, seconds: float | None = None):
+        """Set the servo targets (degrees, robot frame) and advance the physics by ``seconds`` (default: one
+        control period)."""
         if self.torque:
             lo = self.model.actuator_ctrlrange[self.idx.arm_act, 0]
             hi = self.model.actuator_ctrlrange[self.idx.arm_act, 1]
@@ -106,7 +108,8 @@ class SimRobot:
             self.shaft = np.clip(self.shaft, q - self.play / 2, q + self.play / 2)            # dead band, seen
             self.link = np.clip(self.link, self.shaft - self.slack / 2, self.shaft + self.slack / 2)   # unseen
             self.data.ctrl[self.idx.arm_act] = self.link
-        mujoco.mj_step(self.model, self.data, nstep=self.nsub)
+        nstep = self.nsub if seconds is None else max(1, round(seconds / self.scene.timestep))
+        mujoco.mj_step(self.model, self.data, nstep=nstep)
 
     def set_torque(self, on: bool):
         self.torque = on
@@ -161,7 +164,8 @@ class SO101Robot:
         obs = self.robot.get_observation()
         return np.array([obs[f"{name}.pos"] for name in ARM_JOINTS], dtype=float)
 
-    def send_joints(self, deg):
+    def send_joints(self, deg, seconds: float | None = None):
+        """Write the goal positions (degrees); ``seconds`` is for the simulated arm (real time passes by itself)."""
         action = {f"{name}.pos": float(v) for name, v in zip(ARM_JOINTS, deg)}
         action["gripper.pos"] = self.gripper
         self.robot.send_action(action)

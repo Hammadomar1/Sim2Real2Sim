@@ -45,6 +45,9 @@ class TaskConfig:
     tool_height: float = 0.005            # tool tip above the table (m)
     max_speed: float = 0.08               # tool speed at |action| = 1 (m/s)
     tracking_limit: float = 0.015         # anti-windup: command stays this close to the measured tip
+    servo_ramp: bool = True               # move the joint targets from the previous command to the new one across the
+                                          # control period instead of stepping to it (off: the arm lurches 20x a second;
+                                          # checkpoints saved before this option load with it off, as they were trained)
     tool_r: tuple[float, float] = (0.12, 0.275)   # reachable annulus for the tool tip (m)
     tool_az: float = math.radians(55)
     obj_r: tuple[float, float] = (0.175, 0.225)   # object start/goal centre region
@@ -163,7 +166,9 @@ class EnvConfig:
     @staticmethod
     def from_dict(d):
         d = dict(d)
-        task = TaskConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in d.pop("task").items()})
+        task = d.pop("task")
+        task.setdefault("servo_ramp", False)          # trained before the option existed: targets stepped
+        task = TaskConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in task.items()})
         rand = RandomizationConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in d.pop("rand").items()})
         scene = SceneConfig(**{k: tuple(v) if isinstance(v, list) else v for k, v in d.pop("scene").items()})
         return EnvConfig(task=task, rand=rand, scene=scene, **d)
@@ -560,9 +565,15 @@ class PushEnv:
             self.link_target = np.clip(self.link_target, q - play, q + play)
             q = self.link_target
         new_ctrl = np.c_[q, np.full(self.n, self.cfg.scene.gripper_hold)]
-        # Servo command latency: the previous command persists for ``delay`` substeps.
+        # Servo command latency: the previous command persists for ``delay`` substeps. With ``servo_ramp`` the targets
+        # then move to the new command in equal steps over the rest of the control period.
         sub = np.arange(self.nsub)[None, :, None]
-        self.ctrl[:] = np.where(sub < self.delay[:, None, None], self.prev_ctrl[:, None, :], new_ctrl[:, None, :])
+        delay = self.delay[:, None, None]
+        if t.servo_ramp:
+            frac = np.clip((sub + 1 - delay) / (self.nsub - delay), 0.0, 1.0)
+            self.ctrl[:] = self.prev_ctrl[:, None, :] + frac * (new_ctrl - self.prev_ctrl)[:, None, :]
+        else:
+            self.ctrl[:] = np.where(sub < delay, self.prev_ctrl[:, None, :], new_ctrl[:, None, :])
         self.prev_ctrl = new_ctrl
         self.pool.rollout(self.models, self.datas, self.state, self.ctrl, nstep=self.nsub,
                           initial_warmstart=self.warmstart, state=self.out, skip_checks=True)

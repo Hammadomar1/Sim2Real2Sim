@@ -286,3 +286,25 @@ def test_latency_rehearsal_finds_the_injected_delay(tmp_path):
     r = json.loads(out.read_text())
     assert r["camera_ms"] == pytest.approx(90.0, abs=4.0)
     assert r["marker_frames"] >= 0.9 * r["frames"]
+
+
+def test_runner_ramps_the_servo_targets_over_each_tick(untrained):
+    """Each tick's joint target goes out in equal steps from the last one (about 100 Hz), as in training
+    (TaskConfig.servo_ramp); the simulated arm advances 10 ms per step, 50 ms per tick."""
+    robot, poses, runner = _runner(untrained)
+    sent = []
+    send = robot.send_joints
+    robot.send_joints = lambda deg, seconds=None: (sent.append((np.array(deg, float), seconds)), send(deg, seconds))
+    runner.start(np.array([0.21, 0.02, 1.0]))
+    t0 = robot.data.time
+    for _ in range(4):
+        before = runner.last_target.copy()
+        sent.clear()
+        runner.tick()
+        steps = np.array([np.radians(d) for d, _ in sent])          # JointMap() is the identity, in degrees
+        assert len(sent) == runner.ramp_steps == 5 and all(s == pytest.approx(0.01) for _, s in sent)
+        assert np.allclose(steps[-1], runner.last_target)
+        assert np.allclose(np.diff(np.vstack([before, steps]), axis=0), (runner.last_target - before) / 5)
+    assert robot.data.time - t0 == pytest.approx(4 * 0.05)
+    _, _, jumpy = _runner(untrained, ramp=False)
+    assert jumpy.ramp_steps == 1

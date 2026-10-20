@@ -14,6 +14,8 @@ seconds (2 s: the policy closes most shorter gaps itself by pushing on), the run
 moves it a few cm out of the camera's way until the object is seen again, then hands back to the policy
 (--on-lost hold: hold still instead); after --recover-seconds it gives up. A trial whose start position
 hides the object (or the clutter block) starts from a clear one nearby. Ctrl+C lifts the rod and exits.
+Servo targets go out at about 100 Hz (--ramp-hz), stepping evenly from one tick's target to the next as in
+training (TaskConfig.servo_ramp); --no-ramp sends one jump per tick, which the servos take at full speed.
 """
 from __future__ import annotations
 
@@ -70,7 +72,8 @@ class PolicyRunner:
 
     def __init__(self, checkpoint, robot, poses, jmap: JointMap, device: str = "cpu",
                  max_step_deg: float = 4.0, max_pose_age: float = 2.0, realtime: bool = True, lightbox: bool = False,
-                 on_lost: str = "recover", recover_seconds: float = 8.0, lift: float = 0.025):
+                 on_lost: str = "recover", recover_seconds: float = 8.0, lift: float = 0.025,
+                 ramp: bool = True, ramp_hz: float = 100.0):
         self.policy, cfg, _ = load_policy(checkpoint, device)
         cfg = copy.deepcopy(cfg)
         cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
@@ -84,6 +87,10 @@ class PolicyRunner:
         # The camera sees the object now (to lower the rod, hand back, begin a trial): a pose at most this old.
         self.fresh_age = min(max_pose_age, 0.5)
         self.dt = cfg.task.control_dt
+        # Servo targets: each tick's move goes out in equal steps at about ``ramp_hz`` (TaskConfig.servo_ramp, as in
+        # training) instead of one jump that the servos take at full speed, 20 times a second.
+        self.ramp_steps = max(1, round(self.dt * ramp_hz)) if ramp else 1
+        self.last_target = None
         if on_lost not in ("recover", "hold"):
             raise ValueError("on_lost: 'recover' or 'hold'")
         self.on_lost, self.recover_seconds, self.lift = on_lost, recover_seconds, lift
@@ -123,7 +130,8 @@ class PolicyRunner:
         self.twin.set_goal(np.asarray(goal, float))
         self.log, self.events, self.mode = [], [], "policy"
         self.start_shift, self.block_seen, self.clear_t0 = 0.0, -1e9, self._clock()
-        self._tell_arm(self.jmap.to_sim(self.robot.read_joints()))
+        self.last_target = self.jmap.to_sim(self.robot.read_joints())      # the first ramp starts where the arm is
+        self._tell_arm(self.last_target)
         pose, block = self._first_poses(timeout)
         if pose is None or (self.clutter and block is None):
             pose = self._clear_start(gate, clear_seconds)
@@ -166,7 +174,14 @@ class PolicyRunner:
         return q, pose, extra, obs
 
     def _send(self, t0, q, target, pose, extra, a, stale):
-        self.robot.send_joints(self.jmap.to_robot(target))
+        """Send this tick's joint target: in ``ramp_steps`` equal steps from the last one, spread over the tick."""
+        start = q if self.last_target is None else self.last_target
+        n = self.ramp_steps
+        for k in range(1, n + 1):
+            self.robot.send_joints(self.jmap.to_robot(start + (target - start) * k / n), seconds=self.dt / n)
+            if self.realtime and k < n:
+                time.sleep(max(0.0, t0 + self.dt * k / n - time.monotonic()))
+        self.last_target = np.array(target, dtype=float)
         self.log.append(dict(t=t0, q=q.tolist(), target=target.tolist(), tip=self.twin.tip[0].tolist(),
                              cmd=self.twin.cmd_xy[0].tolist(), pose=None if pose is None else pose.tolist(),
                              action=np.asarray(a).tolist(), stale=bool(stale), mode=self.mode,
@@ -502,7 +517,7 @@ def dry_run(args):
     gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
     runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False,
                           lightbox=args.lightbox, max_pose_age=args.max_pose_age, on_lost=args.on_lost,
-                          recover_seconds=args.recover_seconds)
+                          recover_seconds=args.recover_seconds, ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
     camera = None
     if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.1 s per tick)
         from .camera_sim import RenderedPoseSource
@@ -586,7 +601,8 @@ def real_run(args):
     jmap = JointMap.load(args.map)
     robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
     runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, lightbox=args.lightbox,
-                          max_pose_age=args.max_pose_age, on_lost=args.on_lost, recover_seconds=args.recover_seconds)
+                          max_pose_age=args.max_pose_age, on_lost=args.on_lost, recover_seconds=args.recover_seconds,
+                          ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
     try:      # the camera masks the arm out using the policy's own scene (lightbox, rod)
         poses = runner.poses = CameraPoseSource(scene=runner.cfg.scene, block_name=runner.cfg.task.clutter or "box")
     except FileNotFoundError as error:
@@ -642,6 +658,10 @@ def main(argv=None):
     ap.add_argument("--max-pose-age", type=float, default=2.0,
                     help="the object is lost when it has not been seen for this long (s); shorter gaps the policy "
                          "rides through on its last pose")
+    ap.add_argument("--no-ramp", action="store_true",
+                    help="send each tick's joint target in one jump (the servos lurch 20 times a second) instead of "
+                         "ramping to it at --ramp-hz")
+    ap.add_argument("--ramp-hz", type=float, default=100.0, help="rate of the ramped servo targets (default 100 Hz)")
     ap.add_argument("--on-lost", choices=["recover", "hold"], default="recover",
                     help="lost object: lift and move the rod out of the camera's way until it is seen again (default), "
                          "or hold the arm still")

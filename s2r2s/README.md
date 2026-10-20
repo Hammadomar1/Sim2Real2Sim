@@ -375,6 +375,12 @@ noise, joint calibration error, backlash). Push-T, success:
   frames dropped (`rand.occlusion_camera=c920`), Push-T falls from 98.5 % to 69.2 % and clutter from 93.5 % to 63.4 %.
   The middle of the back wall, 25 cm up, hides 1.7 % of frames and costs nothing: move the camera there (LIGHTBOX.md, C6).
   If it must stay on the left wall, `tee_occlusion_v1` (fine-tuned 35 minutes with the occlusion on) scores 95.8 % there.
+- **Smooth motion.** The arm shook: the servos jumped to each new joint target 20 times a second. The targets now ramp
+  over each 50 ms period (`task.servo_ramp`, on for new runs; the hardware runner ramps at 100 Hz), and the lightbox
+  skills were fine-tuned 20 minutes each with it: `tee_lightbox_v2` (99.2 % lightbox, 98.2 % every error),
+  `clutter_lightbox_v2`, `clutter_box_lightbox_v2`, `dock_lightbox_v3`. Rod wobble halves (about 1.1 → 0.55 mm), and
+  with every error Level 2 reaches 91.5 % and Level 3 81.9 % (LIGHTBOX.md, "Smooth motion"). Measure it with
+  `python -m s2r2s.lightbox <checkpoint> --smoothness`.
 
 ```powershell
 python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt                           # the full check (about 8 minutes)
@@ -433,7 +439,10 @@ The robot has no collision geometry except the rod, because the arm cannot reach
 
 **Controller (identical in simulation and on hardware).** action ∈ [-1,1]² → tool velocity (≤8 cm/s) → commanded
 tool position (kept within 15 mm of the measured tip: anti-windup) → projected into the reachable annulus →
-one warm-started damped-least-squares IK step (vertical tool) → joint position targets → servos.
+one warm-started damped-least-squares IK step (vertical tool) → joint position targets → servos. The targets are
+ramped from the previous ones over the 50 ms control period (`task.servo_ramp`, on for runs trained since
+20 Oct 2026; the hardware runner sends them at about 100 Hz). Stepped targets made the arm lurch 20 times a
+second (LIGHTBOX.md, *Smooth motion*).
 `kinematics.py` reads the chain from the MuJoCo model, matches MuJoCo FK to 1e-15, and tracks to about 0.1 mm.
 
 **Observations.** The *actor* gets only what the real system measures: tool position from joint encoders

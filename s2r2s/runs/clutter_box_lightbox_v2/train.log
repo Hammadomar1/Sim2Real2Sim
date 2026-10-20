@@ -1,0 +1,57 @@
+warm start from runs/clutter_box_lightbox_v1/best.pt (inputs (54, 66) -> (54, 66))
+run D:\Sim2Real2Sim\s2r2s\runs\clutter_box_lightbox_v2 | envs 4096 | actor obs 54 critic obs 66 | device cuda
+it    10 |     1.0M samples |   0.4 min | diff 1.0 | succ 0.64 (level 0.64) | fail 0.006 | pos   2.8 mm yaw   4.6 deg | std 0.099 | lr 2.6e-04 |  37662 sps
+it    20 |     2.0M samples |   0.9 min | diff 1.0 | succ 0.94 (level 0.94) | fail 0.004 | pos   1.3 mm yaw   2.4 deg | std 0.097 | lr 2.6e-04 |  35346 sps
+it    30 |     2.9M samples |   1.4 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.003 | pos   1.1 mm yaw   2.4 deg | std 0.096 | lr 2.6e-04 |  36067 sps
+it    40 |     3.9M samples |   1.8 min | diff 1.0 | succ 0.95 (level 0.96) | fail 0.003 | pos   1.1 mm yaw   2.3 deg | std 0.094 | lr 2.6e-04 |  35524 sps
+it    50 |     4.9M samples |   2.3 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.002 | pos   1.1 mm yaw   2.4 deg | std 0.093 | lr 2.6e-04 |  36227 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.941 | pos 1.2 mm (p90 2.7) | yaw 2.7 deg (p90 6.8) | failures 0.006 | time-to-goal 3.4 s
+it    60 |     5.9M samples |   2.9 min | diff 1.0 | succ 0.94 (level 0.94) | fail 0.004 | pos   1.1 mm yaw   2.4 deg | std 0.092 | lr 3.8e-04 |  35486 sps
+it    70 |     6.9M samples |   3.3 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.002 | pos   1.1 mm yaw   2.4 deg | std 0.090 | lr 2.6e-04 |  34396 sps
+it    80 |     7.9M samples |   3.8 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.004 | pos   1.1 mm yaw   2.3 deg | std 0.088 | lr 1.1e-04 |  34856 sps
+it    90 |     8.8M samples |   4.3 min | diff 1.0 | succ 0.95 (level 0.94) | fail 0.002 | pos   1.2 mm yaw   2.3 deg | std 0.087 | lr 2.6e-04 |  34674 sps
+it   100 |     9.8M samples |   4.7 min | diff 1.0 | succ 0.95 (level 0.94) | fail 0.002 | pos   1.1 mm yaw   2.4 deg | std 0.086 | lr 2.6e-04 |  36103 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.947 | pos 1.2 mm (p90 2.8) | yaw 2.2 deg (p90 5.9) | failures 0.000 | time-to-goal 3.3 s
+it   110 |    10.8M samples |   5.3 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.001 | pos   1.1 mm yaw   2.2 deg | std 0.085 | lr 1.7e-04 |  34308 sps
+it   120 |    11.8M samples |   5.8 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.002 | pos   1.1 mm yaw   2.1 deg | std 0.084 | lr 7.6e-05 |  34517 sps
+it   130 |    12.8M samples |   6.2 min | diff 1.0 | succ 0.94 (level 0.95) | fail 0.005 | pos   1.1 mm yaw   2.2 deg | std 0.083 | lr 1.7e-04 |  34595 sps
+it   140 |    13.8M samples |   6.7 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.004 | pos   1.1 mm yaw   2.3 deg | std 0.082 | lr 2.6e-04 |  34304 sps
+it   150 |    14.7M samples |   7.2 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.005 | pos   1.2 mm yaw   2.3 deg | std 0.081 | lr 1.7e-04 |  36398 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.951 | pos 1.1 mm (p90 2.5) | yaw 2.2 deg (p90 6.2) | failures 0.006 | time-to-goal 3.2 s
+it   160 |    15.7M samples |   7.7 min | diff 1.0 | succ 0.95 (level 0.96) | fail 0.003 | pos   1.2 mm yaw   2.2 deg | std 0.079 | lr 1.7e-04 |  37335 sps
+it   170 |    16.7M samples |   8.1 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.002 | pos   1.1 mm yaw   2.1 deg | std 0.079 | lr 1.1e-04 |  41211 sps
+it   180 |    17.7M samples |   8.5 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.003 | pos   1.1 mm yaw   2.1 deg | std 0.078 | lr 1.7e-04 |  41652 sps
+it   190 |    18.7M samples |   8.9 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.002 | pos   1.1 mm yaw   2.0 deg | std 0.077 | lr 2.6e-04 |  41968 sps
+it   200 |    19.7M samples |   9.3 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.006 | pos   1.1 mm yaw   2.1 deg | std 0.076 | lr 1.7e-04 |  42158 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.932 | pos 1.1 mm (p90 2.7) | yaw 2.3 deg (p90 6.8) | failures 0.008 | time-to-goal 3.3 s
+it   210 |    20.6M samples |   9.8 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.005 | pos   1.1 mm yaw   2.1 deg | std 0.076 | lr 1.7e-04 |  41259 sps
+it   220 |    21.6M samples |  10.2 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.002 | pos   1.1 mm yaw   2.3 deg | std 0.075 | lr 1.1e-04 |  42412 sps
+it   230 |    22.6M samples |  10.6 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.002 | pos   1.0 mm yaw   2.1 deg | std 0.074 | lr 1.1e-04 |  41409 sps
+it   240 |    23.6M samples |  11.0 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.002 | pos   1.1 mm yaw   2.4 deg | std 0.073 | lr 1.7e-04 |  42359 sps
+it   250 |    24.6M samples |  11.4 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.002 | pos   1.1 mm yaw   2.1 deg | std 0.073 | lr 1.7e-04 |  41421 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.938 | pos 1.0 mm (p90 2.3) | yaw 2.2 deg (p90 6.0) | failures 0.002 | time-to-goal 3.3 s
+it   260 |    25.6M samples |  11.9 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.002 | pos   1.0 mm yaw   2.2 deg | std 0.072 | lr 1.1e-04 |  40955 sps
+it   270 |    26.5M samples |  12.3 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.002 | pos   1.0 mm yaw   2.1 deg | std 0.071 | lr 1.7e-04 |  40073 sps
+it   280 |    27.5M samples |  12.7 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.002 | pos   1.0 mm yaw   2.3 deg | std 0.071 | lr 2.6e-04 |  41146 sps
+it   290 |    28.5M samples |  13.1 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.003 | pos   1.0 mm yaw   2.2 deg | std 0.070 | lr 2.6e-04 |  39580 sps
+it   300 |    29.5M samples |  13.5 min | diff 1.0 | succ 0.96 (level 0.95) | fail 0.003 | pos   1.1 mm yaw   2.0 deg | std 0.069 | lr 2.6e-04 |  41832 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.947 | pos 1.1 mm (p90 2.2) | yaw 2.2 deg (p90 5.8) | failures 0.002 | time-to-goal 3.3 s
+it   310 |    30.5M samples |  14.0 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.003 | pos   1.0 mm yaw   2.1 deg | std 0.069 | lr 1.7e-04 |  40807 sps
+it   320 |    31.5M samples |  14.4 min | diff 1.0 | succ 0.95 (level 0.96) | fail 0.002 | pos   1.0 mm yaw   2.1 deg | std 0.068 | lr 1.7e-04 |  38711 sps
+it   330 |    32.4M samples |  14.8 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.004 | pos   1.0 mm yaw   2.1 deg | std 0.067 | lr 1.7e-04 |  41611 sps
+it   340 |    33.4M samples |  15.2 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.004 | pos   1.1 mm yaw   2.1 deg | std 0.066 | lr 1.7e-04 |  41057 sps
+it   350 |    34.4M samples |  15.6 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.003 | pos   1.0 mm yaw   2.1 deg | std 0.066 | lr 2.6e-04 |  42136 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.939 | pos 1.0 mm (p90 2.6) | yaw 2.0 deg (p90 6.1) | failures 0.004 | time-to-goal 3.3 s
+it   360 |    35.4M samples |  16.1 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.004 | pos   1.0 mm yaw   2.0 deg | std 0.065 | lr 1.7e-04 |  41641 sps
+it   370 |    36.4M samples |  16.5 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.004 | pos   1.0 mm yaw   2.1 deg | std 0.065 | lr 2.6e-04 |  41708 sps
+it   380 |    37.4M samples |  16.9 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.004 | pos   1.0 mm yaw   2.0 deg | std 0.065 | lr 1.7e-04 |  41021 sps
+it   390 |    38.3M samples |  17.3 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.005 | pos   1.0 mm yaw   1.9 deg | std 0.064 | lr 2.6e-04 |  41173 sps
+it   400 |    39.3M samples |  17.7 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.008 | pos   1.1 mm yaw   1.9 deg | std 0.064 | lr 1.7e-04 |  42662 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.951 | pos 1.0 mm (p90 2.3) | yaw 2.0 deg (p90 5.5) | failures 0.006 | time-to-goal 3.2 s
+it   410 |    40.3M samples |  18.2 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.003 | pos   1.0 mm yaw   2.0 deg | std 0.063 | lr 2.6e-04 |  42161 sps
+it   420 |    41.3M samples |  18.6 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.005 | pos   1.1 mm yaw   2.0 deg | std 0.063 | lr 1.7e-04 |  41177 sps
+it   430 |    42.3M samples |  19.0 min | diff 1.0 | succ 0.96 (level 0.96) | fail 0.003 | pos   1.0 mm yaw   2.0 deg | std 0.062 | lr 1.7e-04 |  41894 sps
+it   440 |    43.3M samples |  19.4 min | diff 1.0 | succ 0.95 (level 0.96) | fail 0.007 | pos   1.1 mm yaw   1.9 deg | std 0.062 | lr 1.1e-04 |  40300 sps
+it   450 |    44.2M samples |  19.8 min | diff 1.0 | succ 0.95 (level 0.95) | fail 0.005 | pos   1.1 mm yaw   1.9 deg | std 0.062 | lr 1.1e-04 |  39428 sps
+   EVAL (full difficulty, 512 fixed scenes): success 0.943 | pos 1.1 mm (p90 2.5) | yaw 1.8 deg (p90 5.5) | failures 0.002 | time-to-goal 3.2 s
+done: 453 iterations, 44.5M samples, 20.0 min
