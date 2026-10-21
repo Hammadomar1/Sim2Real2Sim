@@ -251,8 +251,11 @@ Safety built into the runner:
   still instead, as before. With the C920 in the left-wall slot, holding can deadlock: the arm stops where it hides
   the T and keeps hiding it.
 - **Hidden start:** when the arm hides the object at its start position, or a clutter policy's block (whose start
-  pose is where it must stay), the rod first goes (lifted) to where the arm hides least of the band. Once both are
-  found, the rod comes down at the nearest clear point from which the object should stay in view. The trial log
+  pose is where it must stay), the rod first rises straight up, then flies to where the arm hides least of the band.
+  It flies as high as a vertical rod reaches on the way (up to 40 mm, 20 mm above the objects; less near the edges
+  of the reach ring, never below 25 mm there), and around whichever of the two the camera does see. Once both are
+  found, the rod flies on, as high, to the nearest clear point from which the object should stay in view, and comes
+  straight down there. The trial log
   records how far that is from the planned start (`start_shift`).
 - **Logs:** every tick has its `mode` (`policy`, `retreat`, `lower`, `lost`, `start`); every trial has its
   `recoveries`: where the object was lost, how long it took and how it ended.
@@ -304,10 +307,19 @@ box's true start pose:
    in one episode, 1.4 mm (the limit is 10 mm), and before the runner stepped in: the policy pushed the T against it.
 3. The rest is as with `tee_lightbox_v1`. After 0.5 s, two scenes lost the T 6 times each: the policy pushed back to
    where the arm hides it. Both were still solved. After 2 s the runner stepped in once. Holding still missed one scene.
-4. The clear start's first move, lifted and straight to the park point, is not checked against the box or the T:
-   while the arm hides them, their poses are not known. In 400 sampled scenes, the shadow predictor has the arm
-   hiding one of them at the planned start in 142. In 6 % of those, that move passes over the box 4–5 mm above it.
-   In 6 %, over the T.
+4. **The clear start no longer flies 5 mm over the box or the T.** Its first move used to go straight to the park
+   point, 25 mm above the mat. In 400 sampled scenes (`clutter_lightbox_v1`'s, the shadow predictor as the camera),
+   137 hide the T or the box at the planned start. In 14 of those (10 %) that move passed 5 mm over one of them, and
+   in 10 it was the one the camera *did* see. Now the flight goes around what the camera sees and flies as high as
+   the vertical rod reaches, up to 40 mm (`PolicyRunner(start_lift=0.04)`). A park point at 40 mm hides as little of
+   the band (none) as the old one at 25 mm. Over the same scenes, no flight passes over the T. Four pass over a
+   hidden box, all 20 mm above it. All 137 start (median 2.2 s, from 1.8 s). The hidden one cannot be avoided
+   outright. Its pose is unknown, and bounding it with the shadow predictor does not help: the gripper and the
+   wrist-camera bracket hide the rod's own surroundings, so in 110–122 of the 137 no move clear of everywhere it
+   could be exists. `tee_lightbox_v1`, rendered, 8 scenes, recover after 2 s: all 8 start, the 3 hidden ones 20–60
+   mm from the planned start as before, each clear start about 0.4 s longer. Two runs solved 7 and 8 (the old
+   runner: 8). The miss was episode 6, which needs no clear start. Its yaw error was 10.5° and 7.1° in the two
+   runs, 6.1° with the old runner: run-to-run noise near the 10° limit.
 
 `--camera render` rehearses the camera path too: every tick, the simulated arm's scene is rendered as the C920 sees
 it (100 ms late) and goes through the same estimator and arm mask as `CameraPoseSource`. It takes about 0.25 s per
