@@ -5,6 +5,7 @@
     python -m s2r2s.hardware.runner --checkpoint runs/tee_lightbox_v1/best.pt --robot sim --camera render   # C920 pipeline
     python -m s2r2s.hardware.runner --checkpoint runs/tee_v1/best.pt --robot so101 --port COM5 \\
         --map calibration/joint_map.json --goal 0.20 0.05 90         # real arm (needs the camera)
+    python -m s2r2s.hardware.runner --level 2 --robot sim --episodes 50                    # Levels 2 and 3 (levels.py)
 
 The policy, the controller (action -> commanded rod position -> IK) and the observation code are
 the ones used in training; only the measurements come from outside (joint encoders, camera).
@@ -53,6 +54,17 @@ def move_to(robot, jmap: JointMap, kin, xyz, seconds: float = 2.0, dt: float = 0
             time.sleep(max(0.0, dt - (time.monotonic() - t0)))
 
 
+def load_skill(checkpoint, device: str = "cpu", lightbox: bool = False):
+    """A policy and its twin: the training environment with one world, randomisation off (real measurements
+    replace the simulated camera and physics), stepped by no physics. Returns (policy, cfg, twin)."""
+    policy, cfg, _ = load_policy(checkpoint, device)
+    cfg = copy.deepcopy(cfg)
+    cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
+    cfg.num_envs, cfg.num_threads = 1, 1
+    cfg.rand.enabled = False
+    return policy, cfg, make_env(cfg)
+
+
 class PolicyRunner:
     """The policy in the loop, plus what the runner does by itself when the camera loses the object.
 
@@ -74,13 +86,9 @@ class PolicyRunner:
                  max_step_deg: float = 4.0, max_pose_age: float = 2.0, realtime: bool = True, lightbox: bool = False,
                  on_lost: str = "recover", recover_seconds: float = 8.0, lift: float = 0.025,
                  ramp: bool = True, ramp_hz: float = 100.0):
-        self.policy, cfg, _ = load_policy(checkpoint, device)
-        cfg = copy.deepcopy(cfg)
-        cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
-        cfg.num_envs, cfg.num_threads = 1, 1
-        cfg.rand.enabled = False          # real measurements replace the simulated camera and physics randomisation
+        # The twin runs the controller and observation code; no physics is stepped.
+        self.policy, cfg, self.twin = load_skill(checkpoint, device, lightbox)
         self.cfg, self.device = cfg, device
-        self.twin = make_env(cfg)         # runs the controller and observation code; no physics is stepped
         self.robot, self.poses, self.jmap = robot, poses, jmap
         self.max_step = math.radians(max_step_deg)
         self.max_pose_age, self.realtime = max_pose_age, realtime
@@ -143,7 +151,7 @@ class PolicyRunner:
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=pose[2])
         q = self.jmap.to_sim(self.robot.read_joints())
         self.twin.sync_measurements(q[None], pose[None], first=True, **extra)
-        self.last_seen = self._clock()
+        self.last_seen = self.block_seen = self._clock()
 
     def _clock(self) -> float:
         """Seconds for the lost-object check: wall time on the real arm, control ticks in a dry run (which runs
@@ -187,9 +195,13 @@ class PolicyRunner:
                              action=np.asarray(a).tolist(), stale=bool(stale), mode=self.mode,
                              stage=int(self.twin.stage[0]) if hasattr(self.twin, "stage") else -1,
                              **({"block": None if extra["block"] is None else extra["block"][0].tolist()}
-                                if self.clutter else {})))
+                                if self.clutter else {}), **self._log_extra()))
         if self.realtime:
             time.sleep(max(0.0, self.dt - (time.monotonic() - t0)))
+
+    def _log_extra(self) -> dict:
+        """More fields for each tick's log entry (``levels.LevelRunner``: the current push)."""
+        return {}
 
     def tick(self) -> str:
         """One control period. Returns the mode: "policy", the recovery's "retreat" / "lower", or "lost" (gave up:
@@ -503,6 +515,21 @@ def save_trial(path: Path, runner: PolicyRunner, meta: dict):
     path.with_suffix(".json").write_text(json.dumps({**meta, "ticks": runner.log}, indent=1))
 
 
+def runner_options(args) -> dict:
+    """The runner's safety, recovery and ramp settings from the command line."""
+    return dict(max_step_deg=args.max_step_deg, lightbox=args.lightbox, max_pose_age=args.max_pose_age,
+                on_lost=args.on_lost, recover_seconds=args.recover_seconds, ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
+
+
+def lift_clear(robot, jmap: JointMap, runner: PolicyRunner):
+    """End of a real trial: lift the rod clear, up to 4 cm, as high as a vertical rod reaches there."""
+    tip = runner.twin.tip[0]
+    try:
+        move_to(robot, jmap, runner.twin.kin, (tip[0], tip[1], runner._lift_z(tip[:2], top=0.04)), seconds=1.0)
+    except ValueError as error:
+        print(f"could not lift the rod: {error}")
+
+
 def dry_run(args):
     """Episodes on SimRobot through the full hardware path (joint map, pose source, safety limits)."""
     _, cfg, _ = load_policy(args.checkpoint, "cpu")
@@ -515,9 +542,7 @@ def dry_run(args):
     jmap = JointMap.load(args.map) if args.map else JointMap()
     robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
     gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
-    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False,
-                          lightbox=args.lightbox, max_pose_age=args.max_pose_age, on_lost=args.on_lost,
-                          recover_seconds=args.recover_seconds, ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
+    runner = PolicyRunner(args.checkpoint, robot, None, jmap, realtime=False, **runner_options(args))
     camera = None
     if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.1 s per tick)
         from .camera_sim import RenderedPoseSource
@@ -600,9 +625,7 @@ def dry_run(args):
 def real_run(args):
     jmap = JointMap.load(args.map)
     robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
-    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, lightbox=args.lightbox,
-                          max_pose_age=args.max_pose_age, on_lost=args.on_lost, recover_seconds=args.recover_seconds,
-                          ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
+    runner = PolicyRunner(args.checkpoint, robot, None, jmap, **runner_options(args))
     try:      # the camera masks the arm out using the policy's own scene (lightbox, rod)
         poses = runner.poses = CameraPoseSource(scene=runner.cfg.scene, block_name=runner.cfg.task.clutter or "box")
     except FileNotFoundError as error:
@@ -625,11 +648,7 @@ def real_run(args):
     except RuntimeError as error:
         print(f"trial not started: {error}")
     finally:
-        tip = runner.twin.tip[0]
-        try:                     # lift the rod clear: up to 4 cm, as high as a vertical rod reaches there
-            move_to(robot, jmap, kin, (tip[0], tip[1], runner._lift_z(tip[:2], top=0.04)), seconds=1.0)
-        except ValueError as error:
-            print(f"could not lift the rod: {error}")
+        lift_clear(robot, jmap, runner)
         pose, _ = poses.read()
         meta = dict(checkpoint=args.checkpoint, goal=goal.tolist(), final=None if pose is None else pose.tolist(),
                     start_shift=runner.start_shift, recoveries=runner.events)
@@ -644,7 +663,13 @@ def real_run(args):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--checkpoint", required=True)
+    ap.add_argument("--checkpoint", default="", help="the policy (one per trial); not with --level")
+    ap.add_argument("--level", type=int, choices=[2, 3], default=0,
+                    help="Level 2 (two blocks to their goals) or 3 (the box nested in the T's corner): a push plan from "
+                         "the camera's first view, a skill per push (levels.py)")
+    ap.add_argument("--tee", default="runs/clutter_lightbox_v2/best.pt", help="--level: push the T, keep the box")
+    ap.add_argument("--box", default="runs/clutter_box_lightbox_v2/best.pt", help="--level: push the box, keep the T")
+    ap.add_argument("--dock", default="runs/dock_lightbox_v3/best.pt", help="--level 3: push the box into the T's corner")
     ap.add_argument("--robot", choices=["sim", "so101"], default="sim")
     ap.add_argument("--port", default="")
     ap.add_argument("--map", default="", help="joint map from calibrate.py (required on the real arm)")
@@ -653,7 +678,10 @@ def main(argv=None):
     ap.add_argument("--episodes", type=int, default=20, help="sim dry run")
     ap.add_argument("--seed", type=int, default=TEST_SEED, help="sim dry run: scene seed")
     ap.add_argument("--hidden-map", default="", help="sim dry run: the simulated arm's true (miscalibrated) map")
-    ap.add_argument("--goal", type=float, nargs=3, default=(0.20, 0.05, 90.0), metavar=("X", "Y", "YAW_DEG"))
+    ap.add_argument("--goal", type=float, nargs=3, default=(0.20, 0.05, 90.0), metavar=("X", "Y", "YAW_DEG"),
+                    help="real arm: the object's goal (with --level, the T's)")
+    ap.add_argument("--box-goal", type=float, nargs=3, default=(0.20, -0.06, 0.0), metavar=("X", "Y", "YAW_DEG"),
+                    help="real arm, --level 2: the box's goal")
     ap.add_argument("--tool-start", type=float, nargs=2, default=(0.15, -0.10), metavar=("X", "Y"))
     ap.add_argument("--max-pose-age", type=float, default=2.0,
                     help="the object is lost when it has not been seen for this long (s); shorter gaps the policy "
@@ -672,11 +700,16 @@ def main(argv=None):
     ap.add_argument("--lightbox", action="store_true",
                     help="the arm stands in the lightbox, 9.8 mm below the mat (implied by policies trained there)")
     args = ap.parse_args(argv)
-    if args.robot == "sim":
+    if bool(args.checkpoint) == bool(args.level):
+        ap.error("give --checkpoint (one policy) or --level 2|3 (the skills)")
+    if args.robot == "so101" and not args.map:
+        ap.error("--map is required on the real arm (run calibrate.py first)")
+    if args.level:
+        from . import levels
+        (levels.dry_run if args.robot == "sim" else levels.real_run)(args)
+    elif args.robot == "sim":
         dry_run(args)
     else:
-        if not args.map:
-            ap.error("--map is required on the real arm (run calibrate.py first)")
         real_run(args)
 
 

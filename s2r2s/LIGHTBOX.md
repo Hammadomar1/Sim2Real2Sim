@@ -358,8 +358,19 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
 2. Real: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v2\best.pt --robot so101 --port COM5 --map calibration\joint_map.json --max-step-deg 2`,
    20–30 logged trials from held-out scenes. Compare with `python -m s2r2s.lightbox` re-run at the *measured*
    friction, latency, noise and backlash: that is the simulator's prediction for this table.
-3. Then clutter, the gate (build the wall), and Levels 2 and 3 (they need the planner in the runner), with the
-   lightbox skills `clutter_lightbox_v2`, `clutter_box_lightbox_v2` and `dock_lightbox_v3` (ramped targets).
+3. Then clutter (`--checkpoint runs\clutter_lightbox_v2\best.pt`), the gate (build the wall), and Levels 2 and 3
+   with the lightbox skills `clutter_lightbox_v2`, `clutter_box_lightbox_v2` and `dock_lightbox_v3` (ramped targets):
+   `python -m s2r2s.hardware.runner --level 2 --robot so101 --port COM5 --map calibration\joint_map.json --goal X Y YAW --box-goal X Y YAW --max-step-deg 2`,
+   and `--level 3 ... --goal X Y YAW` (the box then nests in the T's corner). The runner plans the pushes from the
+   camera's first view, runs each with its skill through that skill's twin and starts the next once the camera
+   sees the pushed block settled (HARDWARE.md §5, "Levels 2 and 3"). Rehearse first: `--level 2 --robot sim
+   --episodes 200`, then `--camera render --episodes 8`. On the simulated arm, 1,000 held-out scenes each, the
+   hardware path matches the simulator in the same world: Level 2 95.3 % against 95.6 %, Level 3 91.0 % against
+   91.0 %. Through the rendered C920 in the left-wall slot, 8 scenes per level, 6 and 5 succeed (simulator: 7 and
+   7). Every trial started and every lost block was recovered. But the arm hides the block that must stay (the box
+   in up to 94 % of a T push), and one miss was the T pushed into a box the camera could not see: move the camera
+   (C6) first. Compare real trials with `python -m s2r2s.level2` / `level3 --set ...` at the *measured* errors;
+   with every error at once they are at 91.5 / 81.9 % (*Smooth motion* above).
 
 Policies trained on the flat table run in the lightbox only with `--lightbox` on the hardware tools (the kinematics
 must know the mat height); policies trained in the lightbox carry it in their config.
@@ -379,6 +390,10 @@ must know the mat height); policies trained in the lightbox carry it in their co
   (`tee_occlusion_v1`) recovers most of it for Push-T (95.8 %). The clutter, box and dock skills have no such
   fine-tune: move the camera, or fine-tune them the same way. The actor is not told that its estimate is stale.
   A "frames since the last fresh pose" input (the runner knows it) might close the rest of the gap.
+- Levels 2 and 3 run through the hardware runner (E3) but are rehearsed on the simulated arm only. With the
+  left-wall camera the block that must stay is often hidden, and the rod guard then works from its last pose. The
+  rendered rehearsal covers only that mount (the runner's rendered camera has no mount option yet). Blocks placed
+  within about a millimetre of the 15 mm rule can be refused: camera noise decides.
 - The camera pose estimator, the backlash tool's camera probe and the latency tool are tested on rendered images
   only: C4 and C5 on the real camera are next. The latency tool cannot see delay in the joint readings themselves
   (LeRobot's read is stamped halfway through).

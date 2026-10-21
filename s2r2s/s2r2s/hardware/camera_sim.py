@@ -276,6 +276,7 @@ class RenderedPoseSource:
         self.arm_mask = ArmMask(cam, self.estimator.grid, scene, margin=0.006)
         self.view = ViewPredictor(cam, scene, names, margin=0.006)
         self.object_name, self.block_name = self.sim.object_name, scene.clutter
+        self.swap = False                     # Levels 2 and 3: the box is pushed, the T must stay (poses.py)
         self.rng = np.random.default_rng(seed)
         self.reset()
 
@@ -302,11 +303,11 @@ class RenderedPoseSource:
         self.counts["frames"] += 1
         for name, det in self.found.items():
             self.counts["dropped"][name] = self.counts["dropped"].get(name, 0) + (det.pose is None)
-        return self._get(self.object_name)
+        return self._get(self.block_name if self.swap else self.object_name)
 
     def read_block(self):
         """The block from the newest frame (read() renders it), at 60 % visible as CameraPoseSource has it."""
-        return self._get(self.block_name, 0.6)
+        return self._get(self.object_name if self.swap else self.block_name, 0.6)
 
     def _get(self, name, min_visible: float = 0.0):
         det = self.found.get(name)

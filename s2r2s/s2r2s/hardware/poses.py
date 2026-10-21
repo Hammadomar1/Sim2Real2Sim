@@ -3,6 +3,9 @@
 None means "no fresh estimate" (occluded or dropped frame); the runner then keeps the last pose and
 stops the arm if estimates stay missing for too long. Clutter policies also need read_block(): the
 same for the block that must stay in place.
+
+Levels 2 and 3 swap the roles while the box is pushed (``swap``, set by ``levels.LevelRunner``): read() then gives
+the box and read_block() the T that must stay, each with its role's visibility rule.
 """
 from __future__ import annotations
 
@@ -25,12 +28,13 @@ class SimPoseSource:
         self.pos_noise, self.yaw_noise, self.dropout = pos_noise, yaw_noise, dropout
         self.rng = np.random.default_rng(seed)
         self.history = {"object": [], "block": []}
+        self.swap = False
 
     def read(self):
-        return self._seen("object", self.robot.object_pose())
+        return self._seen("block", self.robot.block_pose()) if self.swap else self._seen("object", self.robot.object_pose())
 
     def read_block(self):
-        return self._seen("block", self.robot.block_pose())
+        return self._seen("object", self.robot.object_pose()) if self.swap else self._seen("block", self.robot.block_pose())
 
     def _seen(self, name, truth):
         history = self.history[name]
@@ -87,6 +91,7 @@ class CameraPoseSource:
         self.arm_mask = ArmMask(camera, self.estimator.grid, scene, arm_margin)
         self.view = ViewPredictor(camera, scene, names, margin=arm_margin)     # where the arm would hide less
         self.max_age, self.max_arm_age, self.block_min_visible = max_age, max_arm_age, block_min_visible
+        self.swap = False                     # Levels 2 and 3: the box is pushed, the T must stay
         self._arm = None                      # (joint angles, stamp) from set_arm
         self.source = source if source is not None else C920()
         self._lock = threading.Lock()
@@ -122,10 +127,10 @@ class CameraPoseSource:
         self._arm = (np.array(q_sim, float), time.monotonic() if stamp is None else stamp)
 
     def read(self):
-        return self._get(self.object_name)
+        return self._get(self.block_name if self.swap else self.object_name)
 
     def read_block(self):
-        return self._get(self.block_name, self.block_min_visible)
+        return self._get(self.object_name if self.swap else self.block_name, self.block_min_visible)
 
     def detections(self):
         """The newest frame's full results (``vision.Detection`` per object) and its stamp, or (None, 0)."""

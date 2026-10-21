@@ -147,6 +147,8 @@ runs/camera_sim/*
 !runs/rehearsal/
 runs/rehearsal/*
 !runs/rehearsal/*.json
+# Levels 2 and 3 through the hardware path against the simulator (HARDWARE.md section 5).
+!runs/rehearsal/levels_*.log
 calibration/c920_intrinsics_frames/
 calibration/print/
 calibration/c920_*.png

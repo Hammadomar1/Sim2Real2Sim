@@ -493,6 +493,11 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
   both, it is free); docking scenes start clear of the T and succeed only when seated with the T in place; the
   dock target stays put when the T is nudged; every assembly plan ends with docking from a pre-dock spot 17.7 mm
   from both faces; and recorded Level 3 starts are reproduced exactly when training starts from them
+- Levels 2 and 3 through the hardware path: the robot's corner choice fits the band and never needs more pushes
+  than the scene's own corner; pushes switch after 1 s settled by the camera, to the other skill's twin with the
+  blocks' roles swapped; docking gets 10 s with its target fixed when it starts; a lost box is recovered as the box
+  skill's object, with no switch meanwhile; blocks too close are refused; and the lightbox skills complete a held-out
+  Level 2 and Level 3 scene on the simulated arm
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -530,5 +535,5 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/camera_study.py` | Arm-occlusion study for choosing the real camera mount |
 | `s2r2s/occlusion.py` | Arm occlusion in the camera model (`rand.occlusion_camera`): ray-cast visible share, hidden frames dropped |
 | `s2r2s/lightbox.py` | Grade a policy in the lightbox scene and under its unmeasured quantities (see LIGHTBOX.md) |
-| `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner: see [HARDWARE.md](HARDWARE.md) |
+| `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner (one policy, or Levels 2 and 3 with the planner and a skill per push): see [HARDWARE.md](HARDWARE.md) |
 | `tests/` | Regression tests |
