@@ -64,6 +64,7 @@ class Level2Env(ClutterEnv):
         self.plan_goal = np.zeros((n, MAX_PUSHES, 3))                 # target pose of each push
         self.plan_len = np.zeros(n, dtype=np.int64)
         self.plan_clearance = np.zeros(n)                    # the plan's smallest clearance to the block that stays
+        self.park_candidates = 24                            # spots tried per scene for a parking push
         self.stop_when_done = False                          # hold the arm still once the last push has ended
         self.external_q = None
         super().__init__(cfg)
@@ -92,13 +93,14 @@ class Level2Env(ClutterEnv):
         box_first = np.minimum(self._sweep(BOX, b_start, b_goal, t_start), self._sweep(TEE, t_start, t_goal, b_goal))
         return np.stack([tee_first, box_first], -1)
 
-    def park_plans(self, t_start, t_goal, b_start, b_goal, k: int = 24):
-        """Best three-push plan per scene: park block A at a spot, push B to its goal, then A to its goal.
+    def park_plans(self, t_start, t_goal, b_start, b_goal):
+        """Best three-push plan per scene: park block A at one of ``park_candidates`` random spots, push B to its
+        goal, then A to its goal.
 
         Returns (clearance (n,), parked block (n,), spot (n, 3)); clearance -1 when no candidate spot works.
         """
         t = self.cfg.task
-        n = len(t_start)
+        n, k = len(t_start), self.park_candidates
         best = np.full(n, -1.0)
         who = np.zeros(n, dtype=np.int64)
         spot = np.zeros((n, 3))

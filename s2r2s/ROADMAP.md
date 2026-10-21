@@ -138,10 +138,11 @@ two-block scenes), and Level 3: connect the blocks (82.5 % of held-out scenes as
 the box nested in its corner, touching both faces), with the same planner plus a dock skill trained on the
 states where docking starts in Level 3. See README.
 
-The hardware runner already carries the block's camera pose and the controller's rod guard. Running Level 2 or 3
-on the arm needs the planner in the runner and a camera that tells the T from the box. For Level 3, the camera
-must also see the two pieces when they touch: the dock target and the final check both depend on the T's pose
-next to the box.
+The hardware runner runs Levels 2 and 3 too (`--level 2|3`, HARDWARE.md §5): it plans from the camera's first
+view, runs each push with its skill through that skill's own twin, and switches when the camera sees the pushed
+block settled; the C920 pose estimator tells the T from the box. On the simulated arm it matches the simulator on
+1,000 held-out scenes (Level 2 95.3 / 95.6 %, Level 3 91.0 / 91.0 %). For Level 3, the camera must also see the
+two pieces when they touch: the dock target and the final check both depend on the T's pose next to the box.
 
 Twice now, a skill failed because it started from states it had never trained on: the rod beside a placed block in
 Level 2, and the rod between the box and the T in Level 3. Training from the states a skill meets in use fixed it

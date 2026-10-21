@@ -1,0 +1,23 @@
+$ python -m s2r2s.hardware.runner --level 2 --robot sim --episodes 8
+episode   1: success box, T                             settled 2/2  T   2.4 mm   3.8 deg  box   1.5 mm   2.4 deg
+episode   2: success T, box                             settled 2/2  T   2.8 mm   6.7 deg  box   5.5 mm   4.7 deg
+episode   3: success box, T                             settled 2/2  T   3.3 mm   2.3 deg  box   5.2 mm   1.0 deg
+episode   4: success T, box                             settled 2/2  T   2.4 mm   3.5 deg  box   0.5 mm   2.4 deg
+episode   5: success box, T                             settled 2/2  T   5.9 mm   2.2 deg  box   0.7 mm   3.0 deg
+episode   6: not started (no push plan keeps the skills' 15 mm rule (the blocks are 14.1 mm apart, 15.5 mm at their goals; the better order leaves 14.1 mm; no parking spot helps): move a block)
+episode   7: success box, T                             settled 2/2  T   2.5 mm   2.9 deg  box   1.2 mm   2.6 deg
+episode   8: success T, box                             settled 2/2  T   5.0 mm   1.7 deg  box   0.3 mm   1.9 deg
+
+1 of 8 episodes not started (episodes [6])
+
+Level 2: 7 scenes (seed 20000003) through the hardware path
+  success                                          100.0%
+    T at its goal                                  100.0%
+    box at its goal                                100.0%
+  every push settled at its target                 100.0%
+  a block that had to stay moved >10 mm            0.0%
+  failures (a block left the band)                 0.0%
+  plans as the simulator's                         100.0%
+  episodes with a lost-object recovery             0.0%
+  gave up (object lost)                            0.0%
+  time to finish, median (s)                       10.9

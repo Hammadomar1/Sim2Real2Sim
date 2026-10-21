@@ -251,8 +251,11 @@ Safety built into the runner:
   still instead, as before. With the C920 in the left-wall slot, holding can deadlock: the arm stops where it hides
   the T and keeps hiding it.
 - **Hidden start:** when the arm hides the object at its start position, or a clutter policy's block (whose start
-  pose is where it must stay), the rod first goes (lifted) to where the arm hides least of the band. Once both are
-  found, the rod comes down at the nearest clear point from which the object should stay in view. The trial log
+  pose is where it must stay), the rod first rises straight up, then flies to where the arm hides least of the band.
+  It flies as high as a vertical rod reaches on the way (up to 40 mm, 20 mm above the objects; less near the edges
+  of the reach ring, never below 25 mm there), and around whichever of the two the camera does see. Once both are
+  found, the rod flies on, as high, to the nearest clear point from which the object should stay in view, and comes
+  straight down there. The trial log
   records how far that is from the planned start (`start_shift`).
 - **Logs:** every tick has its `mode` (`policy`, `retreat`, `lower`, `lost`, `start`); every trial has its
   `recoveries`: where the object was lost, how long it took and how it ended.
@@ -304,20 +307,143 @@ box's true start pose:
    in one episode, 1.4 mm (the limit is 10 mm), and before the runner stepped in: the policy pushed the T against it.
 3. The rest is as with `tee_lightbox_v1`. After 0.5 s, two scenes lost the T 6 times each: the policy pushed back to
    where the arm hides it. Both were still solved. After 2 s the runner stepped in once. Holding still missed one scene.
-4. The clear start's first move, lifted and straight to the park point, is not checked against the box or the T:
-   while the arm hides them, their poses are not known. In 400 sampled scenes, the shadow predictor has the arm
-   hiding one of them at the planned start in 142. In 6 % of those, that move passes over the box 4–5 mm above it.
-   In 6 %, over the T.
+4. **The clear start no longer flies 5 mm over the box or the T.** Its first move used to go straight to the park
+   point, 25 mm above the mat. In 400 sampled scenes (`clutter_lightbox_v1`'s, the shadow predictor as the camera),
+   137 hide the T or the box at the planned start. In 14 of those (10 %) that move passed 5 mm over one of them, and
+   in 10 it was the one the camera *did* see. Now the flight goes around what the camera sees and flies as high as
+   the vertical rod reaches, up to 40 mm (`PolicyRunner(start_lift=0.04)`). A park point at 40 mm hides as little of
+   the band (none) as the old one at 25 mm. Over the same scenes, no flight passes over the T. Four pass over a
+   hidden box, all 20 mm above it. All 137 start (median 2.2 s, from 1.8 s). The hidden one cannot be avoided
+   outright. Its pose is unknown, and bounding it with the shadow predictor does not help: the gripper and the
+   wrist-camera bracket hide the rod's own surroundings, so in 110–122 of the 137 no move clear of everywhere it
+   could be exists. `tee_lightbox_v1`, rendered, 8 scenes, recover after 2 s: all 8 start, the 3 hidden ones 20–60
+   mm from the planned start as before, each clear start about 0.4 s longer. Two runs solved 7 and 8 (the old
+   runner: 8). The miss was episode 6, which needs no clear start. Its yaw error was 10.5° and 7.1° in the two
+   runs, 6.1° with the old runner: run-to-run noise near the 10° limit.
 
 `--camera render` rehearses the camera path too: every tick, the simulated arm's scene is rendered as the C920 sees
 it (100 ms late) and goes through the same estimator and arm mask as `CameraPoseSource`. It takes about 0.25 s per
-tick, so 100 s per episode.
+tick, so 100 s per episode. It renders from the left-wall slot as built; `--mount back` puts the C920 on the back
+wall, 25 cm above the mat (LIGHTBOX.md C6), and the arm mask and the shadow predictor move with it.
 
 **Torque stays on after the program ends** (LeRobot's default would drop the arm). Support the arm before
 powering it down. Keep a hand near the power switch during first runs, and start with `--max-step-deg 2`.
 
+### Levels 2 and 3 (`--level`)
+
+```powershell
+python -m s2r2s.hardware.runner --level 2 --robot sim --episodes 200                 # rehearsal, held-out scenes
+python -m s2r2s.hardware.runner --level 3 --robot sim --camera render --episodes 8   # through the C920 pipeline
+python -m s2r2s.hardware.runner --level 3 --robot sim --camera render --mount back --episodes 8   # from the back wall
+python -m s2r2s.hardware.runner --level 2 --robot so101 --port COM5 --map calibration\joint_map.json `
+    --goal 0.20 0.05 90 --box-goal 0.20 -0.06 0 --max-step-deg 2
+python -m s2r2s.hardware.runner --level 3 --robot so101 --port COM5 --map calibration\joint_map.json `
+    --goal 0.20 0.0 120 --max-step-deg 2
+```
+
+The skills default to the lightbox ones with ramped targets: `--tee runs\clutter_lightbox_v2\best.pt` (push the T,
+keep the box), `--box runs\clutter_box_lightbox_v2\best.pt` (push the box, keep the T) and, for Level 3,
+`--dock runs\dock_lightbox_v3\best.pt`. `--goal` is the T's goal (x, y in m, yaw in degrees) and `--box-goal` the
+box's (Level 2); Level 3 nests the box in a corner of the T at its goal. Put both blocks, and both goals, in the
+work band (17.5–22.5 cm from the pan axis, within 30° of straight ahead), at least 15 mm apart. A trial
+(`hardware/levels.py`, `LevelRunner`) does what `python -m s2r2s.level2` / `level3` do in simulation:
+
+1. **It plans from the camera's first view.** The T skill finds both blocks, with the clear start if the arm hides
+   one. Level 2's planner orders the pushes so that each keeps the skills' 15 mm rule: two pushes in the order with
+   more room, or three when a block must be parked first (the runner tries 1,000 parking spots; the simulator's
+   batched planner tries 24). Level 3 brings the T to its goal and the box to the pre-dock spot of a corner, then
+   docks. Of the T's two corners that fit the band it takes the one whose plan has fewer pushes, then more room
+   (the simulator draws one at random). Without a plan the trial does not start, and says how far apart the
+   blocks are: move one. Camera noise can do this when the blocks are within about a millimetre of the rule.
+2. **Each push runs its skill through that skill's own twin**, as in simulation. The skill that pushes the T keeps
+   the box in place; the box and dock skills keep the T. Each twin's rod guard keeps the rod clear of the block it
+   keeps, at the pose the camera saw when the push began. The pose source reports the pushed block as the object
+   (`swap`): the box down to a quarter visible, the T then at 60 %, as the roles have it with one policy.
+3. **Pushes switch on the camera.** The next push starts once the pushed block has stayed within 8 mm / 8° of its
+   target for 1 s, each of those ticks with a pose at most 0.5 s old, or after 20 s. Docking gets 10 s (the dock
+   skill's episode). Its target is the corner where the camera sees the T when docking starts, fixed from then
+   on: a target that follows the T lets the skill shove both blocks along. The trial ends when the last push has
+   settled (Level 3: also when docking's 10 s are up; the simulator then holds the arm still), or after 60 s
+   (Level 2) / 80 s (Level 3), the simulator's episode lengths. Pushes switch only while the policy has the rod.
+4. **Safety, the servo ramp, the lost-object recovery and the logs are the single-policy runner's**, for the block
+   the current push moves. If the camera loses the box for 2 s while the box skill pushes it, the runner lifts the
+   rod out of the arm's shadow, clear of both blocks, and hands back. A recovery restarts the 1 s settle clock.
+   The trial log (`trials\level2_<date_time>.json`) adds the plan, the corner, and per push the skill, target,
+   start and end ticks, whether it settled, its time and how far the kept block moved (by the camera). Each tick
+   carries `push` and `skill`; its `pose` and `block` are as that skill sees them: the block it pushes and the one
+   it keeps. The final poses and errors come from the camera, with the rod lifted.
+
+Rehearsal: the held-out scenes `python -m s2r2s.level2` / `level3` draw for the same seed and `--episodes`, on the
+simulated arm. The simulator runs in the world the simulated arm has: nominal physics, the training camera model with
+50 ms delay, no joint errors (`--set scene.lightbox=true rand.table_friction=0.35,0.35 rand.pusher_friction=0.3,0.3
+rand.mass_scale=1,1 rand.com_offset=0 rand.servo_kp_scale=1,1 rand.damping_scale=1,1 rand.tool_height_error=0
+rand.max_action_delay=0 rand.obs_latency_steps=1,1 rand.joint_offset_deg=0 rand.backlash_deg=0,0,0,0
+rand.tool_noise=0`). Every command and its output: `runs\rehearsal\levels_*.log`, `runs\camera_sim\rehearsal_level*_render*.log`.
+
+| 1,000 held-out scenes each | Level 2, simulator | Level 2, hardware path | Level 3, simulator | Level 3, hardware path |
+|---|---|---|---|---|
+| **success** (a trial that did not start is a miss) | 95.6 % | **95.3 %** | 91.0 % | **91.0 %** |
+| not started: no plan from the camera's poses | | 0.8 % | | 0.8 % |
+| T at its goal | 98.1 % | 98.5 % | 94.2 % | 94.7 % |
+| box at its goal / nested in the corner (3 mm, 5°) | 96.9 % | 97.3 % | 94.7 % | 95.3 % |
+| every push settled at its target | 93.1 % | 93.6 % | 80.9 % | 82.2 % |
+| a block that had to stay moved >10 mm | 0.5 % | 0.4 % | 3.1 % | 3.0 % |
+| a block left the band | 0.3 % | 0.2 % | 0.8 % | 0.9 % |
+| plan as the simulator's (order, parking, corner) | | 97.6 % | | 90.8 % |
+| time to finish, median | 11.0 s | 10.8 s | 17.1 s | 17.4 s |
+
+Rows below the first two are over the 992 trials that started. What this says:
+1. **The hardware path reproduces the simulator.** Success agrees within 0.3 points on 1,000 scenes (the noise of
+   1,000 scenes is about ±0.7 points for Level 2, ±0.9 for Level 3), and so does every part of it. Single scenes
+   do not: in Level 3, 62 scenes are assembled only in the simulator and 62 only through the hardware path, from
+   different camera noise and encoder noise. Compare rates, not single trials.
+2. **8 scenes in 1,000 do not start.** The training camera model's 1 mm noise puts blocks that the scene placed just
+   over 15 mm apart just under it, and the runner refuses rather than break the skills' rule. The C920 estimator is
+   more precise (p95 0.4 mm in simulation): with the rendered camera, a Level 2 scene this camera model refused
+   started (below). On the real table, move a block a few millimetres.
+3. **Level 3 plans differ from the simulator's in 9 % of scenes**, at no cost (95 % of them succeed). In 79 of the
+   91 the parking push moves the other block: the runner tries 1,000 spots against the simulator's 24 and keeps the
+   one with most room. In 9 the number of pushes differs (6 fewer, 3 more: the corner choice, or camera noise at
+   the 15 mm limit), in 3 the order.
+
+Through the rendered C920, 8 held-out scenes per level, from the left-wall slot as built (`--camera render
+--episodes 8`, about 2 minutes per trial) and from the back wall, 25 cm above the mat (`--mount back`, LIGHTBOX.md
+C6; about 1 minute per trial):
+
+| the same 8 scenes | Level 2 | Level 3 |
+|---|---|---|
+| simulator, same world | 7 | 7 |
+| hardware path, training camera model | 7 (one not started) | 6 |
+| **hardware path, rendered C920, left wall** | **6** | **5** |
+| ... frames without the T / the box | 16.1 / 23.0 % | 12.2 / 20.5 % |
+| ... lost-object recoveries, all resumed (trials) | 3 (3) | 6 (3) |
+| ... trials from a clear start | 1 | 2 |
+| **hardware path, rendered C920, back wall** | **7** | **7** |
+| ... frames without the T / the box | 1.2 / 0.8 % | 1.4 / 1.1 % |
+| ... lost-object recoveries (trials) | 0 | 0 |
+| ... trials from a clear start | 0 | 0 |
+
+Eight scenes are few (one is 12.5 points), but the camera path works end to end. Every trial started: three from a
+clear start 20–60 mm away, and the Level 2 scene the training camera model refused (the rendered estimate put the
+blocks over 15 mm apart). All 9 losses of the pushed block were recovered; no trial gave up. The left wall hides the
+block that must *stay* far more often than the pushed one: it needs 60 % in view and the arm leans over it (the box
+was unseen in up to 94 % of a T push's ticks). One Level 2 miss is exactly that. The T skill guarded a box pose it
+could not refresh and pushed the T into the box (22 mm). The other misses are the skills': the box skill stalled
+45 mm short while seen every tick, twice the T push in Level 3 ran out of its 20 s, and once the arm hid both blocks
+during the box's last push. The clutter, box and dock skills were not fine-tuned for the left wall's occlusion.
+
+From the back wall the arm hardly hides either block: about 1 % of frames lack the T or the box, every trial
+started where the scene put the rod, and no trial lost a block. Both levels match the simulator, 7 of 8. Gone are
+the T pushed into the unseen box, the Level 3 trial where the arm hid both blocks, and one of the two Level 3 T
+pushes that ran out of time. The two misses left are not the camera's: in Level 2 the box skill stalls 45.8 mm
+short, the same to the tenth of a millimetre as from the left wall (the training camera model's run solves that
+scene), and in Level 3 the T ends 8.8 mm / 14.8° off in the scene that the training camera model and the left wall
+miss too (14.6 and 40.5 mm). As for Push-T, move the camera to the back wall (LIGHTBOX.md C6) before judging Levels
+2 and 3 on the real table.
+
 ## 6. Trial logs (for Milestone 3)
 
 Every real run writes `trials/<date_time>.json`: the goal, the final pose and errors, and per tick the joints,
-joint targets, rod position, commanded position, camera pose (and block pose), action and gate stage. The failure-guided
-sampler (Milestone 3) will read these files.
+joint targets, rod position, commanded position, camera pose (and block pose), action and gate stage. Level 2 and 3
+trials (`trials/level2_<date_time>.json`) add the plan and its pushes, and per tick the push and its skill (§5).
+The failure-guided sampler (Milestone 3) will read these files.

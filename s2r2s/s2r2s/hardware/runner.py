@@ -5,6 +5,8 @@
     python -m s2r2s.hardware.runner --checkpoint runs/tee_lightbox_v1/best.pt --robot sim --camera render   # C920 pipeline
     python -m s2r2s.hardware.runner --checkpoint runs/tee_v1/best.pt --robot so101 --port COM5 \\
         --map calibration/joint_map.json --goal 0.20 0.05 90         # real arm (needs the camera)
+    python -m s2r2s.hardware.runner --level 2 --robot sim --episodes 50                    # Levels 2 and 3 (levels.py)
+    python -m s2r2s.hardware.runner --level 2 --robot sim --camera render --mount back --episodes 8   # C920 on the back wall
 
 The policy, the controller (action -> commanded rod position -> IK) and the observation code are
 the ones used in training; only the measurements come from outside (joint encoders, camera).
@@ -13,7 +15,8 @@ inside the reachable annulus at its fixed height. When the object has not been s
 seconds (2 s: the policy closes most shorter gaps itself by pushing on), the runner lifts the rod and
 moves it a few cm out of the camera's way until the object is seen again, then hands back to the policy
 (--on-lost hold: hold still instead); after --recover-seconds it gives up. A trial whose start position
-hides the object (or the clutter block) starts from a clear one nearby. Ctrl+C lifts the rod and exits.
+hides the object (or the clutter block) starts from a clear one nearby, after flying the rod (up to 40 mm high)
+out of the camera's way to find them. Ctrl+C lifts the rod and exits.
 Servo targets go out at about 100 Hz (--ramp-hz), stepping evenly from one tick's target to the next as in
 training (TaskConfig.servo_ramp); --no-ramp sends one jump per tick, which the servos take at full speed.
 """
@@ -53,6 +56,17 @@ def move_to(robot, jmap: JointMap, kin, xyz, seconds: float = 2.0, dt: float = 0
             time.sleep(max(0.0, dt - (time.monotonic() - t0)))
 
 
+def load_skill(checkpoint, device: str = "cpu", lightbox: bool = False):
+    """A policy and its twin: the training environment with one world, randomisation off (real measurements
+    replace the simulated camera and physics), stepped by no physics. Returns (policy, cfg, twin)."""
+    policy, cfg, _ = load_policy(checkpoint, device)
+    cfg = copy.deepcopy(cfg)
+    cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
+    cfg.num_envs, cfg.num_threads = 1, 1
+    cfg.rand.enabled = False
+    return policy, cfg, make_env(cfg)
+
+
 class PolicyRunner:
     """The policy in the loop, plus what the runner does by itself when the camera loses the object.
 
@@ -66,21 +80,18 @@ class PolicyRunner:
     hold the arm still instead (the old behaviour; with the left-wall C920 it can freeze where it hides the T).
 
     A trial that cannot start because the arm hides the object (or the clutter block) at its start position
-    (``start``) moves the rod to the pose that hides least of the band, finds them, then starts from the nearest
-    clear point from which the object stays in view.
+    (``start``) moves the rod to the pose that hides least of the band, flying as high as a vertical rod reaches
+    (up to ``start_lift``) and around what the camera does see, finds them, then starts from the nearest clear
+    point from which the object stays in view.
     """
 
     def __init__(self, checkpoint, robot, poses, jmap: JointMap, device: str = "cpu",
                  max_step_deg: float = 4.0, max_pose_age: float = 2.0, realtime: bool = True, lightbox: bool = False,
                  on_lost: str = "recover", recover_seconds: float = 8.0, lift: float = 0.025,
-                 ramp: bool = True, ramp_hz: float = 100.0):
-        self.policy, cfg, _ = load_policy(checkpoint, device)
-        cfg = copy.deepcopy(cfg)
-        cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
-        cfg.num_envs, cfg.num_threads = 1, 1
-        cfg.rand.enabled = False          # real measurements replace the simulated camera and physics randomisation
+                 start_lift: float = 0.04, ramp: bool = True, ramp_hz: float = 100.0):
+        # The twin runs the controller and observation code; no physics is stepped.
+        self.policy, cfg, self.twin = load_skill(checkpoint, device, lightbox)
         self.cfg, self.device = cfg, device
-        self.twin = make_env(cfg)         # runs the controller and observation code; no physics is stepped
         self.robot, self.poses, self.jmap = robot, poses, jmap
         self.max_step = math.radians(max_step_deg)
         self.max_pose_age, self.realtime = max_pose_age, realtime
@@ -93,7 +104,7 @@ class PolicyRunner:
         self.last_target = None
         if on_lost not in ("recover", "hold"):
             raise ValueError("on_lost: 'recover' or 'hold'")
-        self.on_lost, self.recover_seconds, self.lift = on_lost, recover_seconds, lift
+        self.on_lost, self.recover_seconds, self.lift, self.start_lift = on_lost, recover_seconds, lift, start_lift
         self.rod_speed = cfg.task.max_speed           # the policy's own speed limit, for the runner's moves too
         self.ticks, self.mode, self.log = 0, "policy", []
         self.events: list[dict] = []              # one per recovery: where, why, how it ended
@@ -134,7 +145,7 @@ class PolicyRunner:
         self._tell_arm(self.last_target)
         pose, block = self._first_poses(timeout)
         if pose is None or (self.clutter and block is None):
-            pose = self._clear_start(gate, clear_seconds)
+            pose = self._clear_start(gate, clear_seconds, pose, block)
             block = self.twin.clutter_obs[0].copy() if self.clutter else None     # seen on the way
         extra = {}
         if self.clutter:
@@ -143,7 +154,7 @@ class PolicyRunner:
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=pose[2])
         q = self.jmap.to_sim(self.robot.read_joints())
         self.twin.sync_measurements(q[None], pose[None], first=True, **extra)
-        self.last_seen = self._clock()
+        self.last_seen = self.block_seen = self._clock()
 
     def _clock(self) -> float:
         """Seconds for the lost-object check: wall time on the real arm, control ticks in a dry run (which runs
@@ -187,9 +198,13 @@ class PolicyRunner:
                              action=np.asarray(a).tolist(), stale=bool(stale), mode=self.mode,
                              stage=int(self.twin.stage[0]) if hasattr(self.twin, "stage") else -1,
                              **({"block": None if extra["block"] is None else extra["block"][0].tolist()}
-                                if self.clutter else {})))
+                                if self.clutter else {}), **self._log_extra()))
         if self.realtime:
             time.sleep(max(0.0, self.dt - (time.monotonic() - t0)))
+
+    def _log_extra(self) -> dict:
+        """More fields for each tick's log entry (``levels.LevelRunner``: the current push)."""
+        return {}
 
     def tick(self) -> str:
         """One control period. Returns the mode: "policy", the recovery's "retreat" / "lower", or "lost" (gave up:
@@ -277,11 +292,12 @@ class PolicyRunner:
         q, err, _ = self.twin.kin.solve(np.array([[xy[0], xy[1], z]]), seed[None], iterations=30)
         return q[0], float(err[0])
 
-    def _liftable(self, xy) -> np.ndarray:
-        """Which points (n, 2) a vertical rod reaches at ``lift`` (the vertical-rod workspace narrows with height:
-        at 25 mm r 13.5-27 cm straight ahead, at 40 mm 16-24 cm)."""
+    def _liftable(self, xy, z: float | None = None) -> np.ndarray:
+        """Which points (n, 2) a vertical rod reaches at ``z`` (default ``lift``; the vertical-rod workspace narrows
+        with height: at 25 mm r 13.5-27 cm straight ahead, at 40 mm 16-24 cm)."""
         xy = np.atleast_2d(xy)
-        _, err, _ = self.twin.kin.solve(np.c_[xy, np.full(len(xy), self.lift)], self.twin.kin.seed(xy), iterations=30)
+        _, err, _ = self.twin.kin.solve(np.c_[xy, np.full(len(xy), self.lift if z is None else z)],
+                                        self.twin.kin.seed(xy), iterations=30)
         return err < 0.001
 
     def _lift_z(self, xy, top: float | None = None) -> float:
@@ -311,7 +327,7 @@ class PolicyRunner:
         first, preferring the direction away from the object and toward the robot. With a shadow predictor, the
         first such point from which the camera would see at least ``need`` of the object (else the best one);
         without, the most preferred direction. None when no point qualifies. ``path_from``: where the lifted rod
-        comes from (default ``tip_xy``), for the walls."""
+        comes from (default ``tip_xy``), for the walls; False: any way there (the caller finds one)."""
         away = tip_xy - pose[:2]
         away = away / max(np.linalg.norm(away), 1e-9)
         home = -tip_xy / max(np.linalg.norm(tip_xy), 1e-9)
@@ -322,7 +338,8 @@ class PolicyRunner:
         cands = np.concatenate([tip_xy + d * dirs for d in distances])
         dist = np.repeat(distances, len(dirs))
         pref = 1 - np.tile(dirs @ u, len(distances))                      # 0 along u, 2 against it
-        ok = self._in_reach(cands) & self._clear_of_things(cands, pose, tip_xy if path_from is None else path_from)
+        ok = self._in_reach(cands) & self._clear_of_things(
+            cands, pose, None if path_from is False else tip_xy if path_from is None else path_from)
         ok[ok] &= self._liftable(cands[ok])
         for p in tried:
             ok &= np.linalg.norm(cands - p, axis=-1) > 0.015
@@ -406,27 +423,93 @@ class PolicyRunner:
         self.mode = "policy"
 
     # ------------------------------------------------------------------ a trial the arm hides from the camera
-    def _park_point(self) -> np.ndarray:
-        """The lifted rod position whose arm hides least of the work band (cached); without a shadow predictor,
-        straight ahead near the inner edge of the ring a lifted rod reaches (13.5 cm at 25 mm)."""
+    def _park_points(self) -> np.ndarray:
+        """Rod positions (n, 2) at ``start_lift`` on a 1 cm x 5 deg polar grid, best first (cached): with a shadow
+        predictor, by the share of the work band the arm hides there; without, by distance from straight ahead near
+        the inner edge of the ring a rod that high reaches."""
         if self._park is None:
             t = self.cfg.task
-            best = None
+            r, a = np.meshgrid(np.arange(t.tool_r[0] + 0.01, t.tool_r[1] - 0.005, 0.01), np.radians(np.arange(-50, 51, 5)))
+            xy = np.c_[(r * np.cos(a)).ravel(), (r * np.sin(a)).ravel()]
+            xy = xy[self._liftable(xy, self.start_lift)]
             if self.view is not None:
-                for r in np.arange(t.tool_r[0] + 0.01, t.tool_r[1] - 0.005, 0.01):
-                    for a in np.radians(np.arange(-50, 51, 5)):
-                        xy = np.array([r * math.cos(a), r * math.sin(a)])
-                        qp, err = self._ik(xy, self.lift, self.twin.kin.seed(xy[None])[0])
-                        if err < 0.001:
-                            h = self.view.band_hidden(qp)
-                            best = (h, xy) if best is None or h < best[0] else best
-            self._park = best[1] if best is not None else np.array([t.tool_r[0] + 0.025, 0.0])
+                key = [self.view.band_hidden(self._ik(p, self.start_lift, self.twin.kin.seed(p[None])[0])[0]) for p in xy]
+            else:
+                key = np.linalg.norm(xy - (np.hypot(*xy.T).min() + 0.01, 0.0), axis=1)
+            self._park = xy[np.argsort(key, kind="stable")]
         return self._park
 
-    def _move_until(self, goals, seconds, done=None, early: bool = False) -> bool:
+    def _fly_z(self, xy) -> np.ndarray:
+        """Rod heights (n,) for the clear start's flight over points ``xy`` (n, 2): as high as a vertical rod reaches
+        there, up to ``start_lift``, in 2.5 mm steps (below ``lift`` only where it does not reach that)."""
+        xy = np.atleast_2d(xy)
+        zs = np.arange(self.start_lift, self.lift - 1e-9, -0.0025)
+        pts = np.repeat(xy, len(zs), 0)
+        _, err, _ = self.twin.kin.solve(np.c_[pts, np.tile(zs, len(xy))], self.twin.kin.seed(pts), iterations=30)
+        ok = (err < 0.001).reshape(len(xy), len(zs))
+        return np.array([zs[np.argmax(k)] if k.any() else self._lift_z(p) for k, p in zip(ok, xy)])
+
+    def _flight(self, tip, pose, block) -> list:
+        """The way (x, y points) for the clear start's flight from ``tip`` to the best park point: straight there, or
+        through one other park point, passing over neither the object nor the block where the camera saw them at
+        the start (``pose``, ``block``; None: unseen) nor the gate's walls (the rod clears objects by 20 mm where it
+        flies at 40 mm, by 5 mm at 25 mm). The next best park point when the best cannot be reached that way;
+        straight to the best when none can."""
+        parks = self._park_points()
+        return self._way(tip, parks, pose, block) or [parks[0]]
+
+    def _way(self, frm, targets, pose, block):
+        """The way (x, y points) for the lifted rod from ``frm`` to the first of ``targets`` (n, 2) it can reach
+        straight, or through one park point, passing over neither the object at ``pose`` nor the block at ``block``
+        (None: not known) nor the gate's walls. Like ``_clear_of_things``, it may start near something but never
+        comes closer than 3 mm, or than at ``frm``. None when it reaches none of them."""
+        tw, parks = self.twin, self._park_points()
+
+        def gaps(xy):
+            gap = np.full(len(xy), np.inf)
+            if pose is not None:
+                gap = tw._surface_distance(xy, np.tile(pose, (len(xy), 1)), tw.obj_id[:1].repeat(len(xy)))
+            if self.clutter and block is not None:
+                gap = np.minimum(gap, tw._block_clearance(xy, np.tile(block, (len(xy), 1))) - self.cfg.scene.pusher_radius)
+            if hasattr(tw, "wall_gap"):
+                gap = np.minimum(gap, tw.wall_gap(xy, np.zeros(len(xy), dtype=int)))
+            return gap
+        # Where a lifted rod goes: the ring of park points, ``frm`` and ``targets``.
+        ends = np.vstack([parks, targets, frm[None]])
+        r, az = np.hypot(*ends.T), np.abs(np.arctan2(ends[:, 1], ends[:, 0]))
+        ring = (r.min() - 0.005, r.max() + 0.005, az.max() + 0.02)
+        floor = min(0.003, float(gaps(frm[None])[0]) - 0.001)
+
+        def clear(a, b):                  # the straight lines a[i] -> b[i] (n, 2), checked every 3 mm
+            k = max(2, int(np.linalg.norm(b - a, axis=-1).max() / 0.003) + 1)
+            w = np.linspace(0, 1, k)[None, :, None]
+            seg = (a[:, None] * (1 - w) + b[:, None] * w).reshape(-1, 2)
+            r, az = np.hypot(*seg.T), np.abs(np.arctan2(seg[:, 1], seg[:, 0]))
+            ok = (gaps(seg) >= floor) & (r >= ring[0]) & (r <= ring[1]) & (az <= ring[2])
+            return ok.reshape(len(a), k).all(1)
+        direct = clear(np.tile(frm, (len(targets), 1)), targets)
+        via = parks[clear(np.tile(frm, (len(parks), 1)), parks)]
+        for i, t in enumerate(targets):
+            if direct[i]:
+                return [t]
+            ok = clear(via, np.tile(t, (len(via), 1))) if len(via) else np.zeros(0, bool)
+            if ok.any():
+                k = np.argmin(np.where(ok, np.linalg.norm(via - frm, axis=1) + np.linalg.norm(via - t, axis=1), np.inf))
+                return [via[k], t]
+        return None
+
+    def _fly_goals(self, way) -> np.ndarray:
+        """Rod setpoints (x, y, z) for a lifted flight along the x, y points ``way``: every centimetre or less, as
+        high as a vertical rod reaches (``_fly_z``)."""
+        legs = [np.linspace(a, b, max(2, int(np.linalg.norm(b - a) / 0.01) + 2))[1:] for a, b in zip(way[:-1], way[1:])]
+        xy = np.concatenate([np.asarray(way[:1], float)] + legs)
+        return np.c_[xy, self._fly_z(xy)]
+
+    def _move_until(self, goals, seconds, done=None, early: bool = False, glide: bool = False) -> bool:
         """Runner-driven moves through ``goals`` (x, y, z) (no policy), one tick each, until each is reached and
         ``done()`` (if given) holds at the last one (``early``: anywhere on the way), or ``seconds`` pass. Returns
-        whether it got there."""
+        whether it got there. ``glide``: after the first goal, go on from each one before the last as soon as the
+        setpoint is there, not the rod (a path through them)."""
         q = self.jmap.to_sim(self.robot.read_joints())
         self._start_rod_move(q)
         t_end, k = self._clock() + seconds, 0
@@ -437,27 +520,29 @@ class PolicyRunner:
             self._send(t0, q, target, pose, extra, np.zeros(2), False)
             if early and done is not None and done():
                 return True
-            if there and k < len(goals) - 1:
+            if k < len(goals) - 1 and (there or glide and k > 0 and np.array_equal(self.sp, goals[k])):
                 k += 1
             elif there and (done is None or done()):
                 return True
         return False
 
-    def _clear_start(self, gate, seconds: float) -> np.ndarray:
-        """The arm hides the object (or the clutter block) at its start position: lift the rod and move it where it
-        hides least (the park point), find both, then lower it at the nearest clear point from which the object
-        should stay in view (the block's start pose is known by then)."""
+    def _clear_start(self, gate, seconds: float, pose=None, block=None) -> np.ndarray:
+        """The arm hides the object (or the clutter block) at its start position: lift the rod straight up and fly
+        it where the arm hides least (a park point), as high as a vertical rod reaches on the way (up to
+        ``start_lift``: the hidden one may be anywhere under the arm's shadow, and the gripper hides the rod's
+        surroundings), around the one the camera saw at the start (``pose``, ``block``; None: unseen; ``_flight``).
+        Find both, then lower it at the nearest clear point from which the object should stay in view (the block's
+        start pose is known by then)."""
         self.mode = "start"
         if gate is not None:              # the walls must be known before checking clearances
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=0.0)
         q = self.jmap.to_sim(self.robot.read_joints())
         tip0 = self.twin.kin.forward(q[None])[0][0]
         self.last_seen = -1e9
-        high = self.lift
         fresh = lambda: (self._clock() - self.last_seen <= self.fresh_age
                          and (not self.clutter or self.block_seen > self.clear_t0))
-        self._move_until([np.r_[tip0[:2], self._lift_z(tip0[:2])], np.r_[self._park_point(), high]], seconds, fresh,
-                         early=True)
+        self._move_until(self._fly_goals([tip0[:2]] + self._flight(tip0[:2], pose, block)), seconds, fresh,
+                         early=True, glide=True)                                     # straight up first
         if not fresh():
             raise RuntimeError(f"no {'object or block' if self.clutter else 'object'} pose from the camera, also "
                                "with the arm out of the way")
@@ -475,10 +560,17 @@ class PolicyRunner:
                 start = tip0[:2].copy()
             if start is None:
                 start = self._retreat_point(q, tip0[:2], pose, tried, distances=distances, path_from=here)
+            way = None if start is None else [start]
+            if start is None:          # every straight way to a start passes over something: one through a park point
+                start = self._retreat_point(q, tip0[:2], pose, tried, distances=distances, path_from=False)
+                way = None if start is None else self._way(here, start[None], pose,
+                                                            self.twin.clutter_obs[0] if self.clutter else None)
             if start is None:
                 break
             tried.append(start)
-            if self._move_until([np.r_[start, high], np.r_[start, self.twin.tool_z_cmd[0]]], seconds, fresh):
+            # As high as on the way here, then straight down.
+            if way is not None and self._move_until(self._fly_goals([here] + way), seconds, glide=True) \
+                    and self._move_until([np.r_[start, self.twin.tool_z_cmd[0]]], seconds, fresh):
                 self.start_shift = float(np.linalg.norm(start - tip0[:2]))
                 self.mode = "policy"
                 return self.twin.obs_pose[0].copy()
@@ -503,6 +595,21 @@ def save_trial(path: Path, runner: PolicyRunner, meta: dict):
     path.with_suffix(".json").write_text(json.dumps({**meta, "ticks": runner.log}, indent=1))
 
 
+def runner_options(args) -> dict:
+    """The runner's safety, recovery and ramp settings from the command line."""
+    return dict(max_step_deg=args.max_step_deg, lightbox=args.lightbox, max_pose_age=args.max_pose_age,
+                on_lost=args.on_lost, recover_seconds=args.recover_seconds, ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
+
+
+def lift_clear(robot, jmap: JointMap, runner: PolicyRunner):
+    """End of a real trial: lift the rod clear, up to 4 cm, as high as a vertical rod reaches there."""
+    tip = runner.twin.tip[0]
+    try:
+        move_to(robot, jmap, runner.twin.kin, (tip[0], tip[1], runner._lift_z(tip[:2], top=0.04)), seconds=1.0)
+    except ValueError as error:
+        print(f"could not lift the rod: {error}")
+
+
 def dry_run(args):
     """Episodes on SimRobot through the full hardware path (joint map, pose source, safety limits)."""
     _, cfg, _ = load_policy(args.checkpoint, "cpu")
@@ -515,13 +622,12 @@ def dry_run(args):
     jmap = JointMap.load(args.map) if args.map else JointMap()
     robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
     gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
-    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, realtime=False,
-                          lightbox=args.lightbox, max_pose_age=args.max_pose_age, on_lost=args.on_lost,
-                          recover_seconds=args.recover_seconds, ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
+    runner = PolicyRunner(args.checkpoint, robot, None, jmap, realtime=False, **runner_options(args))
     camera = None
     if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.1 s per tick)
         from .camera_sim import RenderedPoseSource
-        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed)
+        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed,
+                                    mount=args.mount)
     stats, dropped, unseen, shifted, recoveries = [], [], [], [], []
     for i in range(args.episodes):
         robot.place(scenes.tip[i, :2], scenes.object_pose()[i])
@@ -594,15 +700,14 @@ def dry_run(args):
           f"median {np.median(s[:, 1]) * 1e3:.1f} mm / {math.degrees(np.median(s[:, 2])):.1f} deg"
           + (f", passed gate {s[:, 3].mean():.1%}" if gate_task else "")
           + (f", block kept in place {s[:, 3].mean():.1%}" if clutter_task else "")
-          + (f"; rendered C920, {np.mean(dropped):.1%} of frames without a pose" if camera is not None else ""))
+          + (f"; rendered C920 ({args.mount} mount), {np.mean(dropped):.1%} of frames without a pose"
+             if camera is not None else ""))
 
 
 def real_run(args):
     jmap = JointMap.load(args.map)
     robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
-    runner = PolicyRunner(args.checkpoint, robot, None, jmap, max_step_deg=args.max_step_deg, lightbox=args.lightbox,
-                          max_pose_age=args.max_pose_age, on_lost=args.on_lost, recover_seconds=args.recover_seconds,
-                          ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
+    runner = PolicyRunner(args.checkpoint, robot, None, jmap, **runner_options(args))
     try:      # the camera masks the arm out using the policy's own scene (lightbox, rod)
         poses = runner.poses = CameraPoseSource(scene=runner.cfg.scene, block_name=runner.cfg.task.clutter or "box")
     except FileNotFoundError as error:
@@ -625,11 +730,7 @@ def real_run(args):
     except RuntimeError as error:
         print(f"trial not started: {error}")
     finally:
-        tip = runner.twin.tip[0]
-        try:                     # lift the rod clear: up to 4 cm, as high as a vertical rod reaches there
-            move_to(robot, jmap, kin, (tip[0], tip[1], runner._lift_z(tip[:2], top=0.04)), seconds=1.0)
-        except ValueError as error:
-            print(f"could not lift the rod: {error}")
+        lift_clear(robot, jmap, runner)
         pose, _ = poses.read()
         meta = dict(checkpoint=args.checkpoint, goal=goal.tolist(), final=None if pose is None else pose.tolist(),
                     start_shift=runner.start_shift, recoveries=runner.events)
@@ -644,7 +745,13 @@ def real_run(args):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--checkpoint", required=True)
+    ap.add_argument("--checkpoint", default="", help="the policy (one per trial); not with --level")
+    ap.add_argument("--level", type=int, choices=[2, 3], default=0,
+                    help="Level 2 (two blocks to their goals) or 3 (the box nested in the T's corner): a push plan from "
+                         "the camera's first view, a skill per push (levels.py)")
+    ap.add_argument("--tee", default="runs/clutter_lightbox_v2/best.pt", help="--level: push the T, keep the box")
+    ap.add_argument("--box", default="runs/clutter_box_lightbox_v2/best.pt", help="--level: push the box, keep the T")
+    ap.add_argument("--dock", default="runs/dock_lightbox_v3/best.pt", help="--level 3: push the box into the T's corner")
     ap.add_argument("--robot", choices=["sim", "so101"], default="sim")
     ap.add_argument("--port", default="")
     ap.add_argument("--map", default="", help="joint map from calibrate.py (required on the real arm)")
@@ -653,7 +760,10 @@ def main(argv=None):
     ap.add_argument("--episodes", type=int, default=20, help="sim dry run")
     ap.add_argument("--seed", type=int, default=TEST_SEED, help="sim dry run: scene seed")
     ap.add_argument("--hidden-map", default="", help="sim dry run: the simulated arm's true (miscalibrated) map")
-    ap.add_argument("--goal", type=float, nargs=3, default=(0.20, 0.05, 90.0), metavar=("X", "Y", "YAW_DEG"))
+    ap.add_argument("--goal", type=float, nargs=3, default=(0.20, 0.05, 90.0), metavar=("X", "Y", "YAW_DEG"),
+                    help="real arm: the object's goal (with --level, the T's)")
+    ap.add_argument("--box-goal", type=float, nargs=3, default=(0.20, -0.06, 0.0), metavar=("X", "Y", "YAW_DEG"),
+                    help="real arm, --level 2: the box's goal")
     ap.add_argument("--tool-start", type=float, nargs=2, default=(0.15, -0.10), metavar=("X", "Y"))
     ap.add_argument("--max-pose-age", type=float, default=2.0,
                     help="the object is lost when it has not been seen for this long (s); shorter gaps the policy "
@@ -669,14 +779,22 @@ def main(argv=None):
                     help="give up (end the trial, rod lifted) when the object stays unseen this long")
     ap.add_argument("--camera", choices=["sim", "render"], default="sim",
                     help="sim dry run: the training camera model, or the C920 pipeline on rendered frames (lightbox)")
+    ap.add_argument("--mount", choices=["left", "right", "back"], default="left",
+                    help="--camera render: where the C920 is (camera_sim.MOUNTS): the left-wall slot as built, its mirror, "
+                         "or the back wall 25 cm above the mat (LIGHTBOX.md C6)")
     ap.add_argument("--lightbox", action="store_true",
                     help="the arm stands in the lightbox, 9.8 mm below the mat (implied by policies trained there)")
     args = ap.parse_args(argv)
-    if args.robot == "sim":
+    if bool(args.checkpoint) == bool(args.level):
+        ap.error("give --checkpoint (one policy) or --level 2|3 (the skills)")
+    if args.robot == "so101" and not args.map:
+        ap.error("--map is required on the real arm (run calibrate.py first)")
+    if args.level:
+        from . import levels
+        (levels.dry_run if args.robot == "sim" else levels.real_run)(args)
+    elif args.robot == "sim":
         dry_run(args)
     else:
-        if not args.map:
-            ap.error("--map is required on the real arm (run calibrate.py first)")
         real_run(args)
 
 

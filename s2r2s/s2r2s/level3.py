@@ -65,6 +65,28 @@ class Level3Env(Level2Env):
                 & self._in_region(pre[:, :2], (t.obj_r[0] - 0.01, t.obj_r[1] + 0.01), t.obj_az + 0.05)
                 & self._in_region(rod, (t.tool_r[0] + 0.01, t.tool_r[1] - 0.01), t.tool_az - 0.1))
 
+    def assembly_plan(self, t_start, t_goal, b_start, side):
+        """Level 2's plans for the T to its goal and the box to the pre-dock spot of the corner on ``side``, then
+        docking. Returns (length (k,): 0 = no plan, who, targets, clearance) as ``plan``."""
+        length, who, goal, clear = self.plan(t_start, t_goal, b_start, self.predock(t_goal, side)[0])
+        r = np.flatnonzero(length > 0)
+        who[r, length[r]] = DOCK                                          # then dock the box into the corner
+        goal[r, length[r]] = self.docked(t_goal[r], side[r])
+        length[r] += 1
+        return length, who, goal, clear
+
+    def corner_plans(self, t_start, t_goal, b_start):
+        """Plans for scenes that must be done as they are (the real arm: no redrawing): of the corners that fit, the
+        one whose plan has fewer pushes, then more room. Returns (side (k,), length, who, targets, clearance)."""
+        side = np.ones(len(t_start))
+        length, who, goal, clear = self.assembly_plan(t_start, t_goal, b_start, side)
+        length[~self._fits(t_goal, side)] = 0
+        L, W, G, C = self.assembly_plan(t_start, t_goal, b_start, -side)              # the other corner
+        L[~self._fits(t_goal, -side)] = 0
+        b = (L > 0) & ((length == 0) | (L < length) | ((L == length) & (C > clear)))
+        side[b], length[b], who[b], goal[b], clear[b] = -1.0, L[b], W[b], G[b], C[b]
+        return side, length, who, goal, clear
+
     def _sample_scene(self, ids):
         t = self.cfg.task
         n = len(ids)
@@ -89,15 +111,13 @@ class Level3Env(Level2Env):
             bs = bs[np.arange(k) * m + ok.argmax(1)]
             p = self.predock(t_goal, sd)[0]
             sub = np.flatnonzero(found)
-            length, who, goal, clear = self.plan(t_start[sub], t_goal[sub], bs[sub], p[sub])
-            good = sub[length > 0]
+            length, who, goal, clear = self.assembly_plan(t_start[sub], t_goal[sub], bs[sub], sd[sub])
+            ok = length > 0
+            good = sub[ok]
             w = ids[todo[good]]
             b_start[todo[good]], pre[todo[good]], side[todo[good]] = bs[good], p[good], sd[good]
-            L, W, G = length[length > 0], who[length > 0], goal[length > 0]
-            W[np.arange(len(L)), L] = DOCK                                # then dock the box into the corner
-            G[np.arange(len(L)), L] = self.docked(t_goal[good], sd[good])
-            self.plan_len[w], self.plan_who[w], self.plan_goal[w] = L + 1, W, G
-            self.plan_clearance[w] = clear[length > 0]
+            self.plan_len[w], self.plan_who[w], self.plan_goal[w] = length[ok], who[ok], goal[ok]
+            self.plan_clearance[w] = clear[ok]
             todo = np.delete(todo, good)
         if len(todo):
             raise RuntimeError(f"no assembly scene with a plan for {len(todo)} worlds")

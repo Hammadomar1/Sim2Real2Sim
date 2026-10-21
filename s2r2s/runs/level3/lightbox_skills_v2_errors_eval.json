@@ -26,33 +26,33 @@
   ]
  },
  "episodes": 1000,
- "success": 0.838,
- "tee_at_goal": 0.899,
- "box_at_goal": 0.893,
- "failure": 0.016,
- "all_pushes_settled": 0.658,
- "kept_block_disturbed": 0.073,
- "kept_block_moved_mm_median": 1.2316718714768795,
- "time_s_median": 19.25,
+ "success": 0.837,
+ "tee_at_goal": 0.91,
+ "box_at_goal": 0.885,
+ "failure": 0.017,
+ "all_pushes_settled": 0.678,
+ "kept_block_disturbed": 0.07,
+ "kept_block_moved_mm_median": 0.9815410912758487,
+ "time_s_median": 19.0,
  "three_push_share": 0.366,
  "success_two_pushes": 0.8517350157728707,
- "success_three_pushes": 0.8142076502732241,
+ "success_three_pushes": 0.8114754098360656,
  "tee_first_share": 0.6072555205047319,
- "success_tee_first": 0.8753246753246753,
- "success_box_first": 0.8152610441767069,
+ "success_tee_first": 0.8545454545454545,
+ "success_box_first": 0.8473895582329317,
  "order_valid": 1.0,
  "tee_err_median": [
-  2.9706987017418673,
-  3.1440988821112854
+  2.801113281180438,
+  3.0926483882434894
  ],
  "box_err_median": [
-  0.8710874652080738,
-  0.698727972890647
+  0.9155937963838677,
+  0.732029092308393
  ],
- "docked": 0.893,
- "gap_mm_median": 0.0024331226019733143,
+ "docked": 0.885,
+ "gap_mm_median": 0.002443775951400766,
  "dock_err_median": [
-  0.8710874652080738,
-  0.698727972890647
+  0.9155937963838677,
+  0.732029092308393
  ]
 }

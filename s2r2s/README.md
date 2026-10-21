@@ -376,11 +376,11 @@ noise, joint calibration error, backlash). Push-T, success:
   The middle of the back wall, 25 cm up, hides 1.7 % of frames and costs nothing: move the camera there (LIGHTBOX.md, C6).
   If it must stay on the left wall, `tee_occlusion_v1` (fine-tuned 35 minutes with the occlusion on) scores 95.8 % there.
 - **Smooth motion.** The arm shook: the servos jumped to each new joint target 20 times a second. The targets now ramp
-  over each 50 ms period (`task.servo_ramp`, on for new runs; the hardware runner ramps at 100 Hz), and the lightbox
-  skills were fine-tuned 20 minutes each with it: `tee_lightbox_v2` (99.2 % lightbox, 98.2 % every error),
-  `clutter_lightbox_v2`, `clutter_box_lightbox_v2`, `dock_lightbox_v3`. Rod wobble halves (about 1.1 → 0.55 mm), and
-  with every error Level 2 reaches 91.5 % and Level 3 81.9 % (LIGHTBOX.md, "Smooth motion"). Measure it with
-  `python -m s2r2s.lightbox <checkpoint> --smoothness`.
+  over each 50 ms period (`task.servo_ramp`, on for new runs; the servo delay shifts the ramp in time; the hardware
+  runner ramps at 100 Hz), and the lightbox skills were fine-tuned 20 minutes each with it: `tee_lightbox_v2`
+  (99.0 % lightbox, 98.1 % every error), `clutter_lightbox_v2`, `clutter_box_lightbox_v2`, `dock_lightbox_v3`. Rod
+  wobble drops from about 1 mm to 0.11–0.16 mm, and with every error Level 2 reaches 91.1 % and Level 3 82.6 %
+  (LIGHTBOX.md, "Smooth motion"). Measure it with `python -m s2r2s.lightbox <checkpoint> --smoothness`.
 
 ```powershell
 python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt                           # the full check (about 8 minutes)
@@ -493,6 +493,12 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
   both, it is free); docking scenes start clear of the T and succeed only when seated with the T in place; the
   dock target stays put when the T is nudged; every assembly plan ends with docking from a pre-dock spot 17.7 mm
   from both faces; and recorded Level 3 starts are reproduced exactly when training starts from them
+- Levels 2 and 3 through the hardware path: the robot's corner choice fits the band and never needs more pushes
+  than the scene's own corner; pushes switch after 1 s settled by the camera, to the other skill's twin with the
+  blocks' roles swapped; docking gets 10 s with its target fixed when it starts; a lost box is recovered as the box
+  skill's object, with no switch meanwhile; blocks too close are refused; the lightbox skills complete a held-out
+  Level 2 and Level 3 scene on the simulated arm; and the runner's `--mount` reaches the rendered C920 in every dry
+  run, which then renders, estimates and masks the arm from that mount
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 
@@ -530,5 +536,5 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/camera_study.py` | Arm-occlusion study for choosing the real camera mount |
 | `s2r2s/occlusion.py` | Arm occlusion in the camera model (`rand.occlusion_camera`): ray-cast visible share, hidden frames dropped |
 | `s2r2s/lightbox.py` | Grade a policy in the lightbox scene and under its unmeasured quantities (see LIGHTBOX.md) |
-| `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner: see [HARDWARE.md](HARDWARE.md) |
+| `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner (one policy, or Levels 2 and 3 with the planner and a skill per push): see [HARDWARE.md](HARDWARE.md) |
 | `tests/` | Regression tests |

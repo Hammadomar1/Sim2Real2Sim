@@ -1,0 +1,25 @@
+$ python -m s2r2s.hardware.runner --level 2 --robot sim --camera render --mount back --episodes 8
+episode   1: success box, T                             settled 2/2  T   4.0 mm   7.5 deg  box   3.6 mm   4.9 deg
+episode   2: success T, box                             settled 2/2  T   3.0 mm   6.2 deg  box   0.3 mm   4.4 deg
+episode   3: success box, T                             settled 2/2  T   2.6 mm   3.0 deg  box   3.4 mm   5.2 deg
+episode   4: miss    T, box                             settled 1/2  T   0.5 mm   4.6 deg  box  45.8 mm  26.4 deg
+episode   5: success box, T                             settled 2/2  T   6.3 mm   1.8 deg  box   1.1 mm   0.1 deg
+episode   6: success T, box                             settled 2/2  T   2.1 mm   5.3 deg  box   2.8 mm   6.5 deg
+episode   7: success box, T                             settled 2/2  T   5.7 mm   5.2 deg  box   2.9 mm   2.7 deg
+episode   8: success T, box                             settled 2/2  T   1.4 mm   3.3 deg  box   1.2 mm   1.3 deg
+
+Level 2: 8 scenes (seed 20000003) through the hardware path, rendered C920 (back mount; 1.2% of frames without the T, 0.8% without the box)
+  success                                          87.5%
+    T at its goal                                  100.0%
+    box at its goal                                87.5%
+  every push settled at its target                 87.5%
+  a block that had to stay moved >10 mm            0.0%
+  failures (a block left the band)                 0.0%
+  plans as the simulator's                         100.0%
+  episodes with a lost-object recovery             0.0%
+  gave up (object lost)                            0.0%
+  time to finish, median (s)                       10.7
+
+real	8m56.007s
+user	0m0.015s
+sys	0m0.015s
