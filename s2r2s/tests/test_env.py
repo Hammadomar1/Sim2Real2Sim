@@ -103,14 +103,20 @@ def test_servo_ramp_moves_the_targets_in_equal_steps():
     cfg = EnvConfig(num_envs=8, seed=2, num_threads=4, task=TaskConfig(easy_fraction=0.0, servo_ramp=True),
                     rand=RandomizationConfig(enabled=True))
     env = PushEnv(cfg)
+    assert env.delay.max() > 0
     for _ in range(3):
-        prev = env.prev_ctrl.copy()
+        prev2, prev = env.prev2_ctrl.copy(), env.prev_ctrl.copy()
         env.step(np.tile([0.7, -0.4], (env.n, 1)))
         new, d = env.prev_ctrl, env.delay[:, None, None]
-        sub = np.arange(env.nsub)[None, :, None]
-        frac = np.clip((sub + 1 - d) / (env.nsub - d), 0, 1)       # hold during the latency, then equal steps
-        assert np.allclose(env.ctrl, prev[:, None, :] + frac * (new - prev)[:, None, :])
-        assert np.allclose(env.ctrl[:, -1], new)
+        tau = np.arange(env.nsub)[None, :, None] + 1 - d          # the latency shifts the ramps, never squeezes them
+        expected = np.where(tau > 0, prev[:, None, :] + tau / env.nsub * (new - prev)[:, None, :],
+                            prev2[:, None, :] + (env.nsub + tau) / env.nsub * (prev - prev2)[:, None, :])
+        assert np.allclose(env.ctrl, expected)
+        on_new = tau[..., 0] > 1                                  # consecutive substeps of the new ramp: equal steps
+        steps = np.diff(env.ctrl, axis=1)[on_new[:, 1:] & on_new[:, :-1]]
+        assert np.allclose(steps, np.repeat((new - prev) / env.nsub, env.nsub, 0).reshape(env.n, env.nsub, -1)[
+            :, 1:][on_new[:, 1:] & on_new[:, :-1]])
+        assert np.allclose(env.ctrl[env.delay == 0, -1], new[env.delay == 0])
 
 
 def test_servo_ramp_keeps_the_rod_near_the_commanded_speed():

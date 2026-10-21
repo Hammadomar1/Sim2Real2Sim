@@ -22,27 +22,27 @@
   "out": "runs/level2/lightbox_skills_v2_all_errors_eval.json"
  },
  "episodes": 1000,
- "success": 0.915,
- "tee_at_goal": 0.949,
- "box_at_goal": 0.95,
- "failure": 0.011,
- "all_pushes_settled": 0.893,
+ "success": 0.911,
+ "tee_at_goal": 0.946,
+ "box_at_goal": 0.947,
+ "failure": 0.012,
+ "all_pushes_settled": 0.88,
  "kept_block_disturbed": 0.021,
- "kept_block_moved_mm_median": 0.003996912135442598,
- "time_s_median": 12.100000000000001,
+ "kept_block_moved_mm_median": 0.004395948339800998,
+ "time_s_median": 12.15,
  "three_push_share": 0.006,
- "success_two_pushes": 0.9144869215291751,
- "success_three_pushes": 1.0,
+ "success_two_pushes": 0.9114688128772636,
+ "success_three_pushes": 0.8333333333333334,
  "tee_first_share": 0.5181086519114688,
- "success_tee_first": 0.8893203883495145,
- "success_box_first": 0.941544885177453,
+ "success_tee_first": 0.8932038834951457,
+ "success_box_first": 0.9311064718162839,
  "order_valid": 1.0,
  "tee_err_median": [
-  1.7258402844342406,
-  2.366078496074987
+  1.8692564126377305,
+  2.561633582307185
  ],
  "box_err_median": [
-  1.3700117472799929,
-  2.4874880684449274
+  1.427571850016625,
+  2.429074245081627
  ]
 }

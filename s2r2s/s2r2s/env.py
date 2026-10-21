@@ -240,6 +240,7 @@ class PushEnv:
         self.cmd_xy = z(2)
         self.q_cmd = z(5)
         self.prev_ctrl = z(m0.nu)
+        self.prev2_ctrl = z(m0.nu)         # the command before prev_ctrl (the servo ramp's previous segment)
         self.joint_offset = z(5)           # encoder reading minus true joint angle (calibration error)
         self.link_target = z(5)            # servo targets after the backlash dead band (true joint frame)
         self.prev_action = z(2)
@@ -412,6 +413,7 @@ class PushEnv:
         self.q_cmd[ids] = q
         self.prev_ctrl[ids, :5] = q_true
         self.prev_ctrl[ids, 5] = self.cfg.scene.gripper_hold
+        self.prev2_ctrl[ids] = self.prev_ctrl[ids]
         self.cmd_xy[ids] = tool
         self.prev_action[ids] = 0
         self.step_count[ids] = 0
@@ -565,15 +567,20 @@ class PushEnv:
             self.link_target = np.clip(self.link_target, q - play, q + play)
             q = self.link_target
         new_ctrl = np.c_[q, np.full(self.n, self.cfg.scene.gripper_hold)]
-        # Servo command latency: the previous command persists for ``delay`` substeps. With ``servo_ramp`` the targets
-        # then move to the new command in equal steps over the rest of the control period.
+        # Servo command latency: the commands reach the servos ``delay`` substeps late. Stepped targets: the previous
+        # command persists for ``delay`` substeps. With ``servo_ramp`` each command is a ramp over one control period
+        # from the previous one, and the latency shifts that ramp in time: the first ``delay`` substeps still finish
+        # the previous ramp, then the new one starts at the same pace (it finishes during the next period).
         sub = np.arange(self.nsub)[None, :, None]
         delay = self.delay[:, None, None]
         if t.servo_ramp:
-            frac = np.clip((sub + 1 - delay) / (self.nsub - delay), 0.0, 1.0)
-            self.ctrl[:] = self.prev_ctrl[:, None, :] + frac * (new_ctrl - self.prev_ctrl)[:, None, :]
+            tau = sub + 1 - delay                    # substeps into the new ramp (<= 0: still on the previous one)
+            new_ramp = self.prev_ctrl[:, None, :] + (tau / self.nsub) * (new_ctrl - self.prev_ctrl)[:, None, :]
+            old_ramp = self.prev2_ctrl[:, None, :] + ((self.nsub + tau) / self.nsub) * (self.prev_ctrl - self.prev2_ctrl)[:, None, :]
+            self.ctrl[:] = np.where(tau > 0, new_ramp, old_ramp)
         else:
             self.ctrl[:] = np.where(sub < delay, self.prev_ctrl[:, None, :], new_ctrl[:, None, :])
+        self.prev2_ctrl = self.prev_ctrl
         self.prev_ctrl = new_ctrl
         self.pool.rollout(self.models, self.datas, self.state, self.ctrl, nstep=self.nsub,
                           initial_warmstart=self.warmstart, state=self.out, skip_checks=True)

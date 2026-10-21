@@ -376,11 +376,11 @@ noise, joint calibration error, backlash). Push-T, success:
   The middle of the back wall, 25 cm up, hides 1.7 % of frames and costs nothing: move the camera there (LIGHTBOX.md, C6).
   If it must stay on the left wall, `tee_occlusion_v1` (fine-tuned 35 minutes with the occlusion on) scores 95.8 % there.
 - **Smooth motion.** The arm shook: the servos jumped to each new joint target 20 times a second. The targets now ramp
-  over each 50 ms period (`task.servo_ramp`, on for new runs; the hardware runner ramps at 100 Hz), and the lightbox
-  skills were fine-tuned 20 minutes each with it: `tee_lightbox_v2` (99.2 % lightbox, 98.2 % every error),
-  `clutter_lightbox_v2`, `clutter_box_lightbox_v2`, `dock_lightbox_v3`. Rod wobble halves (about 1.1 → 0.55 mm), and
-  with every error Level 2 reaches 91.5 % and Level 3 81.9 % (LIGHTBOX.md, "Smooth motion"). Measure it with
-  `python -m s2r2s.lightbox <checkpoint> --smoothness`.
+  over each 50 ms period (`task.servo_ramp`, on for new runs; the servo delay shifts the ramp in time; the hardware
+  runner ramps at 100 Hz), and the lightbox skills were fine-tuned 20 minutes each with it: `tee_lightbox_v2`
+  (99.0 % lightbox, 98.1 % every error), `clutter_lightbox_v2`, `clutter_box_lightbox_v2`, `dock_lightbox_v3`. Rod
+  wobble drops from about 1 mm to 0.11–0.16 mm, and with every error Level 2 reaches 91.1 % and Level 3 82.6 %
+  (LIGHTBOX.md, "Smooth motion"). Measure it with `python -m s2r2s.lightbox <checkpoint> --smoothness`.
 
 ```powershell
 python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt                           # the full check (about 8 minutes)

@@ -180,44 +180,52 @@ reached each one within a few milliseconds and overshot, so the arm lurched 20 t
 same stepped targets would hit the gearboxes the same way, and the camera noise the policy reacts to adds to it.
 
 The fix is in the controller, shared with the hardware: the joint targets now move from the previous command to the
-new one in equal steps over the control period (after the simulated servo delay), `task.servo_ramp`, on for every
-run trained from now on (checkpoints saved before it load with it off, as they were trained). The hardware runner
-sends the same ramp at about 100 Hz (HARDWARE.md §5).
+new one in equal steps over the control period, `task.servo_ramp`, on for every run trained from now on (checkpoints
+saved before it load with it off, as they were trained). The hardware runner sends the same ramp at about 100 Hz
+(HARDWARE.md §5). The simulated servo command delay (0–25 ms, drawn per episode) shifts the stream of ramped targets
+later in time: during the delay the servos finish the previous ramp, then start the new one at the same even pace.
+(The first version of the ramp held the old target during the delay and then rushed through the whole ramp in the
+time left, so with that delay the arm still pulsed 20 times a second: p99 rod speed 266 mm/s with every hardware
+error. Corrected on 20 Oct; the numbers below are with the corrected model.)
 
-The four lightbox skills were then fine-tuned for 20 minutes each from their earlier versions, with the ramp on and
-the same hardware errors as before: `tee_lightbox_v2`, `clutter_lightbox_v2`, `clutter_box_lightbox_v2` and
-`dock_lightbox_v3` (`dock_lightbox_v2` is the earlier start-bank experiment). 1,000 held-out scenes per cell.
+The four lightbox skills were fine-tuned for 20 minutes each from their earlier versions, with the ramp on and the
+same hardware errors as before: `tee_lightbox_v2`, `clutter_lightbox_v2`, `clutter_box_lightbox_v2` and
+`dock_lightbox_v3` (`dock_lightbox_v2` is the earlier start-bank experiment). They were trained under the first ramp
+model and were not retrained after the correction: their success is unchanged within the noise of 1,000 scenes.
 *Wobble* is the RMS distance of the rod tip from the straight line between where it was at the start and at the end
 of each 50 ms period, *speed* the 99th percentile of its speed over every 5 ms physics step
-(`python -m s2r2s.lightbox <checkpoint> --smoothness`); both in the lightbox row:
+(`python -m s2r2s.lightbox <checkpoint> --smoothness`); both in the lightbox row. 1,000 held-out scenes per cell:
 
-| skill, old → ramped | lightbox | every hardware error | wobble | rod speed, p99 |
+| skill, stepped → ramped | lightbox | every hardware error | wobble | rod speed, p99 |
 |---|---|---|---|---|
-| Push-T, `tee_lightbox_v1` → `tee_lightbox_v2` | 98.5 → **99.2 %** | 97.7 → **98.2 %** | 1.08 → **0.56 mm** | 331 → **242 mm/s** |
-| clutter, `clutter_lightbox_v1` → `clutter_lightbox_v2` | 95.3 → **95.9 %** | 91.0 → **92.6 %** | 1.09 → **0.56 mm** | 338 → **245 mm/s** |
-| box, `clutter_box_lightbox_v1` → `clutter_box_lightbox_v2` | 96.7 → **97.3 %** | 94.2 → **95.9 %** | 1.02 → **0.55 mm** | 322 → **240 mm/s** |
-| dock, `dock_lightbox_v1` → `dock_lightbox_v3` | 92.5 → **95.9 %** | 88.3 → **90.8 %** | 0.96 → **0.52 mm** | 323 → **239 mm/s** |
+| Push-T, `tee_lightbox_v1` → `tee_lightbox_v2` | 98.5 → **99.0 %** | 97.7 → **98.1 %** | 1.08 → **0.11 mm** | 331 → **114 mm/s** |
+| clutter, `clutter_lightbox_v1` → `clutter_lightbox_v2` | 95.3 → **95.0 %** | 91.0 → **94.3 %** | 1.09 → **0.13 mm** | 338 → **114 mm/s** |
+| box, `clutter_box_lightbox_v1` → `clutter_box_lightbox_v2` | 96.7 → **97.3 %** | 94.2 → **96.2 %** | 1.02 → **0.13 mm** | 322 → **114 mm/s** |
+| dock, `dock_lightbox_v1` → `dock_lightbox_v3` | 92.5 → **97.0 %** | 88.3 → **92.3 %** | 0.96 → **0.16 mm** | 323 → **115 mm/s** |
 
-Levels 2 and 3, old skills → ramped skills, in the same three lightbox worlds as above
+Levels 2 and 3, stepped skills → ramped skills, in the same three lightbox worlds as above
 (`runs\level*\lightbox_skills_v2*_eval.json`):
 
 | world | Level 2 | Level 3 |
 |---|---|---|
-| measured geometry, no hardware errors | 93.7 → **95.6 %** | 87.2 → **91.2 %** |
-| + joint calibration error ≤ 1°, backlash ±0.5° | 89.9 → **93.0 %** | 77.3 → **83.8 %** |
-| + mat friction 0.2–0.9, camera latency 0–150 ms (every error) | 89.6 → **91.5 %** | 74.5 → **81.9 %** |
+| measured geometry, no hardware errors | 93.7 → **95.5 %** | 87.2 → **90.0 %** |
+| + joint calibration error ≤ 1°, backlash ±0.5° | 89.9 → **92.1 %** | 77.3 → **83.7 %** |
+| + mat friction 0.2–0.9, camera latency 0–150 ms (every error) | 89.6 → **91.1 %** | 74.5 → **82.6 %** |
 
-- **Ramping alone is safe for the old policies.** Without retraining, `tee_lightbox_v1` with ramped targets scores
-  98.8 % in the lightbox and 98.1 % with every error (98.5 and 97.7 % stepped). The fine-tunes add the rest.
-- **The shaking halves under training conditions and drops five-fold without noise.** With a perfect camera and no
-  randomisation, the ramp takes the wobble from 0.85 to 0.17 mm; under training conditions, from about 1.1 to
-  0.55 mm. The rest has two sources: the simulated servo delay (0–25 ms) holds each ramp before it starts, and the
-  policy reacts to camera noise (its commands change 2.5 times more per step than with a perfect camera). If the real
-  arm still shakes, a pose filter in the estimator or a smoothness cost in training is next.
-- **The rod still briefly exceeds 80 mm/s** (p99 about 240 mm/s): when the tip falls behind, the commanded point runs
-  up to 15 mm ahead (the anti-windup limit), and the ramp spreads that catch-up over one period.
+- **The shaking is gone in simulation.** Wobble drops about eight-fold (≈1.0 → 0.11–0.16 mm) and the rod's p99
+  speed from about 330 to 115 mm/s, with every hardware error on. Traced at 5 ms over 64 Push-T scenes with every
+  error, the rod never exceeds twice the commanded maximum (160 mm/s); before, it did in 26 % of steps.
+  The rod still runs a little above 80 mm/s when it catches up with a command that ran ahead (up to 15 mm, the
+  anti-windup limit).
+- **Success holds or improves.** With every hardware error, clutter goes from 91.0 to 94.3 % and docking from 88.3 to
+  92.3 %; Level 3 from 74.5 to 82.6 %. Clutter in the error-free lightbox moves 95.3 → 95.0 %, within the ±0.7-point
+  noise of 1,000 scenes.
+- **Ramping alone is safe for the stepped policies.** Without retraining, `tee_lightbox_v1` with ramped targets scores
+  98.8 % in the lightbox and 98.1 % with every error (98.5 and 97.7 % stepped; measured under the first ramp model).
 - **Hardware path:** `tee_lightbox_v2` through the runner on the simulated arm, ramped at 100 Hz: 20 of 20,
-  median 1.2 mm / 1.2°.
+  median 1.2 mm / 1.2°. The runner's ramp is unaffected by the correction (the real latency shifts it by itself).
+- **On the real arm**, watch the tracking test (B5) and the first trials: if the arm still buzzes or lurches, the
+  simulator's servo model needs a measured step response.
 - Retrain: `python -m s2r2s.train --run tee_lightbox_v2 --init runs\tee_lightbox_v1\best.pt --init-std 0.1
   --no-curriculum --minutes 20 --set scene.lightbox=true rand.joint_offset_deg=1.0 rand.backlash_deg=1,1,1,1
   rand.table_friction=0.2,0.9 rand.obs_latency_steps=0,3 task.servo_ramp=true`, and the same for the others with
