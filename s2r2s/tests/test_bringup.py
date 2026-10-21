@@ -124,6 +124,44 @@ def test_clutter_runner_starts_clear_when_the_arm_hides_the_block(clutter_untrai
     assert runner.block_moved(robot.block_pose(), (0.15, -0.10, 0.2))[0] < 0.002
 
 
+def _clear_start_flight(clutter_untrained, tee, block, radius=0.03):
+    """A clear start from (0.24, 0.0), where the arm hides the block (within ``radius``); the T and the block
+    (x, y, yaw) on the way to the park point. Returns the runner, its clear-start ticks (tip x, y, z) and the rod's
+    gaps to both footprints."""
+    path, scene = clutter_untrained
+    robot = SimRobot(scene)
+    robot.place((0.24, 0.0), tee)
+    robot.place_block(block)
+    poses = Blinkered(robot, spot=np.array([0.24, 0.0]), radius=radius, block=True, seed=1)
+    runner = PolicyRunner(path, robot, poses, JointMap(), realtime=False)
+    runner.start(np.array([0.21, 0.08, 1.0]))
+    tw = runner.twin
+    log = [r for r in runner.log if r["mode"] == "start"]
+    tip = np.array([r["tip"] for r in log])
+    on_tee = tw._surface_distance(tip[:, :2], np.tile(tee, (len(tip), 1)), tw.obj_id[:1].repeat(len(tip)))
+    on_block = tw._block_clearance(tip[:, :2], np.tile(block, (len(tip), 1))) - scene.pusher_radius
+    assert runner.tick() == "policy"
+    assert runner.block_moved(robot.block_pose(), block)[0] < 0.002
+    assert np.linalg.norm(robot.object_pose()[:2] - np.asarray(tee)[:2]) < 0.002
+    return runner, tip, on_tee, on_block
+
+
+def test_clear_start_flies_high_over_a_block_it_cannot_see(clutter_untrained):
+    """The arm hides the block at the start, right on the way to the park point: the rod, lifted straight up
+    first, flies over it 20 mm clear (40 mm high) instead of 5 mm (at 25 mm, before)."""
+    runner, tip, _, on_block = _clear_start_flight(clutter_untrained, (0.22, 0.10, 0.0), (0.20, 0.0, 0.0))
+    over = on_block < 0
+    assert over.any() and tip[over, 2].min() > 0.035
+    up = np.argmax(tip[:, 2] > 0.035)                      # straight up from the start before moving sideways
+    assert up > 0 and np.linalg.norm(tip[:up, :2] - (0.24, 0.0), axis=1).max() < 0.003
+
+
+def test_clear_start_flies_around_the_object_it_sees(clutter_untrained):
+    """The camera sees the T at the start (the arm hides the block): the flight goes around it, not over it."""
+    _, tip, on_tee, _ = _clear_start_flight(clutter_untrained, (0.19, 0.0, 0.0), (0.24, 0.09, 0.0), radius=0.07)
+    assert on_tee.min() >= 0.002 and (tip[:, 2] > 0.035).any()
+
+
 def test_runner_gives_up_with_the_rod_lifted(untrained):
     robot, poses, runner = _runner(untrained, recover_seconds=2.0)
     runner.start(np.array([0.21, 0.02, 1.0]))

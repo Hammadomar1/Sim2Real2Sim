@@ -13,7 +13,8 @@ inside the reachable annulus at its fixed height. When the object has not been s
 seconds (2 s: the policy closes most shorter gaps itself by pushing on), the runner lifts the rod and
 moves it a few cm out of the camera's way until the object is seen again, then hands back to the policy
 (--on-lost hold: hold still instead); after --recover-seconds it gives up. A trial whose start position
-hides the object (or the clutter block) starts from a clear one nearby. Ctrl+C lifts the rod and exits.
+hides the object (or the clutter block) starts from a clear one nearby, after flying the rod (up to 40 mm high)
+out of the camera's way to find them. Ctrl+C lifts the rod and exits.
 Servo targets go out at about 100 Hz (--ramp-hz), stepping evenly from one tick's target to the next as in
 training (TaskConfig.servo_ramp); --no-ramp sends one jump per tick, which the servos take at full speed.
 """
@@ -66,14 +67,15 @@ class PolicyRunner:
     hold the arm still instead (the old behaviour; with the left-wall C920 it can freeze where it hides the T).
 
     A trial that cannot start because the arm hides the object (or the clutter block) at its start position
-    (``start``) moves the rod to the pose that hides least of the band, finds them, then starts from the nearest
-    clear point from which the object stays in view.
+    (``start``) moves the rod to the pose that hides least of the band, flying as high as a vertical rod reaches
+    (up to ``start_lift``) and around what the camera does see, finds them, then starts from the nearest clear
+    point from which the object stays in view.
     """
 
     def __init__(self, checkpoint, robot, poses, jmap: JointMap, device: str = "cpu",
                  max_step_deg: float = 4.0, max_pose_age: float = 2.0, realtime: bool = True, lightbox: bool = False,
                  on_lost: str = "recover", recover_seconds: float = 8.0, lift: float = 0.025,
-                 ramp: bool = True, ramp_hz: float = 100.0):
+                 start_lift: float = 0.04, ramp: bool = True, ramp_hz: float = 100.0):
         self.policy, cfg, _ = load_policy(checkpoint, device)
         cfg = copy.deepcopy(cfg)
         cfg.scene.lightbox = cfg.scene.lightbox or lightbox     # the kinematics must know where the work surface is
@@ -93,7 +95,7 @@ class PolicyRunner:
         self.last_target = None
         if on_lost not in ("recover", "hold"):
             raise ValueError("on_lost: 'recover' or 'hold'")
-        self.on_lost, self.recover_seconds, self.lift = on_lost, recover_seconds, lift
+        self.on_lost, self.recover_seconds, self.lift, self.start_lift = on_lost, recover_seconds, lift, start_lift
         self.rod_speed = cfg.task.max_speed           # the policy's own speed limit, for the runner's moves too
         self.ticks, self.mode, self.log = 0, "policy", []
         self.events: list[dict] = []              # one per recovery: where, why, how it ended
@@ -134,7 +136,7 @@ class PolicyRunner:
         self._tell_arm(self.last_target)
         pose, block = self._first_poses(timeout)
         if pose is None or (self.clutter and block is None):
-            pose = self._clear_start(gate, clear_seconds)
+            pose = self._clear_start(gate, clear_seconds, pose, block)
             block = self.twin.clutter_obs[0].copy() if self.clutter else None     # seen on the way
         extra = {}
         if self.clutter:
@@ -277,11 +279,12 @@ class PolicyRunner:
         q, err, _ = self.twin.kin.solve(np.array([[xy[0], xy[1], z]]), seed[None], iterations=30)
         return q[0], float(err[0])
 
-    def _liftable(self, xy) -> np.ndarray:
-        """Which points (n, 2) a vertical rod reaches at ``lift`` (the vertical-rod workspace narrows with height:
-        at 25 mm r 13.5-27 cm straight ahead, at 40 mm 16-24 cm)."""
+    def _liftable(self, xy, z: float | None = None) -> np.ndarray:
+        """Which points (n, 2) a vertical rod reaches at ``z`` (default ``lift``; the vertical-rod workspace narrows
+        with height: at 25 mm r 13.5-27 cm straight ahead, at 40 mm 16-24 cm)."""
         xy = np.atleast_2d(xy)
-        _, err, _ = self.twin.kin.solve(np.c_[xy, np.full(len(xy), self.lift)], self.twin.kin.seed(xy), iterations=30)
+        _, err, _ = self.twin.kin.solve(np.c_[xy, np.full(len(xy), self.lift if z is None else z)],
+                                        self.twin.kin.seed(xy), iterations=30)
         return err < 0.001
 
     def _lift_z(self, xy, top: float | None = None) -> float:
@@ -311,7 +314,7 @@ class PolicyRunner:
         first, preferring the direction away from the object and toward the robot. With a shadow predictor, the
         first such point from which the camera would see at least ``need`` of the object (else the best one);
         without, the most preferred direction. None when no point qualifies. ``path_from``: where the lifted rod
-        comes from (default ``tip_xy``), for the walls."""
+        comes from (default ``tip_xy``), for the walls; False: any way there (the caller finds one)."""
         away = tip_xy - pose[:2]
         away = away / max(np.linalg.norm(away), 1e-9)
         home = -tip_xy / max(np.linalg.norm(tip_xy), 1e-9)
@@ -322,7 +325,8 @@ class PolicyRunner:
         cands = np.concatenate([tip_xy + d * dirs for d in distances])
         dist = np.repeat(distances, len(dirs))
         pref = 1 - np.tile(dirs @ u, len(distances))                      # 0 along u, 2 against it
-        ok = self._in_reach(cands) & self._clear_of_things(cands, pose, tip_xy if path_from is None else path_from)
+        ok = self._in_reach(cands) & self._clear_of_things(
+            cands, pose, None if path_from is False else tip_xy if path_from is None else path_from)
         ok[ok] &= self._liftable(cands[ok])
         for p in tried:
             ok &= np.linalg.norm(cands - p, axis=-1) > 0.015
@@ -406,27 +410,93 @@ class PolicyRunner:
         self.mode = "policy"
 
     # ------------------------------------------------------------------ a trial the arm hides from the camera
-    def _park_point(self) -> np.ndarray:
-        """The lifted rod position whose arm hides least of the work band (cached); without a shadow predictor,
-        straight ahead near the inner edge of the ring a lifted rod reaches (13.5 cm at 25 mm)."""
+    def _park_points(self) -> np.ndarray:
+        """Rod positions (n, 2) at ``start_lift`` on a 1 cm x 5 deg polar grid, best first (cached): with a shadow
+        predictor, by the share of the work band the arm hides there; without, by distance from straight ahead near
+        the inner edge of the ring a rod that high reaches."""
         if self._park is None:
             t = self.cfg.task
-            best = None
+            r, a = np.meshgrid(np.arange(t.tool_r[0] + 0.01, t.tool_r[1] - 0.005, 0.01), np.radians(np.arange(-50, 51, 5)))
+            xy = np.c_[(r * np.cos(a)).ravel(), (r * np.sin(a)).ravel()]
+            xy = xy[self._liftable(xy, self.start_lift)]
             if self.view is not None:
-                for r in np.arange(t.tool_r[0] + 0.01, t.tool_r[1] - 0.005, 0.01):
-                    for a in np.radians(np.arange(-50, 51, 5)):
-                        xy = np.array([r * math.cos(a), r * math.sin(a)])
-                        qp, err = self._ik(xy, self.lift, self.twin.kin.seed(xy[None])[0])
-                        if err < 0.001:
-                            h = self.view.band_hidden(qp)
-                            best = (h, xy) if best is None or h < best[0] else best
-            self._park = best[1] if best is not None else np.array([t.tool_r[0] + 0.025, 0.0])
+                key = [self.view.band_hidden(self._ik(p, self.start_lift, self.twin.kin.seed(p[None])[0])[0]) for p in xy]
+            else:
+                key = np.linalg.norm(xy - (np.hypot(*xy.T).min() + 0.01, 0.0), axis=1)
+            self._park = xy[np.argsort(key, kind="stable")]
         return self._park
 
-    def _move_until(self, goals, seconds, done=None, early: bool = False) -> bool:
+    def _fly_z(self, xy) -> np.ndarray:
+        """Rod heights (n,) for the clear start's flight over points ``xy`` (n, 2): as high as a vertical rod reaches
+        there, up to ``start_lift``, in 2.5 mm steps (below ``lift`` only where it does not reach that)."""
+        xy = np.atleast_2d(xy)
+        zs = np.arange(self.start_lift, self.lift - 1e-9, -0.0025)
+        pts = np.repeat(xy, len(zs), 0)
+        _, err, _ = self.twin.kin.solve(np.c_[pts, np.tile(zs, len(xy))], self.twin.kin.seed(pts), iterations=30)
+        ok = (err < 0.001).reshape(len(xy), len(zs))
+        return np.array([zs[np.argmax(k)] if k.any() else self._lift_z(p) for k, p in zip(ok, xy)])
+
+    def _flight(self, tip, pose, block) -> list:
+        """The way (x, y points) for the clear start's flight from ``tip`` to the best park point: straight there, or
+        through one other park point, passing over neither the object nor the block where the camera saw them at
+        the start (``pose``, ``block``; None: unseen) nor the gate's walls (the rod clears objects by 20 mm where it
+        flies at 40 mm, by 5 mm at 25 mm). The next best park point when the best cannot be reached that way;
+        straight to the best when none can."""
+        parks = self._park_points()
+        return self._way(tip, parks, pose, block) or [parks[0]]
+
+    def _way(self, frm, targets, pose, block):
+        """The way (x, y points) for the lifted rod from ``frm`` to the first of ``targets`` (n, 2) it can reach
+        straight, or through one park point, passing over neither the object at ``pose`` nor the block at ``block``
+        (None: not known) nor the gate's walls. Like ``_clear_of_things``, it may start near something but never
+        comes closer than 3 mm, or than at ``frm``. None when it reaches none of them."""
+        tw, parks = self.twin, self._park_points()
+
+        def gaps(xy):
+            gap = np.full(len(xy), np.inf)
+            if pose is not None:
+                gap = tw._surface_distance(xy, np.tile(pose, (len(xy), 1)), tw.obj_id[:1].repeat(len(xy)))
+            if self.clutter and block is not None:
+                gap = np.minimum(gap, tw._block_clearance(xy, np.tile(block, (len(xy), 1))) - self.cfg.scene.pusher_radius)
+            if hasattr(tw, "wall_gap"):
+                gap = np.minimum(gap, tw.wall_gap(xy, np.zeros(len(xy), dtype=int)))
+            return gap
+        # Where a lifted rod goes: the ring of park points, ``frm`` and ``targets``.
+        ends = np.vstack([parks, targets, frm[None]])
+        r, az = np.hypot(*ends.T), np.abs(np.arctan2(ends[:, 1], ends[:, 0]))
+        ring = (r.min() - 0.005, r.max() + 0.005, az.max() + 0.02)
+        floor = min(0.003, float(gaps(frm[None])[0]) - 0.001)
+
+        def clear(a, b):                  # the straight lines a[i] -> b[i] (n, 2), checked every 3 mm
+            k = max(2, int(np.linalg.norm(b - a, axis=-1).max() / 0.003) + 1)
+            w = np.linspace(0, 1, k)[None, :, None]
+            seg = (a[:, None] * (1 - w) + b[:, None] * w).reshape(-1, 2)
+            r, az = np.hypot(*seg.T), np.abs(np.arctan2(seg[:, 1], seg[:, 0]))
+            ok = (gaps(seg) >= floor) & (r >= ring[0]) & (r <= ring[1]) & (az <= ring[2])
+            return ok.reshape(len(a), k).all(1)
+        direct = clear(np.tile(frm, (len(targets), 1)), targets)
+        via = parks[clear(np.tile(frm, (len(parks), 1)), parks)]
+        for i, t in enumerate(targets):
+            if direct[i]:
+                return [t]
+            ok = clear(via, np.tile(t, (len(via), 1))) if len(via) else np.zeros(0, bool)
+            if ok.any():
+                k = np.argmin(np.where(ok, np.linalg.norm(via - frm, axis=1) + np.linalg.norm(via - t, axis=1), np.inf))
+                return [via[k], t]
+        return None
+
+    def _fly_goals(self, way) -> np.ndarray:
+        """Rod setpoints (x, y, z) for a lifted flight along the x, y points ``way``: every centimetre or less, as
+        high as a vertical rod reaches (``_fly_z``)."""
+        legs = [np.linspace(a, b, max(2, int(np.linalg.norm(b - a) / 0.01) + 2))[1:] for a, b in zip(way[:-1], way[1:])]
+        xy = np.concatenate([np.asarray(way[:1], float)] + legs)
+        return np.c_[xy, self._fly_z(xy)]
+
+    def _move_until(self, goals, seconds, done=None, early: bool = False, glide: bool = False) -> bool:
         """Runner-driven moves through ``goals`` (x, y, z) (no policy), one tick each, until each is reached and
         ``done()`` (if given) holds at the last one (``early``: anywhere on the way), or ``seconds`` pass. Returns
-        whether it got there."""
+        whether it got there. ``glide``: after the first goal, go on from each one before the last as soon as the
+        setpoint is there, not the rod (a path through them)."""
         q = self.jmap.to_sim(self.robot.read_joints())
         self._start_rod_move(q)
         t_end, k = self._clock() + seconds, 0
@@ -437,27 +507,29 @@ class PolicyRunner:
             self._send(t0, q, target, pose, extra, np.zeros(2), False)
             if early and done is not None and done():
                 return True
-            if there and k < len(goals) - 1:
+            if k < len(goals) - 1 and (there or glide and k > 0 and np.array_equal(self.sp, goals[k])):
                 k += 1
             elif there and (done is None or done()):
                 return True
         return False
 
-    def _clear_start(self, gate, seconds: float) -> np.ndarray:
-        """The arm hides the object (or the clutter block) at its start position: lift the rod and move it where it
-        hides least (the park point), find both, then lower it at the nearest clear point from which the object
-        should stay in view (the block's start pose is known by then)."""
+    def _clear_start(self, gate, seconds: float, pose=None, block=None) -> np.ndarray:
+        """The arm hides the object (or the clutter block) at its start position: lift the rod straight up and fly
+        it where the arm hides least (a park point), as high as a vertical rod reaches on the way (up to
+        ``start_lift``: the hidden one may be anywhere under the arm's shadow, and the gripper hides the rod's
+        surroundings), around the one the camera saw at the start (``pose``, ``block``; None: unseen; ``_flight``).
+        Find both, then lower it at the nearest clear point from which the object should stay in view (the block's
+        start pose is known by then)."""
         self.mode = "start"
         if gate is not None:              # the walls must be known before checking clearances
             self.twin.configure_gate(gate["centre"], gate["angle"], gate["width"], gate["side"], start_yaw=0.0)
         q = self.jmap.to_sim(self.robot.read_joints())
         tip0 = self.twin.kin.forward(q[None])[0][0]
         self.last_seen = -1e9
-        high = self.lift
         fresh = lambda: (self._clock() - self.last_seen <= self.fresh_age
                          and (not self.clutter or self.block_seen > self.clear_t0))
-        self._move_until([np.r_[tip0[:2], self._lift_z(tip0[:2])], np.r_[self._park_point(), high]], seconds, fresh,
-                         early=True)
+        self._move_until(self._fly_goals([tip0[:2]] + self._flight(tip0[:2], pose, block)), seconds, fresh,
+                         early=True, glide=True)                                     # straight up first
         if not fresh():
             raise RuntimeError(f"no {'object or block' if self.clutter else 'object'} pose from the camera, also "
                                "with the arm out of the way")
@@ -475,10 +547,17 @@ class PolicyRunner:
                 start = tip0[:2].copy()
             if start is None:
                 start = self._retreat_point(q, tip0[:2], pose, tried, distances=distances, path_from=here)
+            way = None if start is None else [start]
+            if start is None:          # every straight way to a start passes over something: one through a park point
+                start = self._retreat_point(q, tip0[:2], pose, tried, distances=distances, path_from=False)
+                way = None if start is None else self._way(here, start[None], pose,
+                                                            self.twin.clutter_obs[0] if self.clutter else None)
             if start is None:
                 break
             tried.append(start)
-            if self._move_until([np.r_[start, high], np.r_[start, self.twin.tool_z_cmd[0]]], seconds, fresh):
+            # As high as on the way here, then straight down.
+            if way is not None and self._move_until(self._fly_goals([here] + way), seconds, glide=True) \
+                    and self._move_until([np.r_[start, self.twin.tool_z_cmd[0]]], seconds, fresh):
                 self.start_shift = float(np.linalg.norm(start - tip0[:2]))
                 self.mode = "policy"
                 return self.twin.obs_pose[0].copy()
