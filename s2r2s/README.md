@@ -496,8 +496,9 @@ Every 50 updates, the policy is scored on 512 fixed held-out scenes at full diff
 - Levels 2 and 3 through the hardware path: the robot's corner choice fits the band and never needs more pushes
   than the scene's own corner; pushes switch after 1 s settled by the camera, to the other skill's twin with the
   blocks' roles swapped; docking gets 10 s with its target fixed when it starts; a lost box is recovered as the box
-  skill's object, with no switch meanwhile; blocks too close are refused; and the lightbox skills complete a held-out
-  Level 2 and Level 3 scene on the simulated arm
+  skill's object, with no switch meanwhile; blocks too close are refused; the lightbox skills complete a held-out
+  Level 2 and Level 3 scene on the simulated arm; and the runner's `--mount` reaches the rendered C920 in every dry
+  run, which then renders, estimates and masks the arm from that mount
 - **Scripted keypoint pusher** (`scripted.py`) solves easy goals (>90 %). At full difficulty it solves 86–100 % across all six
   objects, so every task variant is physically feasible before learning starts
 

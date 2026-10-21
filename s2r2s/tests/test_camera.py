@@ -219,3 +219,30 @@ def test_camera_pose_source_on_replayed_frames(sim):
         assert "frames" in poses.summary()
     finally:
         poses.close()
+
+
+def test_rendered_pose_source_renders_estimates_and_masks_from_its_mount(sim):
+    from s2r2s.hardware.camera_sim import MOUNTS, RenderedPoseSource
+    from s2r2s.hardware.robots import SimRobot
+    scene = SceneConfig(lightbox=True, clutter="box")
+    robot = SimRobot(scene)
+    robot.place((0.15, -0.12), (0.22, 0.05, 0.3))
+    robot.place_block((0.25, -0.08, 0.0))
+    left = RenderedPoseSource(robot, scene)
+    assert np.allclose(left.sim.camera().position, sim.camera().position)       # default: the scene's slot
+    back = RenderedPoseSource(robot, scene, mount="back")
+    assert back.mount == "back" and scene.c920_pos == SceneConfig().c920_pos   # the caller's scene is kept
+    pos, target = MOUNTS["back"]
+    lens = np.array(pos) - (0.0, 0.0, scene.mat_height)
+    cam = back.sim.camera()
+    assert np.allclose(cam.position, lens, atol=1e-6)
+    assert np.allclose(cam.project(np.array([target]))[0], (cam.width / 2, cam.height / 2), atol=1.0)
+    # The estimator, the arm mask and the shadow predictor see from the same lens.
+    assert np.allclose(back.estimator.camera.position, lens, atol=1e-6)
+    for mask in (back.arm_mask, back.view.arm):
+        assert np.allclose([*mask.foot, mask.cz], lens, atol=1e-6)
+    back.set_arm(robot.data.qpos[robot.idx.arm_qpos])
+    tee, _ = back.read()
+    box, _ = back.read_block()
+    assert np.linalg.norm(tee[:2] - robot.object_pose()[:2]) < 1.5e-3
+    assert np.linalg.norm(box[:2] - robot.block_pose()[:2]) < 1.5e-3

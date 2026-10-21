@@ -246,7 +246,8 @@ def dry_run(args):
     camera = None
     if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.25 s per tick)
         from .camera_sim import RenderedPoseSource
-        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed)
+        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed,
+                                    mount=args.mount)
     ticks = round(runner.episode_seconds / runner.dt)
     rows, not_started, dropped = [], [], []
     for i in range(args.episodes):
@@ -305,8 +306,8 @@ def dry_run(args):
     col = lambda k: np.array([r[k] for r in rows], dtype=float)
     time_s = col("time_s")
     print(f"\nLevel {args.level}: {len(rows)} scenes (seed {args.seed}) through the hardware path"
-          + (f", rendered C920 ({np.mean(dropped, 0)[0]:.1%} of frames without the T, {np.mean(dropped, 0)[1]:.1%} "
-             f"without the box)" if dropped else ""))
+          + (f", rendered C920 ({args.mount} mount; {np.mean(dropped, 0)[0]:.1%} of frames without the T, "
+             f"{np.mean(dropped, 0)[1]:.1%} without the box)" if dropped else ""))
     for label, value in (("success", col("success").mean()), ("  T at its goal", col("tee_ok").mean()),
                          ("  box " + ("at its goal" if args.level == 2 else "nested in the corner"), col("box_ok").mean()),
                          ("every push settled at its target", col("all_settled").mean()),

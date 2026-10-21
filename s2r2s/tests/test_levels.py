@@ -191,6 +191,27 @@ def test_skills_must_match_their_roles(skills):
         LevelRunner(3, {**paths, DOCK: paths[BOX]}, robot, None, JointMap(), realtime=False)
 
 
+def test_mount_reaches_the_rendered_camera_in_every_dry_run(skills, monkeypatch):
+    from s2r2s.hardware import camera_sim, runner
+
+    class Built(Exception):
+        pass
+
+    mounts = []
+
+    def rendered(robot, scene, object_name="tee", **kw):
+        mounts.append(kw.get("mount"))
+        raise Built                            # the rendered camera is built before the first episode
+    monkeypatch.setattr(camera_sim, "RenderedPoseSource", rendered)
+    paths, _ = skills
+    for skill_args in (["--checkpoint", str(paths[TEE])],
+                       ["--level", "2", "--tee", str(paths[TEE]), "--box", str(paths[BOX])],
+                       ["--level", "3", "--tee", str(paths[TEE]), "--box", str(paths[BOX]), "--dock", str(paths[DOCK])]):
+        with pytest.raises(Built):
+            runner.main(skill_args + ["--robot", "sim", "--camera", "render", "--mount", "back", "--episodes", "1"])
+    assert mounts == ["back"] * 3
+
+
 @pytest.mark.skipif(not all(p.exists() for p in TRAINED.values()), reason="needs the lightbox skills")
 @pytest.mark.parametrize("level, tool, tee, box, tee_goal, box_goal, plan", [
     # Held-out scenes (seed 20000003): Level 2 box first, Level 3 box to the pre-dock spot, the T, then docking.

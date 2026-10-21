@@ -260,13 +260,18 @@ class RenderedPoseSource:
     """The C920 pipeline on the simulated arm, for ``runner --robot sim --camera render``: every tick the SimRobot's
     scene is rendered as the C920 sees it, from ``latency_steps`` ticks ago, and goes through the pose estimator with
     the arm masked out at the joint angles the runner passes (``set_arm``), as ``CameraPoseSource`` does on the real
-    camera. Synchronous and on simulated time, so a dry run gives the same result however fast it runs."""
+    camera. Synchronous and on simulated time, so a dry run gives the same result however fast it runs.
+    ``mount``: where the C920 is (a ``MOUNTS`` key; default: the scene's own ``c920_pos``, the left-wall slot), for the
+    renders, the arm mask and the shadow predictor alike."""
 
     def __init__(self, robot, scene: SceneConfig, object_name: str = "tee", latency_steps: int = 2, dt: float = 0.05,
-                 seed: int = 0):
+                 seed: int = 0, mount: str | None = None):
         if not scene.lightbox:
             raise ValueError("the C920 is in the lightbox: use --lightbox (or a policy trained there)")
-        self.robot, self.latency, self.dt = robot, latency_steps, dt
+        if mount is not None:
+            scene = copy.deepcopy(scene)
+            scene.c920_pos, scene.c920_target = MOUNTS[mount]
+        self.robot, self.latency, self.dt, self.mount = robot, latency_steps, dt, mount
         self.sim = SimCamera(scene, object_name)
         if self.sim.model.nq != robot.model.nq:
             raise RuntimeError("the rendering model's state layout differs from the simulated robot's")

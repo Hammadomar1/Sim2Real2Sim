@@ -311,7 +311,8 @@ box's true start pose:
 
 `--camera render` rehearses the camera path too: every tick, the simulated arm's scene is rendered as the C920 sees
 it (100 ms late) and goes through the same estimator and arm mask as `CameraPoseSource`. It takes about 0.25 s per
-tick, so 100 s per episode.
+tick, so 100 s per episode. It renders from the left-wall slot as built; `--mount back` puts the C920 on the back
+wall, 25 cm above the mat (LIGHTBOX.md C6), and the arm mask and the shadow predictor move with it.
 
 **Torque stays on after the program ends** (LeRobot's default would drop the arm). Support the arm before
 powering it down. Keep a hand near the power switch during first runs, and start with `--max-step-deg 2`.
@@ -321,6 +322,7 @@ powering it down. Keep a hand near the power switch during first runs, and start
 ```powershell
 python -m s2r2s.hardware.runner --level 2 --robot sim --episodes 200                 # rehearsal, held-out scenes
 python -m s2r2s.hardware.runner --level 3 --robot sim --camera render --episodes 8   # through the C920 pipeline
+python -m s2r2s.hardware.runner --level 3 --robot sim --camera render --mount back --episodes 8   # from the back wall
 python -m s2r2s.hardware.runner --level 2 --robot so101 --port COM5 --map calibration\joint_map.json `
     --goal 0.20 0.05 90 --box-goal 0.20 -0.06 0 --max-step-deg 2
 python -m s2r2s.hardware.runner --level 3 --robot so101 --port COM5 --map calibration\joint_map.json `
@@ -364,7 +366,7 @@ simulated arm. The simulator runs in the world the simulated arm has: nominal ph
 50 ms delay, no joint errors (`--set scene.lightbox=true rand.table_friction=0.35,0.35 rand.pusher_friction=0.3,0.3
 rand.mass_scale=1,1 rand.com_offset=0 rand.servo_kp_scale=1,1 rand.damping_scale=1,1 rand.tool_height_error=0
 rand.max_action_delay=0 rand.obs_latency_steps=1,1 rand.joint_offset_deg=0 rand.backlash_deg=0,0,0,0
-rand.tool_noise=0`). Every command and its output: `runs\rehearsal\levels_*.log`, `runs\camera_sim\rehearsal_level*_render.log`.
+rand.tool_noise=0`). Every command and its output: `runs\rehearsal\levels_*.log`, `runs\camera_sim\rehearsal_level*_render*.log`.
 
 | 1,000 held-out scenes each | Level 2, simulator | Level 2, hardware path | Level 3, simulator | Level 3, hardware path |
 |---|---|---|---|---|
@@ -392,8 +394,9 @@ Rows below the first two are over the 992 trials that started. What this says:
    one with most room. In 9 the number of pushes differs (6 fewer, 3 more: the corner choice, or camera noise at
    the 15 mm limit), in 3 the order.
 
-Through the rendered C920 in the left-wall slot (as built), 8 held-out scenes per level (`--camera render
---episodes 8`, about 2 minutes per trial):
+Through the rendered C920, 8 held-out scenes per level, from the left-wall slot as built (`--camera render
+--episodes 8`, about 2 minutes per trial) and from the back wall, 25 cm above the mat (`--mount back`, LIGHTBOX.md
+C6; about 1 minute per trial):
 
 | the same 8 scenes | Level 2 | Level 3 |
 |---|---|---|
@@ -402,6 +405,11 @@ Through the rendered C920 in the left-wall slot (as built), 8 held-out scenes pe
 | **hardware path, rendered C920, left wall** | **6** | **5** |
 | ... frames without the T / the box | 16.1 / 23.0 % | 12.2 / 20.5 % |
 | ... lost-object recoveries, all resumed (trials) | 3 (3) | 6 (3) |
+| ... trials from a clear start | 1 | 2 |
+| **hardware path, rendered C920, back wall** | **7** | **7** |
+| ... frames without the T / the box | 1.2 / 0.8 % | 1.4 / 1.1 % |
+| ... lost-object recoveries (trials) | 0 | 0 |
+| ... trials from a clear start | 0 | 0 |
 
 Eight scenes are few (one is 12.5 points), but the camera path works end to end. Every trial started: three from a
 clear start 20–60 mm away, and the Level 2 scene the training camera model refused (the rendered estimate put the
@@ -410,8 +418,16 @@ block that must *stay* far more often than the pushed one: it needs 60 % in view
 was unseen in up to 94 % of a T push's ticks). One Level 2 miss is exactly that. The T skill guarded a box pose it
 could not refresh and pushed the T into the box (22 mm). The other misses are the skills': the box skill stalled
 45 mm short while seen every tick, twice the T push in Level 3 ran out of its 20 s, and once the arm hid both blocks
-during the box's last push. As for Push-T, move the camera to the back wall (LIGHTBOX.md C6) before judging Levels 2
-and 3 on the real table. The clutter, box and dock skills were not fine-tuned for the left wall's occlusion.
+during the box's last push. The clutter, box and dock skills were not fine-tuned for the left wall's occlusion.
+
+From the back wall the arm hardly hides either block: about 1 % of frames lack the T or the box, every trial
+started where the scene put the rod, and no trial lost a block. Both levels match the simulator, 7 of 8. Gone are
+the T pushed into the unseen box, the Level 3 trial where the arm hid both blocks, and one of the two Level 3 T
+pushes that ran out of time. The two misses left are not the camera's: in Level 2 the box skill stalls 45.8 mm
+short, the same to the tenth of a millimetre as from the left wall (the training camera model's run solves that
+scene), and in Level 3 the T ends 8.8 mm / 14.8° off in the scene that the training camera model and the left wall
+miss too (14.6 and 40.5 mm). As for Push-T, move the camera to the back wall (LIGHTBOX.md C6) before judging Levels
+2 and 3 on the real table.
 
 ## 6. Trial logs (for Milestone 3)
 

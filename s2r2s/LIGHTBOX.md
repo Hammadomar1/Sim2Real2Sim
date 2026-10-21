@@ -358,7 +358,7 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
 **E. Policy trials**
 1. Rehearse on the simulated arm: `python -m s2r2s.hardware.runner --checkpoint runs\tee_lightbox_v2\best.pt --robot sim --episodes 20`,
    then through the camera path: `... --camera render --episodes 8` (the C920 rendered from its mount, 100 s per
-   episode). When the camera loses the T for 2 s (`--max-pose-age`), the runner lifts the rod out of the arm's
+   episode; `--mount back` for the back wall, C6). When the camera loses the T for 2 s (`--max-pose-age`), the runner lifts the rod out of the arm's
    shadow, lowers it once the T is back in view and hands back to the policy (HARDWARE.md §5). A start where the arm
    hides the T begins from a clear point nearby. Rendered from the left-wall slot (8 held-out scenes),
    `tee_lightbox_v1` solves all 8 with the 2 s default and 6 with `--max-pose-age 0.5`, which steps in too
@@ -372,13 +372,16 @@ All of it: `python -m s2r2s.hardware.camera_calibrate <step>` (HARDWARE.md §4);
    and `--level 3 ... --goal X Y YAW` (the box then nests in the T's corner). The runner plans the pushes from the
    camera's first view, runs each with its skill through that skill's twin and starts the next once the camera
    sees the pushed block settled (HARDWARE.md §5, "Levels 2 and 3"). Rehearse first: `--level 2 --robot sim
-   --episodes 200`, then `--camera render --episodes 8`. On the simulated arm, 1,000 held-out scenes each, the
-   hardware path matches the simulator in the same world: Level 2 95.3 % against 95.6 %, Level 3 91.0 % against
-   91.0 %. Through the rendered C920 in the left-wall slot, 8 scenes per level, 6 and 5 succeed (simulator: 7 and
-   7). Every trial started and every lost block was recovered. But the arm hides the block that must stay (the box
-   in up to 94 % of a T push), and one miss was the T pushed into a box the camera could not see: move the camera
-   (C6) first. Compare real trials with `python -m s2r2s.level2` / `level3 --set ...` at the *measured* errors;
-   with every error at once they are at 91.5 / 81.9 % (*Smooth motion* above).
+   --episodes 200`, then `--camera render --episodes 8` (add `--mount back` for the back wall). On the simulated
+   arm, 1,000 held-out scenes each, the hardware path matches the simulator in the same world: Level 2 95.3 %
+   against 95.6 %, Level 3 91.0 % against 91.0 %. Through the rendered C920 in the left-wall slot, 8 scenes per
+   level, 6 and 5 succeed (simulator: 7 and 7). Every trial started and every lost block was recovered. But the arm
+   hides the block that must stay (the box in up to 94 % of a T push), and one miss was the T pushed into a box the
+   camera could not see. From the back wall, the same scenes, 7 and 7 succeed, as in the simulator: about 1 % of
+   frames lack a block, no trial needed a clear start or a recovery, and both misses happen from the left wall
+   too. Move the camera (C6) first. Compare real trials with `python -m s2r2s.level2` /
+   `level3 --set ...` at the *measured* errors; with every error at once they are at 91.5 / 81.9 % (*Smooth motion*
+   above).
 
 Policies trained on the flat table run in the lightbox only with `--lightbox` on the hardware tools (the kinematics
 must know the mat height); policies trained in the lightbox carry it in their config.
@@ -399,9 +402,10 @@ must know the mat height); policies trained in the lightbox carry it in their co
   fine-tune: move the camera, or fine-tune them the same way. The actor is not told that its estimate is stale.
   A "frames since the last fresh pose" input (the runner knows it) might close the rest of the gap.
 - Levels 2 and 3 run through the hardware runner (E3) but are rehearsed on the simulated arm only. With the
-  left-wall camera the block that must stay is often hidden, and the rod guard then works from its last pose. The
-  rendered rehearsal covers only that mount (the runner's rendered camera has no mount option yet). Blocks placed
-  within about a millimetre of the 15 mm rule can be refused: camera noise decides.
+  left-wall camera the block that must stay is often hidden, and the rod guard then works from its last pose. From
+  the back wall (`--mount back`) the rendered rehearsal matches the simulator, 7 of 8 per level with no lost
+  block, but on 8 scenes per level only. Blocks placed within about a millimetre of the 15 mm rule can be refused:
+  camera noise decides.
 - The camera pose estimator, the backlash tool's camera probe and the latency tool are tested on rendered images
   only: C4 and C5 on the real camera are next. The latency tool cannot see delay in the joint readings themselves
   (LeRobot's read is stamped halfway through).

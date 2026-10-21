@@ -6,6 +6,7 @@
     python -m s2r2s.hardware.runner --checkpoint runs/tee_v1/best.pt --robot so101 --port COM5 \\
         --map calibration/joint_map.json --goal 0.20 0.05 90         # real arm (needs the camera)
     python -m s2r2s.hardware.runner --level 2 --robot sim --episodes 50                    # Levels 2 and 3 (levels.py)
+    python -m s2r2s.hardware.runner --level 2 --robot sim --camera render --mount back --episodes 8   # C920 on the back wall
 
 The policy, the controller (action -> commanded rod position -> IK) and the observation code are
 the ones used in training; only the measurements come from outside (joint encoders, camera).
@@ -546,7 +547,8 @@ def dry_run(args):
     camera = None
     if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.1 s per tick)
         from .camera_sim import RenderedPoseSource
-        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed)
+        camera = RenderedPoseSource(robot, cfg.scene, cfg.task.objects[0], latency_steps=2, dt=runner.dt, seed=args.seed,
+                                    mount=args.mount)
     stats, dropped, unseen, shifted, recoveries = [], [], [], [], []
     for i in range(args.episodes):
         robot.place(scenes.tip[i, :2], scenes.object_pose()[i])
@@ -619,7 +621,8 @@ def dry_run(args):
           f"median {np.median(s[:, 1]) * 1e3:.1f} mm / {math.degrees(np.median(s[:, 2])):.1f} deg"
           + (f", passed gate {s[:, 3].mean():.1%}" if gate_task else "")
           + (f", block kept in place {s[:, 3].mean():.1%}" if clutter_task else "")
-          + (f"; rendered C920, {np.mean(dropped):.1%} of frames without a pose" if camera is not None else ""))
+          + (f"; rendered C920 ({args.mount} mount), {np.mean(dropped):.1%} of frames without a pose"
+             if camera is not None else ""))
 
 
 def real_run(args):
@@ -697,6 +700,9 @@ def main(argv=None):
                     help="give up (end the trial, rod lifted) when the object stays unseen this long")
     ap.add_argument("--camera", choices=["sim", "render"], default="sim",
                     help="sim dry run: the training camera model, or the C920 pipeline on rendered frames (lightbox)")
+    ap.add_argument("--mount", choices=["left", "right", "back"], default="left",
+                    help="--camera render: where the C920 is (camera_sim.MOUNTS): the left-wall slot as built, its mirror, "
+                         "or the back wall 25 cm above the mat (LIGHTBOX.md C6)")
     ap.add_argument("--lightbox", action="store_true",
                     help="the arm stands in the lightbox, 9.8 mm below the mat (implied by policies trained there)")
     args = ap.parse_args(argv)
