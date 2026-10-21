@@ -1,0 +1,1015 @@
+$ python -m s2r2s.hardware.runner --level 3 --robot sim --episodes 1000
+episode   1: success box, T, dock the box               settled 3/3  T   4.3 mm   3.7 deg  box to corner   0.1 mm   0.2 deg
+episode   2: success T, box, dock the box               settled 3/3  T   1.7 mm   1.3 deg  box to corner   1.2 mm   2.5 deg
+episode   3: success T, box, dock the box               settled 3/3  T   2.2 mm   4.0 deg  box to corner   0.4 mm   1.3 deg
+episode   4: success park the box, T, box, dock the box settled 4/4  T   1.7 mm   0.9 deg  box to corner   0.8 mm   0.5 deg  (simulator's plan: tee, box, tee, dock)
+episode   5: miss    box, T, dock the box               settled 2/3  T  37.7 mm   7.2 deg  box to corner   0.7 mm   0.0 deg
+episode   6: success box, T, dock the box               settled 3/3  T   5.0 mm   0.3 deg  box to corner   0.0 mm   0.1 deg
+episode   7: success park the box, T, box, dock the box settled 4/4  T   2.6 mm   0.6 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: tee, box, tee, dock)
+episode   8: success T, box, dock the box               settled 3/3  T   1.4 mm   3.6 deg  box to corner   0.2 mm   0.7 deg
+episode   9: success box, T, dock the box               settled 3/3  T   4.0 mm   5.6 deg  box to corner   1.8 mm   1.7 deg
+episode  10: success T, box, dock the box               settled 3/3  T   6.3 mm   2.6 deg  box to corner   0.8 mm   1.2 deg
+episode  11: miss    park the T, box, T, dock the box   settled 2/4  T  12.8 mm   6.8 deg  box to corner   1.5 mm   4.0 deg
+episode  12: success box, T, dock the box               settled 3/3  T   2.3 mm   1.4 deg  box to corner   0.5 mm   0.8 deg
+episode  13: success box, T, dock the box               settled 3/3  T   2.3 mm   3.0 deg  box to corner   0.1 mm   0.0 deg
+episode  14: success park the box, T, box, dock the box settled 4/4  T   1.8 mm   4.5 deg  box to corner   1.8 mm   2.2 deg
+episode  15: success T, box, dock the box               settled 3/3  T   1.5 mm   0.4 deg  box to corner   0.2 mm   0.5 deg
+episode  16: success box, T, dock the box               settled 2/3  T   1.8 mm   1.0 deg  box to corner   0.0 mm   0.0 deg
+episode  17: miss    T, box, dock the box               settled 1/3  T  62.9 mm 167.7 deg  box to corner  56.2 mm  23.4 deg
+episode  18: success box, T, dock the box               settled 3/3  T   5.5 mm   2.0 deg  box to corner   0.9 mm   2.5 deg
+episode  19: miss    park the T, box, T, dock the box   settled 3/4  T   7.3 mm  15.7 deg  box to corner   0.0 mm   0.0 deg
+episode  20: success box, T, dock the box               settled 3/3  T   4.0 mm   4.2 deg  box to corner   0.0 mm   0.0 deg
+episode  21: success box, T, dock the box               settled 3/3  T   5.5 mm   3.9 deg  box to corner   0.0 mm   0.0 deg
+episode  22: miss    T, box, dock the box               settled 1/3  T 140.4 mm 128.0 deg  box to corner   9.7 mm  18.2 deg
+episode  23: success T, box, dock the box               settled 3/3  T   4.7 mm   0.1 deg  box to corner   2.0 mm   0.6 deg
+episode  24: success T, box, dock the box               settled 3/3  T   1.3 mm   1.7 deg  box to corner   0.0 mm   0.0 deg
+episode  25: success T, box, dock the box               settled 3/3  T   1.3 mm   0.8 deg  box to corner   0.9 mm   2.7 deg
+episode  26: miss    park the box, T, box, dock the box settled 2/4  T   4.0 mm   2.0 deg  box to corner  92.7 mm   3.9 deg  (simulator's plan: tee, box, tee, dock)
+episode  27: success T, box, dock the box               settled 3/3  T   0.5 mm   1.9 deg  box to corner   0.4 mm   1.3 deg
+episode  28: success park the T, box, T, dock the box   settled 4/4  T   6.0 mm   6.8 deg  box to corner   0.0 mm   0.0 deg
+episode  29: miss    park the T, box, T, dock the box   settled 2/4  T  19.6 mm   4.3 deg  box to corner  11.1 mm  29.3 deg
+episode  30: miss    park the T, box, T, dock the box   settled 3/4  T  58.5 mm  92.8 deg  box to corner   0.1 mm   0.0 deg
+episode  31: success box, T, dock the box               settled 2/3  T   5.1 mm   0.9 deg  box to corner   1.9 mm   4.0 deg
+episode  32: miss    T, box, dock the box               settled 2/3  T   5.2 mm  10.9 deg  box to corner   0.6 mm   0.7 deg
+episode  33: success park the box, T, box, dock the box settled 4/4  T   3.5 mm   3.6 deg  box to corner   1.6 mm   0.4 deg
+episode  34: success box, T, dock the box               settled 2/3  T   4.6 mm   0.0 deg  box to corner   1.1 mm   3.1 deg
+episode  35: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   1.8 deg  box to corner   1.7 mm   1.0 deg
+episode  36: success box, T, dock the box               settled 3/3  T   2.1 mm   2.6 deg  box to corner   0.3 mm   0.5 deg
+episode  37: success box, T, dock the box               settled 3/3  T   0.9 mm   2.5 deg  box to corner   1.6 mm   0.1 deg
+episode  38: success T, box, dock the box               settled 3/3  T   1.9 mm   2.6 deg  box to corner   0.3 mm   0.6 deg
+episode  39: success box, T, dock the box               settled 2/3  T   1.8 mm   3.4 deg  box to corner   1.6 mm   1.8 deg
+episode  40: success T, box, dock the box               settled 3/3  T   1.4 mm   5.0 deg  box to corner   0.1 mm   0.0 deg
+episode  41: success box, T, dock the box               settled 3/3  T   4.1 mm   0.8 deg  box to corner   0.0 mm   0.0 deg
+episode  42: success box, T, dock the box               settled 2/3  T   2.4 mm   0.8 deg  box to corner   0.0 mm   0.0 deg
+episode  43: success T, box, dock the box               settled 3/3  T   0.9 mm   2.1 deg  box to corner   1.7 mm   0.1 deg
+episode  44: success T, box, dock the box               settled 3/3  T   0.8 mm   0.9 deg  box to corner   0.5 mm   1.0 deg
+episode  45: success park the T, box, T, dock the box   settled 3/4  T   5.2 mm   0.6 deg  box to corner   2.6 mm   3.9 deg
+episode  46: success park the T, box, T, dock the box   settled 4/4  T   1.0 mm   5.0 deg  box to corner   0.0 mm   0.0 deg
+episode  47: miss    park the box, T, box, dock the box settled 4/4  T   1.3 mm   0.6 deg  box to corner   3.5 mm   0.1 deg
+episode  48: success box, T, dock the box               settled 3/3  T   3.1 mm   0.9 deg  box to corner   0.0 mm   0.0 deg
+episode  49: success park the T, box, T, dock the box   settled 3/4  T   1.4 mm   2.5 deg  box to corner   0.0 mm   0.0 deg
+episode  50: success T, box, dock the box               settled 3/3  T   1.2 mm   2.1 deg  box to corner   0.5 mm   0.7 deg
+episode  51: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   5.0 deg  box to corner   1.3 mm   2.0 deg
+episode  52: success park the T, box, T, dock the box   settled 4/4  T   3.1 mm   1.8 deg  box to corner   0.0 mm   0.0 deg
+episode  53: success box, T, dock the box               settled 3/3  T   1.4 mm   2.9 deg  box to corner   0.5 mm   1.4 deg
+episode  54: success park the T, box, T, dock the box   settled 4/4  T   1.1 mm   0.4 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode  55: success T, box, dock the box               settled 3/3  T   2.2 mm   0.3 deg  box to corner   0.5 mm   1.3 deg
+episode  56: success T, box, dock the box               settled 3/3  T   1.7 mm   4.7 deg  box to corner   0.1 mm   0.0 deg
+episode  57: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   4.8 deg  box to corner   0.7 mm   0.1 deg
+episode  58: success T, box, dock the box               settled 2/3  T   5.1 mm   6.6 deg  box to corner   0.6 mm   1.6 deg
+episode  59: success park the T, box, T, dock the box   settled 4/4  T   6.2 mm   0.4 deg  box to corner   2.3 mm   0.1 deg
+episode  60: success T, box, dock the box               settled 3/3  T   3.5 mm   0.6 deg  box to corner   0.0 mm   0.0 deg
+episode  61: success park the box, T, box, dock the box settled 4/4  T   3.2 mm   1.5 deg  box to corner   0.7 mm   2.1 deg
+episode  62: success box, T, dock the box               settled 3/3  T   3.0 mm   2.4 deg  box to corner   0.0 mm   0.1 deg
+episode  63: success T, box, dock the box               settled 3/3  T   3.7 mm   2.8 deg  box to corner   1.0 mm   0.0 deg
+episode  64: success park the box, T, box, dock the box settled 4/4  T   2.4 mm   5.6 deg  box to corner   0.5 mm   0.3 deg
+episode  65: success box, T, dock the box               settled 3/3  T   1.5 mm   2.4 deg  box to corner   1.8 mm   4.9 deg
+episode  66: miss    box, T, dock the box               settled 2/3  T  17.5 mm   2.2 deg  box to corner   0.0 mm   0.0 deg
+episode  67: success park the box, T, box, dock the box settled 3/4  T   1.9 mm   7.6 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode  68: success park the T, box, T, dock the box   settled 4/4  T   6.9 mm   3.0 deg  box to corner   0.0 mm   0.0 deg
+episode  69: success box, T, dock the box               settled 2/3  T   9.7 mm   4.9 deg  box to corner   1.6 mm   0.6 deg
+episode  70: success box, T, dock the box               settled 3/3  T   5.3 mm   3.6 deg  box to corner   0.0 mm   0.0 deg
+episode  71: success park the box, T, box, dock the box settled 4/4  T   3.1 mm   3.6 deg  box to corner   0.8 mm   0.4 deg
+episode  72: success T, box, dock the box               settled 3/3  T   0.6 mm   0.4 deg  box to corner   0.5 mm   1.4 deg
+episode  73: miss    box, T, dock the box               settled 2/3  T   4.2 mm   2.2 deg  box to corner   3.7 mm   0.8 deg
+episode  74: success T, box, dock the box               settled 3/3  T   1.9 mm   5.9 deg  box to corner   0.0 mm   0.0 deg
+episode  75: success park the box, T, box, dock the box settled 4/4  T   3.5 mm   5.1 deg  box to corner   0.7 mm   0.6 deg  (simulator's plan: tee, box, tee, dock)
+episode  76: success box, T, dock the box               settled 3/3  T   1.7 mm   2.3 deg  box to corner   0.0 mm   0.0 deg
+episode  77: success park the box, T, box, dock the box settled 4/4  T   3.0 mm   2.5 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode  78: success T, box, dock the box               settled 3/3  T   7.5 mm   6.0 deg  box to corner   0.0 mm   0.1 deg
+episode  79: success box, T, dock the box               settled 3/3  T   0.6 mm   0.0 deg  box to corner   1.7 mm   2.5 deg
+episode  80: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   0.2 deg  box to corner   0.9 mm   0.6 deg
+episode  81: success park the T, box, T, dock the box   settled 4/4  T   2.8 mm   3.2 deg  box to corner   0.0 mm   0.0 deg
+episode  82: success T, box, dock the box               settled 3/3  T   1.7 mm   4.0 deg  box to corner   0.1 mm   0.1 deg
+episode  83: success T, box, dock the box               settled 3/3  T   1.4 mm   1.6 deg  box to corner   0.5 mm   1.6 deg
+episode  84: success T, box, dock the box               settled 3/3  T   1.2 mm   6.4 deg  box to corner   0.2 mm   0.6 deg
+episode  85: success park the T, box, T, dock the box   settled 3/4  T   4.4 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode  86: success T, box, dock the box               settled 3/3  T   3.7 mm   4.1 deg  box to corner   0.0 mm   0.1 deg
+episode  87: success park the T, box, T, dock the box   settled 4/4  T   2.7 mm   0.3 deg  box to corner   0.0 mm   0.0 deg
+episode  88: success T, box, dock the box               settled 3/3  T   5.3 mm   0.5 deg  box to corner   1.5 mm   3.1 deg
+episode  89: success park the T, box, T, dock the box   settled 4/4  T   2.6 mm   4.3 deg  box to corner   0.4 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode  90: success box, T, dock the box               settled 3/3  T   3.4 mm   1.5 deg  box to corner   0.0 mm   0.1 deg
+episode  91: success park the T, box, T, dock the box   settled 4/4  T   4.5 mm   1.8 deg  box to corner   0.0 mm   0.1 deg
+episode  92: success box, T, dock the box               settled 3/3  T   2.2 mm   0.5 deg  box to corner   0.9 mm   2.8 deg
+episode  93: success box, T, dock the box               settled 2/3  T   4.7 mm   2.7 deg  box to corner   1.0 mm   0.6 deg
+episode  94: success T, box, dock the box               settled 3/3  T   1.9 mm   2.2 deg  box to corner   0.0 mm   0.0 deg
+episode  95: success park the T, box, T, dock the box   settled 4/4  T   3.7 mm   2.1 deg  box to corner   1.7 mm   3.0 deg
+episode  96: miss    box, T, dock the box               settled 3/3  T   3.9 mm   1.6 deg  box to corner   3.5 mm   1.8 deg
+episode  97: miss    T, box, dock the box               settled 2/3  T   5.6 mm  10.1 deg  box to corner   0.0 mm   0.0 deg
+episode  98: success T, box, dock the box               settled 3/3  T   2.2 mm   2.4 deg  box to corner   1.5 mm   1.6 deg
+episode  99: success park the T, box, T, dock the box   settled 4/4  T   5.7 mm   3.6 deg  box to corner   0.0 mm   0.0 deg
+episode 100: success park the T, box, T, dock the box   settled 4/4  T   1.7 mm   1.6 deg  box to corner   1.1 mm   2.2 deg  (simulator's plan: box, tee, dock)
+episode 101: success park the T, box, T, dock the box   settled 4/4  T   4.4 mm   4.2 deg  box to corner   0.5 mm   0.2 deg
+episode 102: success T, box, dock the box               settled 3/3  T   2.1 mm   0.8 deg  box to corner   0.3 mm   0.1 deg
+episode 103: success box, T, dock the box               settled 3/3  T   1.1 mm   1.4 deg  box to corner   0.6 mm   1.1 deg
+episode 104: success box, T, dock the box               settled 3/3  T   5.5 mm   4.2 deg  box to corner   0.0 mm   0.0 deg
+episode 105: miss    box, T, dock the box               settled 3/3  T   1.4 mm   4.2 deg  box to corner   3.8 mm   3.2 deg
+episode 106: success box, T, dock the box               settled 3/3  T   0.5 mm   3.4 deg  box to corner   0.0 mm   0.0 deg
+episode 107: success park the T, box, T, dock the box   settled 4/4  T   2.7 mm   1.7 deg  box to corner   0.0 mm   0.0 deg
+episode 108: success park the T, box, T, dock the box   settled 4/4  T   2.7 mm   2.2 deg  box to corner   0.0 mm   0.1 deg
+episode 109: success T, box, dock the box               settled 3/3  T   2.7 mm   4.2 deg  box to corner   0.0 mm   0.0 deg
+episode 110: success T, box, dock the box               settled 3/3  T   3.6 mm   6.3 deg  box to corner   0.0 mm   0.0 deg
+episode 111: success T, box, dock the box               settled 3/3  T   1.0 mm   1.0 deg  box to corner   0.4 mm   1.2 deg
+episode 112: success box, T, dock the box               settled 3/3  T   2.0 mm   6.2 deg  box to corner   2.7 mm   0.7 deg
+episode 113: success park the T, box, T, dock the box   settled 4/4  T   2.3 mm   3.2 deg  box to corner   1.4 mm   2.5 deg
+episode 114: success T, box, dock the box               settled 3/3  T   3.8 mm   4.0 deg  box to corner   0.0 mm   0.0 deg
+episode 115: success T, box, dock the box               settled 3/3  T   3.2 mm   6.7 deg  box to corner   0.5 mm   1.0 deg
+episode 116: success box, T, dock the box               settled 3/3  T   3.2 mm   0.8 deg  box to corner   1.3 mm   0.8 deg
+episode 117: success T, box, dock the box               settled 3/3  T   1.5 mm   3.1 deg  box to corner   0.3 mm   0.1 deg
+episode 118: success box, T, dock the box               settled 3/3  T   1.8 mm   0.3 deg  box to corner   0.5 mm   0.6 deg
+episode 119: success park the T, box, T, dock the box   settled 4/4  T   4.2 mm   4.9 deg  box to corner   2.1 mm   0.9 deg
+episode 120: success park the T, box, T, dock the box   settled 4/4  T   3.4 mm   2.9 deg  box to corner   2.2 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 121: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   2.3 deg  box to corner   0.1 mm   0.4 deg
+episode 122: miss    park the box, T, box, dock the box settled 3/4  T   2.4 mm  10.4 deg  box to corner   0.7 mm   0.3 deg
+episode 123: success T, box, dock the box               settled 3/3  T   3.5 mm   0.5 deg  box to corner   0.1 mm   0.4 deg
+episode 124: success T, box, dock the box               settled 1/3  T   8.6 mm   8.3 deg  box to corner   0.1 mm   0.0 deg
+episode 125: success park the T, box, T, dock the box   settled 4/4  T   6.4 mm   1.5 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 126: success box, T, dock the box               settled 3/3  T   1.4 mm   0.2 deg  box to corner   1.4 mm   3.8 deg
+episode 127: success T, box, dock the box               settled 3/3  T   2.4 mm   8.7 deg  box to corner   0.1 mm   0.2 deg
+episode 128: miss    park the T, box, T, dock the box   settled 2/4  T  73.5 mm 110.4 deg  box to corner  64.0 mm  15.5 deg
+episode 129: success park the T, box, T, dock the box   settled 4/4  T   1.2 mm   3.1 deg  box to corner   0.7 mm   1.7 deg
+episode 130: success box, T, dock the box               settled 2/3  T   7.3 mm   6.5 deg  box to corner   1.2 mm   0.8 deg
+episode 131: success box, T, dock the box               settled 2/3  T   2.5 mm   4.6 deg  box to corner   0.3 mm   0.7 deg
+episode 132: miss    T, box, dock the box               settled 1/3  T   0.2 mm   0.9 deg  box to corner 157.1 mm  10.3 deg
+episode 133: success park the box, T, box, dock the box settled 3/4  T   0.4 mm   0.1 deg  box to corner   1.4 mm   3.4 deg
+episode 134: success T, box, dock the box               settled 3/3  T   4.3 mm   5.6 deg  box to corner   0.5 mm   0.9 deg
+episode 135: success T, box, dock the box               settled 3/3  T   3.3 mm   7.5 deg  box to corner   0.0 mm   0.0 deg
+episode 136: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   2.7 deg  box to corner   0.1 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 137: success T, box, dock the box               settled 3/3  T   1.0 mm   5.2 deg  box to corner   0.6 mm   0.9 deg
+episode 138: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   3.1 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 139: success box, T, dock the box               settled 3/3  T   2.7 mm   3.7 deg  box to corner   1.3 mm   2.9 deg
+episode 140: success box, T, dock the box               settled 3/3  T   1.6 mm   0.1 deg  box to corner   0.0 mm   0.1 deg
+episode 141: success T, box, dock the box               settled 3/3  T   3.3 mm   1.2 deg  box to corner   0.0 mm   0.0 deg
+episode 142: success box, T, dock the box               settled 3/3  T   5.8 mm   4.0 deg  box to corner   0.0 mm   0.0 deg
+episode 143: success box, T, dock the box               settled 3/3  T   0.9 mm   2.9 deg  box to corner   1.6 mm   0.3 deg
+episode 144: success T, box, dock the box               settled 3/3  T   2.2 mm   2.3 deg  box to corner   0.1 mm   0.0 deg
+episode 145: success park the T, box, T, dock the box   settled 4/4  T   3.8 mm   1.2 deg  box to corner   0.5 mm   0.0 deg
+episode 146: success park the box, T, box, dock the box settled 3/4  T   1.6 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 147: success park the T, box, T, dock the box   settled 4/4  T   8.2 mm   0.8 deg  box to corner   0.0 mm   0.0 deg
+episode 148: success park the T, box, T, dock the box   settled 4/4  T   2.9 mm   3.1 deg  box to corner   0.5 mm   0.7 deg  (simulator's plan: box, tee, box, dock)
+episode 149: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   1.8 deg  box to corner   0.2 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 150: success park the T, box, T, dock the box   settled 4/4  T   4.7 mm   0.4 deg  box to corner   0.5 mm   1.5 deg  (simulator's plan: box, tee, box, dock)
+episode 151: success box, T, dock the box               settled 3/3  T   2.0 mm   1.0 deg  box to corner   0.0 mm   0.2 deg
+episode 152: success box, T, dock the box               settled 3/3  T   0.9 mm   3.1 deg  box to corner   0.3 mm   0.9 deg
+episode 153: miss    park the T, box, T, dock the box   settled 3/4  T  16.5 mm   5.4 deg  box to corner   0.7 mm   0.9 deg
+episode 154: success T, box, dock the box               settled 3/3  T   1.2 mm   3.1 deg  box to corner   0.1 mm   0.3 deg
+episode 155: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   0.5 deg  box to corner   0.1 mm   0.5 deg  (simulator's plan: box, tee, box, dock)
+episode 156: success park the T, box, T, dock the box   settled 4/4  T   2.0 mm   0.8 deg  box to corner   0.3 mm   0.8 deg
+episode 157: success park the T, box, T, dock the box   settled 3/4  T   2.9 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 158: success park the T, box, T, dock the box   settled 4/4  T   1.0 mm   0.2 deg  box to corner   0.6 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 159: success box, T, dock the box               settled 3/3  T   3.9 mm   1.0 deg  box to corner   0.5 mm   0.9 deg
+episode 160: success park the T, box, T, dock the box   settled 4/4  T   5.7 mm   2.1 deg  box to corner   0.6 mm   0.0 deg
+episode 161: success park the box, T, box, dock the box settled 3/4  T   3.0 mm   0.4 deg  box to corner   1.9 mm   2.4 deg
+episode 162: success park the T, box, T, dock the box   settled 3/4  T   0.7 mm   2.3 deg  box to corner   1.2 mm   3.5 deg
+episode 163: success T, box, dock the box               settled 3/3  T   3.2 mm   2.4 deg  box to corner   0.5 mm   0.5 deg
+episode 164: success T, box, dock the box               settled 3/3  T   1.6 mm   0.8 deg  box to corner   0.8 mm   1.6 deg
+episode 165: success T, box, dock the box               settled 3/3  T   1.0 mm   2.7 deg  box to corner   0.1 mm   0.1 deg
+episode 166: success box, T, dock the box               settled 3/3  T   3.1 mm   3.5 deg  box to corner   0.2 mm   0.5 deg
+episode 167: success T, box, dock the box               settled 3/3  T   2.0 mm   1.8 deg  box to corner   0.3 mm   0.1 deg
+episode 168: success park the box, T, box, dock the box settled 4/4  T   0.9 mm   1.8 deg  box to corner   0.0 mm   0.0 deg
+episode 169: success park the T, box, T, dock the box   settled 4/4  T   5.2 mm   2.1 deg  box to corner   1.2 mm   3.7 deg
+episode 170: success box, T, dock the box               settled 2/3  T   2.0 mm   2.7 deg  box to corner   0.0 mm   0.0 deg
+episode 171: success T, box, dock the box               settled 3/3  T   6.1 mm   7.6 deg  box to corner   0.8 mm   0.4 deg
+episode 172: not started (no push plan keeps the skills' 15 mm rule (the blocks are 14.6 mm apart; no parking spot or corner helps): move a block)
+episode 173: success T, box, dock the box               settled 3/3  T   0.4 mm   0.6 deg  box to corner   0.2 mm   0.2 deg
+episode 174: success T, box, dock the box               settled 3/3  T   2.3 mm   1.2 deg  box to corner   1.7 mm   0.1 deg
+episode 175: success park the T, box, T, dock the box   settled 4/4  T   4.6 mm   3.8 deg  box to corner   1.0 mm   2.2 deg
+episode 176: miss    box, T, dock the box               settled 3/3  T   0.7 mm   3.9 deg  box to corner   4.6 mm   1.4 deg
+episode 177: success park the T, box, T, dock the box   settled 3/4  T   0.8 mm   4.4 deg  box to corner   2.1 mm   3.4 deg  (simulator's plan: box, tee, box, dock)
+episode 178: success park the T, box, T, dock the box   settled 4/4  T   5.1 mm   4.5 deg  box to corner   0.1 mm   0.3 deg
+episode 179: success park the T, box, T, dock the box   settled 4/4  T   2.2 mm   1.3 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 180: success T, box, dock the box               settled 3/3  T   3.1 mm   6.5 deg  box to corner   1.3 mm   0.0 deg
+episode 181: success park the box, T, box, dock the box settled 4/4  T   0.8 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 182: success box, T, dock the box               settled 3/3  T   2.1 mm   7.6 deg  box to corner   1.3 mm   1.7 deg
+episode 183: success T, box, dock the box               settled 3/3  T   4.8 mm   2.9 deg  box to corner   1.7 mm   0.7 deg
+episode 184: success park the box, T, box, dock the box settled 4/4  T   3.9 mm   0.7 deg  box to corner   0.4 mm   1.2 deg
+episode 185: success park the T, box, T, dock the box   settled 4/4  T   1.7 mm   7.2 deg  box to corner   0.8 mm   2.3 deg
+episode 186: success park the T, box, T, dock the box   settled 4/4  T   1.6 mm   5.2 deg  box to corner   0.1 mm   0.3 deg  (simulator's plan: box, tee, box, dock)
+episode 187: success park the box, T, box, dock the box settled 4/4  T   2.9 mm   0.1 deg  box to corner   1.7 mm   0.8 deg
+episode 188: success T, box, dock the box               settled 3/3  T   1.9 mm   0.2 deg  box to corner   0.3 mm   0.1 deg
+episode 189: success park the box, T, box, dock the box settled 4/4  T   1.6 mm   1.5 deg  box to corner   0.2 mm   0.5 deg
+episode 190: success T, box, dock the box               settled 3/3  T   0.7 mm   1.9 deg  box to corner   1.3 mm   0.0 deg
+episode 191: success box, T, dock the box               settled 3/3  T   2.6 mm   2.8 deg  box to corner   0.0 mm   0.0 deg
+episode 192: success park the T, box, T, dock the box   settled 4/4  T   6.5 mm   5.2 deg  box to corner   0.0 mm   0.0 deg
+episode 193: success park the T, box, T, dock the box   settled 4/4  T   2.2 mm   3.1 deg  box to corner   1.6 mm   0.3 deg
+episode 194: success T, box, dock the box               settled 3/3  T   2.5 mm   5.6 deg  box to corner   0.4 mm   1.0 deg
+episode 195: success T, box, dock the box               settled 3/3  T   0.2 mm   0.5 deg  box to corner   0.0 mm   0.0 deg
+episode 196: success T, box, dock the box               settled 3/3  T   1.8 mm   3.8 deg  box to corner   0.2 mm   0.6 deg
+episode 197: success park the box, T, box, dock the box settled 3/4  T   6.8 mm   2.7 deg  box to corner   0.0 mm   0.0 deg
+episode 198: success box, T, dock the box               settled 3/3  T   0.9 mm   2.4 deg  box to corner   0.3 mm   0.6 deg
+episode 199: success box, T, dock the box               settled 3/3  T   3.3 mm   3.8 deg  box to corner   0.0 mm   0.0 deg
+episode 200: success park the T, box, T, dock the box   settled 4/4  T   1.2 mm   0.9 deg  box to corner   0.1 mm   0.1 deg
+episode 201: success park the T, box, T, dock the box   settled 4/4  T   2.0 mm   1.1 deg  box to corner   1.1 mm   2.2 deg
+episode 202: success T, box, dock the box               settled 2/3  T   3.7 mm   9.1 deg  box to corner   0.0 mm   0.0 deg
+episode 203: success T, box, dock the box               settled 3/3  T   1.6 mm   0.3 deg  box to corner   2.5 mm   1.1 deg
+episode 204: success T, box, dock the box               settled 3/3  T   0.6 mm   1.9 deg  box to corner   0.1 mm   0.4 deg
+episode 205: success T, box, dock the box               settled 3/3  T   5.5 mm   3.7 deg  box to corner   1.8 mm   0.0 deg
+episode 206: success box, T, dock the box               settled 3/3  T   7.5 mm   5.7 deg  box to corner   0.0 mm   0.0 deg
+episode 207: success park the box, T, box, dock the box settled 4/4  T   2.1 mm   5.9 deg  box to corner   0.1 mm   0.1 deg
+episode 208: success T, box, dock the box               settled 3/3  T   0.9 mm   0.8 deg  box to corner   0.7 mm   2.2 deg
+episode 209: success T, box, dock the box               settled 3/3  T   1.7 mm   2.7 deg  box to corner   0.6 mm   1.0 deg
+episode 210: success park the T, box, T, dock the box   settled 4/4  T   5.0 mm   1.7 deg  box to corner   1.4 mm   0.2 deg
+episode 211: success park the T, box, T, dock the box   settled 4/4  T   1.5 mm   0.1 deg  box to corner   0.0 mm   0.0 deg
+episode 212: success T, box, dock the box               settled 3/3  T   1.6 mm   2.0 deg  box to corner   0.0 mm   0.0 deg
+episode 213: success park the T, box, T, dock the box   settled 4/4  T   0.7 mm   8.1 deg  box to corner   0.3 mm   0.3 deg
+episode 214: success box, T, dock the box               settled 3/3  T   2.8 mm   1.3 deg  box to corner   0.0 mm   0.0 deg
+episode 215: success park the T, box, T, dock the box   settled 4/4  T   1.1 mm   4.9 deg  box to corner   1.0 mm   2.0 deg
+episode 216: success park the T, box, T, dock the box   settled 4/4  T   1.9 mm   0.3 deg  box to corner   0.4 mm   0.8 deg  (simulator's plan: box, tee, box, dock)
+episode 217: success park the box, T, box, dock the box settled 4/4  T   1.3 mm   0.9 deg  box to corner   0.6 mm   0.4 deg  (simulator's plan: tee, box, tee, dock)
+episode 218: success park the T, box, T, dock the box   settled 3/4  T   1.5 mm   3.6 deg  box to corner   0.8 mm   1.5 deg  (simulator's plan: box, tee, box, dock)
+episode 219: success box, T, dock the box               settled 3/3  T   4.7 mm   8.5 deg  box to corner   0.7 mm   0.7 deg
+episode 220: success box, T, dock the box               settled 3/3  T   2.6 mm   1.1 deg  box to corner   2.6 mm   0.5 deg
+episode 221: success box, T, dock the box               settled 3/3  T   5.9 mm   0.1 deg  box to corner   1.1 mm   0.0 deg
+episode 222: success park the box, T, box, dock the box settled 4/4  T   0.7 mm   3.7 deg  box to corner   0.0 mm   0.0 deg
+episode 223: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   2.9 deg  box to corner   0.4 mm   0.0 deg
+episode 224: success T, box, dock the box               settled 3/3  T   2.1 mm   4.8 deg  box to corner   0.6 mm   0.1 deg
+episode 225: success box, T, dock the box               settled 3/3  T   3.1 mm   1.7 deg  box to corner   0.8 mm   2.1 deg
+episode 226: success box, T, dock the box               settled 3/3  T   1.9 mm   2.8 deg  box to corner   0.0 mm   0.0 deg
+episode 227: not started (no push plan keeps the skills' 15 mm rule (the blocks are 14.0 mm apart; no parking spot or corner helps): move a block)
+episode 228: success T, box, dock the box               settled 3/3  T   4.0 mm   3.1 deg  box to corner   0.1 mm   0.0 deg
+episode 229: success T, box, dock the box               settled 2/3  T   2.3 mm   1.9 deg  box to corner   1.8 mm   3.9 deg
+episode 230: success box, T, dock the box               settled 3/3  T   3.0 mm   2.3 deg  box to corner   0.0 mm   0.0 deg
+episode 231: success T, box, dock the box               settled 2/3  T   3.4 mm   1.1 deg  box to corner   1.2 mm   0.8 deg
+episode 232: success box, T, dock the box               settled 3/3  T   4.6 mm   3.9 deg  box to corner   1.4 mm   2.4 deg
+episode 233: success box, T, dock the box               settled 3/3  T   2.6 mm   2.1 deg  box to corner   0.3 mm   0.8 deg
+episode 234: success box, T, dock the box               settled 3/3  T   5.4 mm   4.8 deg  box to corner   0.2 mm   0.1 deg
+episode 235: success T, box, dock the box               settled 2/3  T   3.0 mm   3.6 deg  box to corner   0.7 mm   1.6 deg
+episode 236: success park the T, box, T, dock the box   settled 4/4  T   4.8 mm   1.1 deg  box to corner   0.4 mm   0.3 deg
+episode 237: success T, box, dock the box               settled 3/3  T   0.9 mm   0.4 deg  box to corner   1.5 mm   0.7 deg
+episode 238: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   5.3 deg  box to corner   0.3 mm   0.6 deg
+episode 239: success box, T, dock the box               settled 3/3  T   0.3 mm   0.3 deg  box to corner   0.3 mm   0.8 deg
+episode 240: success park the T, box, T, dock the box   settled 4/4  T   3.4 mm   1.1 deg  box to corner   0.1 mm   0.3 deg
+episode 241: success box, T, dock the box               settled 3/3  T   2.2 mm   1.0 deg  box to corner   0.0 mm   0.0 deg
+episode 242: not started (no push plan keeps the skills' 15 mm rule (the blocks are 12.8 mm apart; no parking spot or corner helps): move a block)
+episode 243: success park the T, box, T, dock the box   settled 4/4  T   5.9 mm   8.2 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 244: success T, box, dock the box               settled 3/3  T   5.0 mm   3.1 deg  box to corner   2.1 mm   0.6 deg
+episode 245: miss    T, box, dock the box               settled 1/3  T   2.9 mm   3.8 deg  box to corner 114.3 mm   9.9 deg
+episode 246: miss    park the T, box, T, dock the box   settled 3/4  T  16.2 mm   0.8 deg  box to corner   0.1 mm   0.1 deg
+episode 247: success T, box, dock the box               settled 2/3  T   3.8 mm   0.3 deg  box to corner   0.1 mm   0.1 deg
+episode 248: miss    box, T, dock the box               settled 1/3  T  19.1 mm   0.1 deg  box to corner   1.2 mm   3.4 deg
+episode 249: success box, T, dock the box               settled 3/3  T   3.2 mm   0.6 deg  box to corner   0.0 mm   0.0 deg
+episode 250: miss    T, box, dock the box               settled 1/3  T  15.6 mm  18.1 deg  box to corner  15.9 mm  19.2 deg
+episode 251: success T, box, dock the box               settled 3/3  T   0.9 mm   2.7 deg  box to corner   0.0 mm   0.0 deg
+episode 252: success box, T, dock the box               settled 3/3  T   3.1 mm   1.4 deg  box to corner   0.3 mm   0.9 deg
+episode 253: success park the T, box, T, dock the box   settled 4/4  T   5.1 mm   3.5 deg  box to corner   0.8 mm   1.3 deg
+episode 254: success T, box, dock the box               settled 3/3  T   1.7 mm   5.4 deg  box to corner   0.9 mm   2.4 deg
+episode 255: success box, T, dock the box               settled 2/3  T   0.3 mm   0.1 deg  box to corner   0.1 mm   0.2 deg
+episode 256: success T, box, dock the box               settled 2/3  T   3.7 mm   3.2 deg  box to corner   0.9 mm   0.1 deg
+episode 257: success park the T, box, T, dock the box   settled 4/4  T   2.6 mm   1.7 deg  box to corner   1.9 mm   3.3 deg
+episode 258: success T, box, dock the box               settled 3/3  T   0.5 mm   2.4 deg  box to corner   0.9 mm   0.6 deg
+episode 259: success park the box, T, box, dock the box settled 4/4  T   1.9 mm   0.2 deg  box to corner   0.8 mm   1.2 deg
+episode 260: success park the T, box, T, dock the box   settled 4/4  T   1.0 mm   2.2 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 261: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   7.0 deg  box to corner   1.9 mm   2.5 deg
+episode 262: success park the T, box, T, dock the box   settled 4/4  T   7.5 mm   5.6 deg  box to corner   1.2 mm   0.6 deg
+episode 263: success box, T, dock the box               settled 3/3  T   5.1 mm   2.7 deg  box to corner   0.0 mm   0.0 deg
+episode 264: miss    box, T, dock the box               settled 2/3  T  75.5 mm  12.3 deg  box to corner   0.2 mm   0.3 deg
+episode 265: success T, box, dock the box               settled 3/3  T   2.0 mm   1.8 deg  box to corner   0.4 mm   1.2 deg
+episode 266: success box, T, dock the box               settled 3/3  T   6.6 mm   7.7 deg  box to corner   0.1 mm   0.1 deg
+episode 267: success T, box, dock the box               settled 3/3  T   1.4 mm   7.2 deg  box to corner   0.9 mm   0.1 deg
+episode 268: success park the box, T, box, dock the box settled 4/4  T   1.5 mm   2.1 deg  box to corner   0.0 mm   0.2 deg
+episode 269: success T, box, dock the box               settled 3/3  T   2.5 mm   2.2 deg  box to corner   0.2 mm   0.1 deg
+episode 270: success T, box, dock the box               settled 3/3  T   1.3 mm   1.2 deg  box to corner   1.6 mm   1.9 deg
+episode 271: success park the T, box, T, dock the box   settled 4/4  T   3.3 mm   1.0 deg  box to corner   0.9 mm   1.8 deg
+episode 272: success box, T, dock the box               settled 3/3  T   3.9 mm   0.4 deg  box to corner   0.1 mm   0.2 deg
+episode 273: success box, T, dock the box               settled 3/3  T   0.8 mm   0.5 deg  box to corner   0.1 mm   0.0 deg
+episode 274: success box, T, dock the box               settled 3/3  T   1.4 mm   1.5 deg  box to corner   0.7 mm   0.6 deg
+episode 275: success T, box, dock the box               settled 3/3  T   3.7 mm   1.5 deg  box to corner   0.2 mm   0.5 deg
+episode 276: success park the T, box, T, dock the box   settled 3/4  T   9.8 mm   1.5 deg  box to corner   0.0 mm   0.0 deg
+episode 277: success box, T, dock the box               settled 3/3  T   2.1 mm   2.7 deg  box to corner   0.3 mm   0.1 deg
+episode 278: success box, T, dock the box               settled 3/3  T   2.9 mm   0.8 deg  box to corner   0.0 mm   0.0 deg
+episode 279: success park the T, box, T, dock the box   settled 4/4  T   5.3 mm   5.5 deg  box to corner   1.2 mm   3.6 deg
+episode 280: success T, box, dock the box               settled 3/3  T   3.0 mm   2.6 deg  box to corner   1.2 mm   0.1 deg
+episode 281: success T, box, dock the box               settled 3/3  T   0.8 mm   1.2 deg  box to corner   0.0 mm   0.0 deg
+episode 282: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   3.1 deg  box to corner   0.8 mm   2.2 deg
+episode 283: success T, box, dock the box               settled 3/3  T   1.3 mm   2.5 deg  box to corner   0.0 mm   0.1 deg
+episode 284: success park the T, box, T, dock the box   settled 4/4  T   0.6 mm   4.9 deg  box to corner   0.3 mm   0.3 deg
+episode 285: success box, T, dock the box               settled 3/3  T   4.5 mm   0.4 deg  box to corner   0.0 mm   0.0 deg
+episode 286: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   1.8 deg  box to corner   0.5 mm   0.8 deg  (simulator's plan: tee, box, dock)
+episode 287: success T, box, dock the box               settled 3/3  T   3.3 mm   4.2 deg  box to corner   0.3 mm   0.0 deg
+episode 288: success park the T, box, T, dock the box   settled 4/4  T   1.3 mm   3.9 deg  box to corner   0.7 mm   1.5 deg
+episode 289: success T, box, dock the box               settled 3/3  T   1.4 mm   3.2 deg  box to corner   0.0 mm   0.0 deg
+episode 290: success park the T, box, T, dock the box   settled 4/4  T   3.5 mm   1.8 deg  box to corner   0.2 mm   0.5 deg  (simulator's plan: box, tee, box, dock)
+episode 291: success park the T, box, T, dock the box   settled 4/4  T   3.8 mm   4.1 deg  box to corner   0.7 mm   2.1 deg  (simulator's plan: box, tee, box, dock)
+episode 292: success park the box, T, box, dock the box settled 4/4  T   1.9 mm   0.4 deg  box to corner   0.7 mm   1.2 deg
+episode 293: success park the T, box, T, dock the box   settled 4/4  T   1.2 mm   3.5 deg  box to corner   1.0 mm   2.1 deg  (simulator's plan: box, tee, box, dock)
+episode 294: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   6.1 deg  box to corner   2.1 mm   1.9 deg
+episode 295: success park the T, box, T, dock the box   settled 4/4  T   1.1 mm   0.9 deg  box to corner   0.0 mm   0.0 deg
+episode 296: success park the box, T, box, dock the box settled 3/4  T   0.7 mm   2.9 deg  box to corner   0.0 mm   0.0 deg
+episode 297: miss    T, box, dock the box               settled 2/3  T   0.6 mm   5.7 deg  box to corner   2.5 mm   7.4 deg
+episode 298: success park the box, T, box, dock the box settled 4/4  T   2.3 mm   4.5 deg  box to corner   1.6 mm   2.2 deg
+episode 299: success park the T, box, T, dock the box   settled 4/4  T   3.4 mm   2.4 deg  box to corner   1.0 mm   1.6 deg
+episode 300: success T, box, dock the box               settled 3/3  T   0.6 mm   1.8 deg  box to corner   1.5 mm   1.4 deg
+episode 301: miss    park the T, box, T, dock the box   settled 3/4  T  22.1 mm  30.0 deg  box to corner   5.0 mm   4.0 deg
+episode 302: success park the box, T, box, dock the box settled 4/4  T   4.1 mm   6.4 deg  box to corner   0.0 mm   0.0 deg
+episode 303: success T, box, dock the box               settled 3/3  T   2.7 mm   4.2 deg  box to corner   0.0 mm   0.2 deg
+episode 304: success park the T, box, T, dock the box   settled 4/4  T   2.0 mm   1.4 deg  box to corner   0.1 mm   0.3 deg
+episode 305: success T, box, dock the box               settled 3/3  T   3.0 mm   1.7 deg  box to corner   0.0 mm   0.0 deg
+episode 306: success box, T, dock the box               settled 3/3  T   2.4 mm   3.4 deg  box to corner   0.1 mm   0.1 deg
+episode 307: success park the box, T, box, dock the box settled 4/4  T   3.0 mm   7.0 deg  box to corner   0.8 mm   1.9 deg
+episode 308: success T, box, dock the box               settled 3/3  T   1.6 mm   4.9 deg  box to corner   0.0 mm   0.0 deg
+episode 309: success T, box, dock the box               settled 3/3  T   3.4 mm   1.2 deg  box to corner   0.2 mm   0.1 deg
+episode 310: success box, T, dock the box               settled 3/3  T   3.5 mm   3.1 deg  box to corner   0.3 mm   1.0 deg
+episode 311: success T, box, dock the box               settled 3/3  T   1.9 mm   0.5 deg  box to corner   1.5 mm   0.7 deg
+episode 312: miss    park the T, box, T, dock the box   settled 2/4  T  40.6 mm   1.9 deg  box to corner  46.8 mm   3.2 deg
+episode 313: success park the box, T, box, dock the box settled 4/4  T   2.4 mm   2.1 deg  box to corner   0.0 mm   0.0 deg
+episode 314: success box, T, dock the box               settled 3/3  T   2.1 mm   5.6 deg  box to corner   2.5 mm   2.0 deg
+episode 315: success park the box, T, box, dock the box settled 4/4  T   2.7 mm   3.4 deg  box to corner   1.3 mm   0.4 deg
+episode 316: success park the box, T, box, dock the box settled 4/4  T   4.7 mm   0.5 deg  box to corner   0.4 mm   1.3 deg
+episode 317: success T, box, dock the box               settled 3/3  T   3.0 mm   1.4 deg  box to corner   0.1 mm   0.1 deg
+episode 318: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   2.5 deg  box to corner   0.2 mm   0.4 deg
+episode 319: miss    box, T, dock the box               settled 3/3  T   1.1 mm   1.6 deg  box to corner   3.4 mm   2.7 deg
+episode 320: success park the T, box, T, dock the box   settled 4/4  T   1.1 mm   2.6 deg  box to corner   0.4 mm   0.0 deg
+episode 321: miss    box, T, dock the box               settled 2/3  T   5.7 mm  17.5 deg  box to corner   0.0 mm   0.0 deg
+episode 322: success T, box, dock the box               settled 3/3  T   3.8 mm   2.2 deg  box to corner   0.4 mm   0.1 deg
+episode 323: success park the T, box, T, dock the box   settled 4/4  T   1.9 mm   6.6 deg  box to corner   0.2 mm   0.5 deg
+episode 324: success T, box, dock the box               settled 3/3  T   4.5 mm   4.8 deg  box to corner   0.6 mm   1.9 deg
+episode 325: miss    box, T, dock the box               settled 2/3  T   2.7 mm   2.1 deg  box to corner   2.4 mm   6.5 deg
+episode 326: success T, box, dock the box               settled 3/3  T   0.5 mm   3.3 deg  box to corner   1.0 mm   2.4 deg
+episode 327: success T, box, dock the box               settled 3/3  T   3.7 mm   0.6 deg  box to corner   0.5 mm   1.1 deg
+episode 328: success T, box, dock the box               settled 3/3  T   4.5 mm   4.8 deg  box to corner   0.1 mm   0.2 deg
+episode 329: success T, box, dock the box               settled 3/3  T   6.0 mm   1.0 deg  box to corner   0.0 mm   0.1 deg
+episode 330: success T, box, dock the box               settled 3/3  T   1.3 mm   0.3 deg  box to corner   1.8 mm   2.3 deg
+episode 331: success park the T, box, T, dock the box   settled 4/4  T   0.3 mm   5.6 deg  box to corner   0.5 mm   0.9 deg  (simulator's plan: tee, box, dock)
+episode 332: success park the T, box, T, dock the box   settled 4/4  T   2.3 mm   2.7 deg  box to corner   0.8 mm   1.8 deg  (simulator's plan: box, tee, box, dock)
+episode 333: success T, box, dock the box               settled 3/3  T   1.3 mm   5.3 deg  box to corner   0.0 mm   0.0 deg
+episode 334: success T, box, dock the box               settled 3/3  T   0.2 mm   0.9 deg  box to corner   0.4 mm   0.4 deg
+episode 335: success T, box, dock the box               settled 3/3  T   1.9 mm   1.2 deg  box to corner   1.0 mm   2.0 deg
+episode 336: success park the T, box, T, dock the box   settled 4/4  T   2.1 mm   2.9 deg  box to corner   1.1 mm   0.9 deg  (simulator's plan: box, tee, box, dock)
+episode 337: success T, box, dock the box               settled 3/3  T   5.5 mm   4.1 deg  box to corner   1.0 mm   0.0 deg
+episode 338: success T, box, dock the box               settled 2/3  T   6.1 mm   7.4 deg  box to corner   0.0 mm   0.0 deg
+episode 339: miss    box, T, dock the box               settled 2/3  T  13.2 mm   2.9 deg  box to corner   0.4 mm   0.0 deg
+episode 340: success T, box, dock the box               settled 3/3  T   4.0 mm   2.2 deg  box to corner   0.3 mm   0.7 deg
+episode 341: success T, box, dock the box               settled 3/3  T   1.4 mm   0.6 deg  box to corner   0.6 mm   0.7 deg
+episode 342: success box, T, dock the box               settled 3/3  T   0.3 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 343: success T, box, dock the box               settled 3/3  T   2.1 mm   3.8 deg  box to corner   0.2 mm   0.3 deg
+episode 344: success park the box, T, box, dock the box settled 4/4  T   2.2 mm   2.3 deg  box to corner   1.3 mm   1.2 deg
+episode 345: success park the box, T, box, dock the box settled 3/4  T   3.5 mm   4.8 deg  box to corner   0.0 mm   0.0 deg
+episode 346: success park the box, T, box, dock the box settled 4/4  T   1.4 mm   2.6 deg  box to corner   0.8 mm   0.1 deg
+episode 347: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   2.0 deg  box to corner   1.4 mm   1.1 deg
+episode 348: success box, T, dock the box               settled 3/3  T   1.2 mm   0.2 deg  box to corner   1.8 mm   0.4 deg
+episode 349: success box, T, dock the box               settled 3/3  T   2.1 mm   0.4 deg  box to corner   0.5 mm   1.0 deg
+episode 350: success park the T, box, T, dock the box   settled 4/4  T   2.6 mm   3.4 deg  box to corner   1.7 mm   3.7 deg
+episode 351: success T, box, dock the box               settled 3/3  T   2.8 mm   4.9 deg  box to corner   0.1 mm   0.2 deg
+episode 352: success park the T, box, T, dock the box   settled 4/4  T   0.5 mm   0.1 deg  box to corner   0.5 mm   1.4 deg  (simulator's plan: box, tee, box, dock)
+episode 353: miss    T, box, dock the box               settled 3/3  T   1.2 mm   1.8 deg  box to corner   5.9 mm   0.0 deg
+episode 354: success park the T, box, T, dock the box   settled 4/4  T   1.3 mm   5.9 deg  box to corner   0.9 mm   1.0 deg
+episode 355: success T, box, dock the box               settled 3/3  T   5.0 mm   1.1 deg  box to corner   0.6 mm   1.7 deg
+episode 356: success park the box, T, box, dock the box settled 4/4  T   2.1 mm   4.8 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 357: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   5.4 deg  box to corner   0.0 mm   0.1 deg
+episode 358: success T, box, dock the box               settled 3/3  T   0.5 mm   3.1 deg  box to corner   0.2 mm   0.1 deg
+episode 359: success box, T, dock the box               settled 3/3  T   1.2 mm   0.0 deg  box to corner   2.3 mm   0.8 deg
+episode 360: success box, T, dock the box               settled 3/3  T   1.9 mm   4.0 deg  box to corner   0.4 mm   0.0 deg
+episode 361: success park the box, T, box, dock the box settled 4/4  T   2.9 mm   0.4 deg  box to corner   0.0 mm   0.2 deg  (simulator's plan: tee, box, tee, dock)
+episode 362: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   5.1 deg  box to corner   0.8 mm   2.2 deg
+episode 363: success T, box, dock the box               settled 3/3  T   2.0 mm   1.5 deg  box to corner   0.2 mm   0.3 deg
+episode 364: success T, box, dock the box               settled 3/3  T   1.4 mm   5.5 deg  box to corner   0.1 mm   0.0 deg
+episode 365: miss    box, T, dock the box               settled 2/3  T  17.4 mm   3.9 deg  box to corner   0.8 mm   0.1 deg
+episode 366: success park the T, box, T, dock the box   settled 4/4  T   1.5 mm   5.7 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 367: success box, T, dock the box               settled 3/3  T   3.5 mm   0.4 deg  box to corner   0.1 mm   0.2 deg
+episode 368: success park the T, box, T, dock the box   settled 3/4  T   0.3 mm   3.1 deg  box to corner   0.9 mm   0.9 deg
+episode 369: success T, box, dock the box               settled 2/3  T   4.3 mm   3.6 deg  box to corner   0.1 mm   0.2 deg
+episode 370: success park the T, box, T, dock the box   settled 4/4  T   2.9 mm   0.6 deg  box to corner   1.6 mm   1.6 deg
+episode 371: success T, box, dock the box               settled 3/3  T   2.2 mm   1.3 deg  box to corner   0.9 mm   0.7 deg
+episode 372: success box, T, dock the box               settled 3/3  T   4.8 mm   4.6 deg  box to corner   0.0 mm   0.1 deg
+episode 373: success T, box, dock the box               settled 3/3  T   2.9 mm   1.4 deg  box to corner   0.1 mm   0.4 deg
+episode 374: success T, box, dock the box               settled 3/3  T   7.6 mm   6.1 deg  box to corner   0.1 mm   0.2 deg
+episode 375: success park the T, box, T, dock the box   settled 4/4  T   3.3 mm   1.1 deg  box to corner   0.1 mm   0.2 deg  (simulator's plan: box, tee, box, dock)
+episode 376: success T, box, dock the box               settled 3/3  T   1.5 mm   3.8 deg  box to corner   0.2 mm   0.2 deg
+episode 377: success T, box, dock the box               settled 3/3  T   2.4 mm   3.6 deg  box to corner   0.3 mm   0.3 deg
+episode 378: success T, box, dock the box               settled 3/3  T   0.6 mm   0.5 deg  box to corner   0.5 mm   0.3 deg
+episode 379: success box, T, dock the box               settled 3/3  T   1.4 mm   2.6 deg  box to corner   0.9 mm   0.5 deg
+episode 380: success T, box, dock the box               settled 3/3  T   5.3 mm   4.4 deg  box to corner   0.2 mm   0.7 deg
+episode 381: success T, box, dock the box               settled 3/3  T   0.6 mm   0.7 deg  box to corner   0.2 mm   0.1 deg
+episode 382: success box, T, dock the box               settled 3/3  T   3.0 mm   2.5 deg  box to corner   0.2 mm   0.5 deg
+episode 383: success park the T, box, T, dock the box   settled 4/4  T   2.7 mm   3.1 deg  box to corner   0.2 mm   0.3 deg
+episode 384: success box, T, dock the box               settled 3/3  T   0.9 mm   0.2 deg  box to corner   0.7 mm   1.9 deg
+episode 385: success T, box, dock the box               settled 3/3  T   4.5 mm   1.3 deg  box to corner   2.3 mm   0.0 deg
+episode 386: success T, box, dock the box               settled 3/3  T   5.0 mm   3.2 deg  box to corner   0.1 mm   0.0 deg
+episode 387: success T, box, dock the box               settled 3/3  T   3.6 mm   6.8 deg  box to corner   0.0 mm   0.0 deg
+episode 388: success T, box, dock the box               settled 3/3  T   6.1 mm   5.4 deg  box to corner   0.0 mm   0.0 deg
+episode 389: success box, T, dock the box               settled 3/3  T   2.0 mm   4.0 deg  box to corner   1.0 mm   2.4 deg
+episode 390: success T, box, dock the box               settled 3/3  T   0.3 mm   2.0 deg  box to corner   0.3 mm   0.6 deg
+episode 391: success T, box, dock the box               settled 3/3  T   2.5 mm   3.2 deg  box to corner   0.4 mm   1.3 deg
+episode 392: success park the T, box, T, dock the box   settled 4/4  T   4.3 mm   1.0 deg  box to corner   2.6 mm   1.0 deg
+episode 393: success park the T, box, T, dock the box   settled 4/4  T   2.3 mm   1.7 deg  box to corner   1.4 mm   0.6 deg
+episode 394: success box, T, dock the box               settled 3/3  T   3.1 mm   2.7 deg  box to corner   0.1 mm   0.1 deg
+episode 395: success box, T, dock the box               settled 3/3  T   2.5 mm   2.2 deg  box to corner   0.1 mm   0.3 deg
+episode 396: not started (no push plan keeps the skills' 15 mm rule (the blocks are 13.1 mm apart; no parking spot or corner helps): move a block)
+episode 397: success box, T, dock the box               settled 2/3  T   1.4 mm   4.8 deg  box to corner   1.6 mm   4.2 deg
+episode 398: success park the T, box, T, dock the box   settled 4/4  T   2.7 mm   0.9 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 399: success T, box, dock the box               settled 3/3  T   1.6 mm   4.1 deg  box to corner   0.5 mm   1.3 deg
+episode 400: success T, box, dock the box               settled 2/3  T   3.3 mm   7.7 deg  box to corner   0.5 mm   0.3 deg
+episode 401: success park the T, box, T, dock the box   settled 3/4  T   5.0 mm   3.9 deg  box to corner   0.0 mm   0.0 deg
+episode 402: success box, T, dock the box               settled 3/3  T   3.0 mm   0.4 deg  box to corner   1.2 mm   1.0 deg
+episode 403: success T, box, dock the box               settled 3/3  T   4.0 mm   3.5 deg  box to corner   1.3 mm   1.4 deg
+episode 404: success T, box, dock the box               settled 3/3  T   2.5 mm   2.6 deg  box to corner   0.0 mm   0.1 deg
+episode 405: success box, T, dock the box               settled 3/3  T   3.4 mm   2.3 deg  box to corner   2.2 mm   2.0 deg
+episode 406: miss    park the T, box, T, dock the box   settled 3/4  T   1.9 mm  10.0 deg  box to corner   0.2 mm   0.6 deg
+episode 407: success T, box, dock the box               settled 3/3  T   1.8 mm   2.3 deg  box to corner   0.3 mm   0.5 deg
+episode 408: success T, box, dock the box               settled 3/3  T   2.6 mm   2.1 deg  box to corner   0.2 mm   0.2 deg
+episode 409: success box, T, dock the box               settled 3/3  T   5.7 mm   4.0 deg  box to corner   0.7 mm   0.4 deg
+episode 410: success box, T, dock the box               settled 3/3  T   3.9 mm   1.9 deg  box to corner   0.0 mm   0.0 deg
+episode 411: success T, box, dock the box               settled 3/3  T   0.6 mm   2.1 deg  box to corner   0.4 mm   0.0 deg
+episode 412: miss    T, box, dock the box               settled 1/3  T   1.5 mm   3.9 deg  box to corner 116.4 mm  11.9 deg
+episode 413: success park the T, box, T, dock the box   settled 3/4  T   2.6 mm   5.9 deg  box to corner   1.4 mm   0.3 deg
+episode 414: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   4.1 deg  box to corner   0.5 mm   1.4 deg  (simulator's plan: box, tee, box, dock)
+episode 415: success T, box, dock the box               settled 3/3  T   1.1 mm   1.2 deg  box to corner   0.0 mm   0.0 deg
+episode 416: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   0.4 deg  box to corner   1.2 mm   2.7 deg
+episode 417: success T, box, dock the box               settled 3/3  T   1.3 mm   2.9 deg  box to corner   0.0 mm   0.0 deg
+episode 418: success T, box, dock the box               settled 3/3  T   1.3 mm   1.1 deg  box to corner   0.5 mm   0.8 deg
+episode 419: success T, box, dock the box               settled 3/3  T   2.1 mm   0.4 deg  box to corner   0.0 mm   0.0 deg
+episode 420: success box, T, dock the box               settled 3/3  T   6.6 mm   6.2 deg  box to corner   0.0 mm   0.1 deg
+episode 421: success park the box, T, box, dock the box settled 4/4  T   2.5 mm   4.3 deg  box to corner   0.1 mm   0.0 deg
+episode 422: success T, box, dock the box               settled 3/3  T   3.4 mm   6.7 deg  box to corner   0.0 mm   0.0 deg
+episode 423: success park the T, box, T, dock the box   settled 4/4  T   2.1 mm   1.9 deg  box to corner   0.0 mm   0.0 deg
+episode 424: success T, box, dock the box               settled 3/3  T   2.9 mm   4.6 deg  box to corner   0.1 mm   0.3 deg
+episode 425: success T, box, dock the box               settled 3/3  T   6.2 mm   0.8 deg  box to corner   1.3 mm   2.2 deg
+episode 426: success box, T, dock the box               settled 3/3  T   5.5 mm   2.0 deg  box to corner   1.8 mm   3.3 deg
+episode 427: success T, box, dock the box               settled 3/3  T   1.4 mm   2.6 deg  box to corner   1.5 mm   0.6 deg
+episode 428: miss    park the T, box, T, dock the box   settled 2/4  T  86.4 mm  36.5 deg  box to corner   0.0 mm   0.0 deg
+episode 429: success park the T, box, T, dock the box   settled 4/4  T   2.3 mm   3.1 deg  box to corner   1.1 mm   0.0 deg
+episode 430: success T, box, dock the box               settled 3/3  T   4.1 mm   3.7 deg  box to corner   1.5 mm   2.5 deg
+episode 431: success park the T, box, T, dock the box   settled 4/4  T   0.3 mm   1.2 deg  box to corner   0.3 mm   0.8 deg
+episode 432: success T, box, dock the box               settled 3/3  T   3.3 mm   3.2 deg  box to corner   1.0 mm   1.9 deg
+episode 433: success park the box, T, box, dock the box settled 4/4  T   0.9 mm   0.1 deg  box to corner   1.7 mm   3.7 deg
+episode 434: success T, box, dock the box               settled 2/3  T   3.8 mm   5.0 deg  box to corner   2.0 mm   3.3 deg
+episode 435: miss    park the T, box, T, dock the box   settled 3/4  T  12.4 mm  18.8 deg  box to corner   0.4 mm   0.2 deg
+episode 436: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   5.7 deg  box to corner   1.8 mm   3.5 deg
+episode 437: success T, box, dock the box               settled 3/3  T   1.8 mm   4.2 deg  box to corner   0.2 mm   0.1 deg
+episode 438: success box, T, dock the box               settled 3/3  T   2.4 mm   1.3 deg  box to corner   0.1 mm   0.0 deg
+episode 439: success park the box, T, box, dock the box settled 3/4  T   3.0 mm   3.1 deg  box to corner   2.6 mm   4.8 deg
+episode 440: miss    T, box, dock the box               settled 2/3  T   4.8 mm  10.8 deg  box to corner   1.3 mm   0.1 deg
+episode 441: success T, box, dock the box               settled 3/3  T   1.5 mm   2.0 deg  box to corner   0.7 mm   1.1 deg
+episode 442: success T, box, dock the box               settled 3/3  T   3.5 mm   8.3 deg  box to corner   0.4 mm   0.4 deg
+episode 443: success park the T, box, T, dock the box   settled 4/4  T   6.3 mm   1.8 deg  box to corner   0.0 mm   0.0 deg
+episode 444: success box, T, dock the box               settled 3/3  T   6.8 mm   2.4 deg  box to corner   0.0 mm   0.0 deg
+episode 445: success T, box, dock the box               settled 3/3  T   1.7 mm   0.5 deg  box to corner   0.2 mm   0.0 deg
+episode 446: success box, T, dock the box               settled 3/3  T   0.2 mm   3.5 deg  box to corner   0.0 mm   0.0 deg
+episode 447: success box, T, dock the box               settled 3/3  T   0.8 mm   0.8 deg  box to corner   0.7 mm   1.5 deg
+episode 448: miss    park the T, box, T, dock the box   settled 3/4  T  18.2 mm  13.9 deg  box to corner   0.1 mm   0.3 deg
+episode 449: success park the T, box, T, dock the box   settled 4/4  T   3.7 mm   3.7 deg  box to corner   0.7 mm   2.3 deg
+episode 450: success box, T, dock the box               settled 3/3  T   5.3 mm   2.6 deg  box to corner   2.3 mm   4.4 deg
+episode 451: miss    park the T, box, T, dock the box   settled 3/4  T   0.5 mm   0.0 deg  box to corner   2.6 mm   5.9 deg
+episode 452: success T, box, dock the box               settled 3/3  T   4.1 mm   5.1 deg  box to corner   0.0 mm   0.0 deg
+episode 453: success park the T, box, T, dock the box   settled 4/4  T   4.6 mm   3.3 deg  box to corner   1.8 mm   0.5 deg
+episode 454: success T, box, dock the box               settled 3/3  T   2.9 mm   8.5 deg  box to corner   0.9 mm   2.7 deg
+episode 455: success T, box, dock the box               settled 3/3  T   4.8 mm   2.4 deg  box to corner   0.1 mm   0.4 deg
+episode 456: success T, box, dock the box               settled 3/3  T   1.9 mm   1.2 deg  box to corner   0.0 mm   0.0 deg
+episode 457: miss    box, T, dock the box               settled 2/3  T   2.8 mm  10.3 deg  box to corner   0.2 mm   0.6 deg
+episode 458: success T, box, dock the box               settled 3/3  T   3.7 mm   5.3 deg  box to corner   0.6 mm   0.8 deg
+episode 459: success box, T, dock the box               settled 3/3  T   1.2 mm   3.5 deg  box to corner   1.2 mm   0.8 deg
+episode 460: success park the T, box, T, dock the box   settled 3/4  T   6.1 mm   4.9 deg  box to corner   0.4 mm   1.1 deg
+episode 461: success T, box, dock the box               settled 3/3  T   1.6 mm   6.5 deg  box to corner   0.0 mm   0.0 deg
+episode 462: success T, box, dock the box               settled 3/3  T   1.2 mm   0.3 deg  box to corner   1.8 mm   0.4 deg
+episode 463: miss    park the T, box, T, dock the box   settled 2/4  T   7.6 mm  14.1 deg  box to corner   5.9 mm   7.3 deg
+episode 464: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   3.0 deg  box to corner   2.7 mm   3.1 deg  (simulator's plan: box, tee, box, dock)
+episode 465: success park the box, T, box, dock the box settled 4/4  T   1.1 mm   2.9 deg  box to corner   1.3 mm   0.4 deg
+episode 466: success park the T, box, T, dock the box   settled 4/4  T   1.3 mm   0.9 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 467: success T, box, dock the box               settled 3/3  T   2.7 mm   1.3 deg  box to corner   0.0 mm   0.0 deg
+episode 468: success T, box, dock the box               settled 3/3  T   2.3 mm   1.0 deg  box to corner   0.3 mm   0.6 deg
+episode 469: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   1.3 deg  box to corner   0.1 mm   0.1 deg
+episode 470: success box, T, dock the box               settled 3/3  T   0.6 mm   2.9 deg  box to corner   1.1 mm   1.4 deg
+episode 471: success T, box, dock the box               settled 3/3  T   2.4 mm   2.5 deg  box to corner   0.5 mm   0.1 deg
+episode 472: success park the T, box, T, dock the box   settled 2/4  T   6.2 mm   5.2 deg  box to corner   0.5 mm   0.6 deg
+episode 473: success T, box, dock the box               settled 3/3  T   1.8 mm   5.9 deg  box to corner   2.3 mm   0.4 deg
+episode 474: success T, box, dock the box               settled 3/3  T   1.3 mm   0.1 deg  box to corner   0.4 mm   0.4 deg
+episode 475: success box, T, dock the box               settled 3/3  T   1.5 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 476: success T, box, dock the box               settled 3/3  T   2.0 mm   3.6 deg  box to corner   0.8 mm   2.3 deg
+episode 477: success park the T, box, T, dock the box   settled 3/4  T   2.0 mm   2.2 deg  box to corner   0.5 mm   1.5 deg
+episode 478: success T, box, dock the box               settled 3/3  T   1.4 mm   3.3 deg  box to corner   1.0 mm   1.3 deg
+episode 479: success park the T, box, T, dock the box   settled 4/4  T   7.1 mm   2.4 deg  box to corner   0.0 mm   0.0 deg
+episode 480: success box, T, dock the box               settled 3/3  T   1.6 mm   0.0 deg  box to corner   0.6 mm   1.9 deg
+episode 481: success park the box, T, box, dock the box settled 4/4  T   3.2 mm   6.7 deg  box to corner   1.6 mm   0.4 deg  (simulator's plan: tee, box, tee, dock)
+episode 482: miss    T, box, dock the box               settled 1/3  T   3.3 mm   6.0 deg  box to corner 157.7 mm  10.5 deg
+episode 483: success park the box, T, box, dock the box settled 4/4  T   3.3 mm   5.3 deg  box to corner   2.1 mm   3.2 deg
+episode 484: success park the T, box, T, dock the box   settled 4/4  T   1.2 mm   4.8 deg  box to corner   0.5 mm   1.1 deg
+episode 485: success park the T, box, T, dock the box   settled 3/4  T   1.8 mm   4.9 deg  box to corner   1.9 mm   2.0 deg
+episode 486: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   3.1 deg  box to corner   0.0 mm   0.0 deg
+episode 487: success park the T, box, T, dock the box   settled 2/4  T   9.3 mm   4.3 deg  box to corner   0.0 mm   0.1 deg
+episode 488: success park the T, box, T, dock the box   settled 4/4  T   2.9 mm   0.2 deg  box to corner   1.9 mm   1.8 deg
+episode 489: success T, box, dock the box               settled 3/3  T   1.8 mm   2.4 deg  box to corner   0.0 mm   0.1 deg
+episode 490: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   2.5 deg  box to corner   0.1 mm   0.0 deg
+episode 491: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   6.6 deg  box to corner   0.0 mm   0.0 deg
+episode 492: success T, box, dock the box               settled 3/3  T   3.1 mm   5.1 deg  box to corner   0.3 mm   0.8 deg
+episode 493: success box, T, dock the box               settled 3/3  T   3.1 mm   1.3 deg  box to corner   0.2 mm   0.0 deg
+episode 494: success park the box, T, box, dock the box settled 4/4  T   1.7 mm   1.9 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: tee, box, tee, dock)
+episode 495: success T, box, dock the box               settled 2/3  T   1.6 mm   2.1 deg  box to corner   1.9 mm   4.9 deg
+episode 496: success T, box, dock the box               settled 3/3  T   2.2 mm   0.7 deg  box to corner   0.0 mm   0.1 deg
+episode 497: success T, box, dock the box               settled 2/3  T   1.8 mm   1.4 deg  box to corner   0.1 mm   0.2 deg
+episode 498: success box, T, dock the box               settled 3/3  T   5.7 mm   4.3 deg  box to corner   0.7 mm   1.4 deg
+episode 499: miss    park the T, box, T, dock the box   settled 3/4  T  11.9 mm   8.2 deg  box to corner   0.6 mm   0.7 deg
+episode 500: success T, box, dock the box               settled 3/3  T   1.4 mm   0.5 deg  box to corner   0.0 mm   0.0 deg
+episode 501: success T, box, dock the box               settled 3/3  T   2.6 mm   3.5 deg  box to corner   1.3 mm   0.2 deg
+episode 502: success park the T, box, T, dock the box   settled 3/4  T   2.0 mm   0.7 deg  box to corner   0.4 mm   1.1 deg
+episode 503: success T, box, dock the box               settled 3/3  T   2.6 mm   4.0 deg  box to corner   0.4 mm   0.1 deg
+episode 504: success box, T, dock the box               settled 3/3  T   2.6 mm   0.3 deg  box to corner   0.5 mm   1.3 deg
+episode 505: success T, box, dock the box               settled 3/3  T   1.7 mm   3.4 deg  box to corner   1.5 mm   0.0 deg
+episode 506: success T, box, dock the box               settled 3/3  T   3.6 mm   7.3 deg  box to corner   0.3 mm   1.0 deg
+episode 507: miss    park the box, T, box, dock the box settled 4/4  T  23.0 mm  11.3 deg  box to corner   0.0 mm   0.1 deg
+episode 508: miss    T, box, dock the box               settled 0/3  T  54.3 mm 170.9 deg  box to corner  58.6 mm  16.0 deg
+episode 509: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   2.5 deg  box to corner   0.0 mm   0.0 deg
+episode 510: success box, T, dock the box               settled 3/3  T   2.2 mm   1.8 deg  box to corner   1.1 mm   2.3 deg
+episode 511: success box, T, dock the box               settled 2/3  T   5.9 mm   0.9 deg  box to corner   1.1 mm   2.1 deg
+episode 512: success T, box, dock the box               settled 3/3  T   2.8 mm   5.7 deg  box to corner   1.3 mm   0.2 deg
+episode 513: success T, box, dock the box               settled 3/3  T   2.1 mm   5.1 deg  box to corner   0.7 mm   1.6 deg
+episode 514: success T, box, dock the box               settled 3/3  T   3.5 mm   7.2 deg  box to corner   0.6 mm   0.0 deg
+episode 515: success box, T, dock the box               settled 2/3  T   3.0 mm   1.0 deg  box to corner   0.0 mm   0.0 deg
+episode 516: success park the T, box, T, dock the box   settled 4/4  T   2.1 mm   4.4 deg  box to corner   1.4 mm   0.6 deg
+episode 517: success T, box, dock the box               settled 3/3  T   3.3 mm   5.7 deg  box to corner   0.1 mm   0.4 deg
+episode 518: miss    park the T, box, T, dock the box   settled 3/4  T  29.4 mm   3.6 deg  box to corner   0.2 mm   0.7 deg
+episode 519: success T, box, dock the box               settled 3/3  T   2.3 mm   2.8 deg  box to corner   0.0 mm   0.0 deg
+episode 520: success park the box, T, box, dock the box settled 4/4  T   0.1 mm   2.9 deg  box to corner   1.1 mm   3.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 521: success park the box, T, box, dock the box settled 4/4  T   1.6 mm   2.4 deg  box to corner   0.0 mm   0.0 deg
+episode 522: success T, box, dock the box               settled 3/3  T   1.4 mm   2.6 deg  box to corner   0.9 mm   0.9 deg
+episode 523: success T, box, dock the box               settled 3/3  T   0.9 mm   1.8 deg  box to corner   2.9 mm   0.3 deg
+episode 524: success park the T, box, T, dock the box   settled 4/4  T   3.8 mm   5.3 deg  box to corner   1.3 mm   0.1 deg
+episode 525: success T, box, dock the box               settled 3/3  T   0.7 mm   2.4 deg  box to corner   0.6 mm   0.0 deg
+episode 526: success T, box, dock the box               settled 3/3  T   1.1 mm   2.1 deg  box to corner   0.5 mm   1.4 deg
+episode 527: success T, box, dock the box               settled 3/3  T   2.3 mm   0.8 deg  box to corner   0.3 mm   0.0 deg
+episode 528: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   0.8 deg  box to corner   0.1 mm   0.1 deg
+episode 529: success park the T, box, T, dock the box   settled 4/4  T   1.2 mm   0.1 deg  box to corner   2.2 mm   1.6 deg
+episode 530: success box, T, dock the box               settled 3/3  T   2.9 mm   4.3 deg  box to corner   0.0 mm   0.0 deg
+episode 531: success park the T, box, T, dock the box   settled 3/4  T   2.0 mm   0.4 deg  box to corner   0.7 mm   1.9 deg
+episode 532: success park the box, T, box, dock the box settled 4/4  T   1.2 mm   0.6 deg  box to corner   2.2 mm   2.6 deg
+episode 533: success T, box, dock the box               settled 3/3  T   1.1 mm   0.8 deg  box to corner   0.3 mm   0.0 deg
+episode 534: success box, T, dock the box               settled 3/3  T   2.4 mm   3.3 deg  box to corner   1.4 mm   0.1 deg
+episode 535: miss    T, box, dock the box               settled 1/3  T   2.7 mm   4.0 deg  box to corner 128.6 mm   2.5 deg
+episode 536: miss    box, T, dock the box               settled 1/3  T  52.9 mm  50.1 deg  box to corner  33.1 mm  44.2 deg
+episode 537: success T, box, dock the box               settled 2/3  T   2.4 mm   1.0 deg  box to corner   0.0 mm   0.1 deg
+episode 538: success box, T, dock the box               settled 3/3  T   3.3 mm   1.5 deg  box to corner   0.2 mm   0.5 deg
+episode 539: success T, box, dock the box               settled 3/3  T   2.9 mm   4.1 deg  box to corner   1.7 mm   0.3 deg
+episode 540: success park the T, box, T, dock the box   settled 4/4  T   1.3 mm   2.3 deg  box to corner   1.8 mm   1.2 deg  (simulator's plan: box, tee, box, dock)
+episode 541: success box, T, dock the box               settled 3/3  T   3.4 mm   3.1 deg  box to corner   3.0 mm   4.0 deg
+episode 542: success box, T, dock the box               settled 3/3  T   1.7 mm   4.1 deg  box to corner   0.0 mm   0.1 deg
+episode 543: success T, box, dock the box               settled 3/3  T   0.5 mm   2.2 deg  box to corner   0.7 mm   1.3 deg
+episode 544: success T, box, dock the box               settled 3/3  T   3.0 mm   2.9 deg  box to corner   0.0 mm   0.1 deg
+episode 545: miss    park the T, box, T, dock the box   settled 2/4  T   3.7 mm   5.2 deg  box to corner  21.9 mm   9.3 deg
+episode 546: success T, box, dock the box               settled 3/3  T   2.7 mm   4.6 deg  box to corner   0.0 mm   0.0 deg
+episode 547: success T, box, dock the box               settled 3/3  T   4.8 mm   6.2 deg  box to corner   0.0 mm   0.0 deg
+episode 548: success park the T, box, T, dock the box   settled 3/4  T   6.2 mm   0.0 deg  box to corner   2.5 mm   0.9 deg
+episode 549: success park the T, box, T, dock the box   settled 4/4  T   4.0 mm   0.7 deg  box to corner   0.3 mm   0.6 deg
+episode 550: success park the box, T, box, dock the box settled 4/4  T   0.3 mm   0.2 deg  box to corner   0.9 mm   1.4 deg  (simulator's plan: tee, box, tee, dock)
+episode 551: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   3.8 deg  box to corner   0.0 mm   0.0 deg
+episode 552: success T, box, dock the box               settled 3/3  T   1.1 mm   2.7 deg  box to corner   0.5 mm   1.0 deg
+episode 553: success T, box, dock the box               settled 3/3  T   3.2 mm   4.9 deg  box to corner   0.0 mm   0.0 deg
+episode 554: success box, T, dock the box               settled 3/3  T   0.5 mm   4.3 deg  box to corner   0.0 mm   0.1 deg
+episode 555: success park the box, T, box, dock the box settled 4/4  T   6.4 mm   0.3 deg  box to corner   0.4 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 556: success T, box, dock the box               settled 3/3  T   4.3 mm   7.2 deg  box to corner   0.0 mm   0.0 deg
+episode 557: success T, box, dock the box               settled 2/3  T   1.8 mm   7.9 deg  box to corner   0.4 mm   0.2 deg
+episode 558: success park the T, box, T, dock the box   settled 4/4  T   3.0 mm   1.5 deg  box to corner   2.3 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 559: success box, T, dock the box               settled 3/3  T   1.5 mm   2.5 deg  box to corner   2.0 mm   0.9 deg
+episode 560: miss    park the box, T, box, dock the box settled 3/4  T   4.3 mm   2.5 deg  box to corner   3.8 mm   5.7 deg
+episode 561: success T, box, dock the box               settled 3/3  T   1.1 mm   1.5 deg  box to corner   0.7 mm   0.1 deg
+episode 562: success box, T, dock the box               settled 3/3  T   2.4 mm   3.5 deg  box to corner   0.7 mm   0.0 deg
+episode 563: success box, T, dock the box               settled 3/3  T   0.9 mm   0.0 deg  box to corner   0.5 mm   1.4 deg
+episode 564: success T, box, dock the box               settled 3/3  T   1.6 mm   1.6 deg  box to corner   0.1 mm   0.2 deg
+episode 565: miss    park the T, box, T, dock the box   settled 3/4  T   1.6 mm   3.9 deg  box to corner   2.7 mm   5.7 deg
+episode 566: success park the T, box, T, dock the box   settled 3/4  T   2.0 mm   2.0 deg  box to corner   0.1 mm   0.0 deg
+episode 567: success T, box, dock the box               settled 2/3  T   6.4 mm   3.3 deg  box to corner   1.7 mm   4.3 deg  (simulator's plan: box, tee, dock)
+episode 568: success T, box, dock the box               settled 3/3  T   1.3 mm   2.3 deg  box to corner   0.0 mm   0.0 deg
+episode 569: success box, T, dock the box               settled 3/3  T   3.6 mm   0.6 deg  box to corner   0.0 mm   0.0 deg
+episode 570: success box, T, dock the box               settled 3/3  T   4.3 mm   2.2 deg  box to corner   2.6 mm   1.5 deg
+episode 571: success T, box, dock the box               settled 2/3  T   0.8 mm   5.3 deg  box to corner   0.2 mm   0.1 deg
+episode 572: success box, T, dock the box               settled 3/3  T   1.9 mm   1.2 deg  box to corner   0.0 mm   0.0 deg
+episode 573: success T, box, dock the box               settled 3/3  T   2.0 mm   2.0 deg  box to corner   0.0 mm   0.0 deg
+episode 574: success T, box, dock the box               settled 3/3  T   2.3 mm   3.3 deg  box to corner   0.3 mm   0.1 deg
+episode 575: success box, T, dock the box               settled 3/3  T   1.1 mm   3.4 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: tee, box, dock)
+episode 576: success park the T, box, T, dock the box   settled 4/4  T   1.8 mm   0.5 deg  box to corner   0.1 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 577: success T, box, dock the box               settled 2/3  T   1.5 mm   0.6 deg  box to corner   0.1 mm   0.4 deg
+episode 578: success park the T, box, T, dock the box   settled 3/4  T   4.6 mm   7.6 deg  box to corner   0.0 mm   0.0 deg
+episode 579: success park the T, box, T, dock the box   settled 4/4  T   4.7 mm   3.4 deg  box to corner   0.8 mm   1.1 deg
+episode 580: success park the box, T, box, dock the box settled 3/4  T   1.7 mm   1.4 deg  box to corner   0.8 mm   2.4 deg
+episode 581: success T, box, dock the box               settled 3/3  T   3.6 mm   5.7 deg  box to corner   0.1 mm   0.4 deg
+episode 582: success T, box, dock the box               settled 3/3  T   1.6 mm   4.6 deg  box to corner   1.2 mm   1.9 deg
+episode 583: success box, T, dock the box               settled 3/3  T   4.0 mm   1.7 deg  box to corner   0.0 mm   0.0 deg
+episode 584: success park the T, box, T, dock the box   settled 4/4  T   3.7 mm   3.7 deg  box to corner   0.3 mm   0.7 deg
+episode 585: success T, box, dock the box               settled 3/3  T   2.0 mm   4.6 deg  box to corner   0.1 mm   0.1 deg
+episode 586: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   4.1 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 587: success T, box, dock the box               settled 3/3  T   1.9 mm   0.1 deg  box to corner   1.6 mm   0.0 deg
+episode 588: miss    park the T, box, T, dock the box   settled 3/4  T  13.6 mm   9.9 deg  box to corner   0.0 mm   0.0 deg
+episode 589: success park the T, box, T, dock the box   settled 4/4  T   2.1 mm   0.1 deg  box to corner   0.2 mm   0.5 deg
+episode 590: success park the box, T, box, dock the box settled 4/4  T   1.5 mm   2.4 deg  box to corner   0.4 mm   0.0 deg
+episode 591: success park the box, T, box, dock the box settled 4/4  T   4.0 mm   6.0 deg  box to corner   0.0 mm   0.0 deg
+episode 592: success box, T, dock the box               settled 3/3  T   1.7 mm   5.9 deg  box to corner   1.0 mm   1.6 deg
+episode 593: success T, box, dock the box               settled 3/3  T   5.4 mm   1.3 deg  box to corner   0.4 mm   0.0 deg
+episode 594: success T, box, dock the box               settled 3/3  T   0.7 mm   1.5 deg  box to corner   0.6 mm   1.2 deg
+episode 595: success park the box, T, box, dock the box settled 4/4  T   1.2 mm   1.2 deg  box to corner   0.6 mm   0.1 deg  (simulator's plan: tee, box, tee, dock)
+episode 596: success T, box, dock the box               settled 3/3  T   3.3 mm   3.4 deg  box to corner   0.1 mm   0.0 deg
+episode 597: success park the T, box, T, dock the box   settled 4/4  T   3.6 mm   6.6 deg  box to corner   0.0 mm   0.0 deg
+episode 598: success T, box, dock the box               settled 3/3  T   2.1 mm   3.9 deg  box to corner   0.0 mm   0.0 deg
+episode 599: miss    box, T, dock the box               settled 2/3  T  12.0 mm  10.6 deg  box to corner   0.1 mm   0.1 deg
+episode 600: success T, box, dock the box               settled 3/3  T   1.6 mm   1.8 deg  box to corner   0.0 mm   0.1 deg
+episode 601: success box, T, dock the box               settled 3/3  T   2.8 mm   0.5 deg  box to corner   0.0 mm   0.0 deg
+episode 602: success box, T, dock the box               settled 3/3  T   6.8 mm   3.0 deg  box to corner   0.1 mm   0.1 deg
+episode 603: success box, T, dock the box               settled 3/3  T   4.6 mm   3.8 deg  box to corner   0.1 mm   0.5 deg
+episode 604: success park the T, box, T, dock the box   settled 3/4  T   2.6 mm   3.6 deg  box to corner   0.6 mm   0.3 deg
+episode 605: success park the T, box, T, dock the box   settled 4/4  T   1.9 mm   2.0 deg  box to corner   0.0 mm   0.0 deg
+episode 606: success park the T, box, T, dock the box   settled 4/4  T   2.5 mm   0.9 deg  box to corner   1.2 mm   0.5 deg
+episode 607: success park the T, box, T, dock the box   settled 3/4  T   0.8 mm   6.6 deg  box to corner   0.0 mm   0.0 deg
+episode 608: success box, T, dock the box               settled 3/3  T   1.0 mm   4.3 deg  box to corner   1.2 mm   3.6 deg
+episode 609: success park the T, box, T, dock the box   settled 3/4  T   1.8 mm   0.5 deg  box to corner   1.2 mm   3.4 deg
+episode 610: success box, T, dock the box               settled 2/3  T   2.2 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 611: success park the T, box, T, dock the box   settled 4/4  T   1.8 mm   3.0 deg  box to corner   0.0 mm   0.0 deg
+episode 612: success park the T, box, T, dock the box   settled 4/4  T   0.7 mm   0.6 deg  box to corner   2.2 mm   2.2 deg
+episode 613: miss    park the T, box, T, dock the box   settled 2/4  T   9.0 mm   6.4 deg  box to corner   4.6 mm   5.1 deg
+episode 614: success park the T, box, T, dock the box   settled 4/4  T   3.9 mm   2.3 deg  box to corner   0.1 mm   0.1 deg
+episode 615: success T, box, dock the box               settled 3/3  T   3.3 mm   3.3 deg  box to corner   0.5 mm   0.0 deg
+episode 616: success park the T, box, T, dock the box   settled 4/4  T   1.7 mm   1.7 deg  box to corner   1.3 mm   2.7 deg
+episode 617: success T, box, dock the box               settled 2/3  T   0.8 mm   4.0 deg  box to corner   1.2 mm   3.5 deg
+episode 618: success T, box, dock the box               settled 3/3  T   1.3 mm   1.1 deg  box to corner   0.3 mm   0.9 deg
+episode 619: success T, box, dock the box               settled 3/3  T   3.3 mm   2.3 deg  box to corner   0.0 mm   0.1 deg
+episode 620: success box, T, dock the box               settled 3/3  T   3.1 mm   1.4 deg  box to corner   1.6 mm   1.3 deg
+episode 621: success T, box, dock the box               settled 3/3  T   4.7 mm   1.7 deg  box to corner   1.3 mm   1.0 deg
+episode 622: success T, box, dock the box               settled 3/3  T   2.8 mm   2.0 deg  box to corner   0.6 mm   1.7 deg
+episode 623: success box, T, dock the box               settled 3/3  T   2.2 mm   0.7 deg  box to corner   0.0 mm   0.0 deg
+episode 624: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   3.8 deg  box to corner   0.3 mm   1.0 deg  (simulator's plan: box, tee, box, dock)
+episode 625: miss    box, T, dock the box               settled 2/3  T   3.0 mm   4.2 deg  box to corner 105.9 mm   7.3 deg
+episode 626: success box, T, dock the box               settled 3/3  T   3.0 mm   1.0 deg  box to corner   0.0 mm   0.1 deg
+episode 627: success park the T, box, T, dock the box   settled 4/4  T   6.7 mm   4.2 deg  box to corner   0.5 mm   1.4 deg
+episode 628: success T, box, dock the box               settled 3/3  T   0.8 mm   1.7 deg  box to corner   0.0 mm   0.0 deg
+episode 629: success T, box, dock the box               settled 3/3  T   4.8 mm   1.8 deg  box to corner   1.7 mm   0.9 deg
+episode 630: success T, box, dock the box               settled 3/3  T   4.2 mm   4.9 deg  box to corner   0.0 mm   0.1 deg
+episode 631: success park the T, box, T, dock the box   settled 4/4  T   3.6 mm   3.2 deg  box to corner   1.1 mm   1.1 deg
+episode 632: success box, T, dock the box               settled 3/3  T   1.4 mm   0.8 deg  box to corner   0.6 mm   1.1 deg
+episode 633: success T, box, dock the box               settled 3/3  T   0.9 mm   1.7 deg  box to corner   0.0 mm   0.0 deg
+episode 634: success T, box, dock the box               settled 3/3  T   2.6 mm   4.7 deg  box to corner   0.0 mm   0.0 deg
+episode 635: success park the T, box, T, dock the box   settled 3/4  T   4.8 mm   3.0 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 636: success park the T, box, T, dock the box   settled 4/4  T   3.5 mm   1.2 deg  box to corner   0.6 mm   1.7 deg
+episode 637: miss    T, box, dock the box               settled 2/3  T   7.3 mm  11.6 deg  box to corner   0.0 mm   0.0 deg
+episode 638: success T, box, dock the box               settled 3/3  T   1.6 mm   3.8 deg  box to corner   1.4 mm   1.4 deg
+episode 639: success box, T, dock the box               settled 3/3  T   0.6 mm   0.5 deg  box to corner   0.9 mm   2.7 deg
+episode 640: success park the box, T, box, dock the box settled 4/4  T   0.7 mm   1.1 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 641: success box, T, dock the box               settled 3/3  T   4.3 mm   4.3 deg  box to corner   0.6 mm   0.0 deg
+episode 642: miss    park the T, box, T, dock the box   settled 2/4  T   3.0 mm   4.4 deg  box to corner  17.2 mm  22.4 deg  (simulator's plan: box, tee, box, dock)
+episode 643: success box, T, dock the box               settled 2/3  T   1.8 mm   2.0 deg  box to corner   1.2 mm   3.1 deg
+episode 644: success T, box, dock the box               settled 2/3  T   4.0 mm   6.6 deg  box to corner   0.0 mm   0.0 deg
+episode 645: success T, box, dock the box               settled 3/3  T   2.2 mm   3.1 deg  box to corner   0.1 mm   0.5 deg
+episode 646: miss    park the box, T, box, dock the box settled 2/4  T   2.9 mm   6.5 deg  box to corner  68.6 mm  16.0 deg
+episode 647: success park the T, box, T, dock the box   settled 4/4  T   3.0 mm   3.3 deg  box to corner   0.7 mm   1.4 deg
+episode 648: success box, T, dock the box               settled 3/3  T   1.9 mm   2.1 deg  box to corner   0.3 mm   0.5 deg
+episode 649: success T, box, dock the box               settled 3/3  T   2.5 mm   2.7 deg  box to corner   0.4 mm   0.7 deg
+episode 650: success T, box, dock the box               settled 3/3  T   1.4 mm   1.8 deg  box to corner   0.0 mm   0.0 deg
+episode 651: success box, T, dock the box               settled 3/3  T   1.5 mm   0.6 deg  box to corner   2.1 mm   0.0 deg
+episode 652: success box, T, dock the box               settled 3/3  T   1.1 mm   0.6 deg  box to corner   0.3 mm   1.0 deg
+episode 653: success box, T, dock the box               settled 3/3  T   4.3 mm   1.0 deg  box to corner   0.2 mm   0.0 deg
+episode 654: success T, box, dock the box               settled 3/3  T   3.2 mm   4.3 deg  box to corner   0.7 mm   1.5 deg
+episode 655: success T, box, dock the box               settled 3/3  T   3.9 mm   0.6 deg  box to corner   0.0 mm   0.0 deg
+episode 656: miss    park the T, box, T, dock the box   settled 3/4  T  18.1 mm   3.1 deg  box to corner   0.0 mm   0.1 deg
+episode 657: success park the T, box, T, dock the box   settled 4/4  T   6.3 mm   0.2 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 658: success box, T, dock the box               settled 3/3  T   2.7 mm   1.5 deg  box to corner   0.5 mm   0.1 deg
+episode 659: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   0.7 deg  box to corner   0.8 mm   0.0 deg
+episode 660: success T, box, dock the box               settled 3/3  T   1.7 mm   1.9 deg  box to corner   0.4 mm   1.0 deg
+episode 661: success T, box, dock the box               settled 3/3  T   4.7 mm   0.0 deg  box to corner   1.5 mm   0.4 deg
+episode 662: success T, box, dock the box               settled 3/3  T   0.4 mm   1.5 deg  box to corner   1.5 mm   0.0 deg
+episode 663: success T, box, dock the box               settled 3/3  T   1.6 mm   3.2 deg  box to corner   0.0 mm   0.0 deg
+episode 664: success park the T, box, T, dock the box   settled 3/4  T   1.9 mm   0.0 deg  box to corner   0.1 mm   0.3 deg
+episode 665: success park the box, T, box, dock the box settled 4/4  T   2.0 mm   0.4 deg  box to corner   0.2 mm   0.1 deg
+episode 666: success T, box, dock the box               settled 3/3  T   2.2 mm   2.9 deg  box to corner   1.5 mm   0.4 deg
+episode 667: success box, T, dock the box               settled 3/3  T   2.5 mm   1.6 deg  box to corner   0.0 mm   0.0 deg
+episode 668: success box, T, dock the box               settled 3/3  T   2.7 mm   3.6 deg  box to corner   0.7 mm   1.1 deg
+episode 669: success T, box, dock the box               settled 3/3  T   3.1 mm   4.3 deg  box to corner   0.0 mm   0.1 deg
+episode 670: miss    park the T, box, T, dock the box   settled 2/4  T   1.7 mm   1.8 deg  box to corner 132.2 mm  27.7 deg
+episode 671: success T, box, dock the box               settled 3/3  T   1.7 mm   2.4 deg  box to corner   0.2 mm   0.1 deg
+episode 672: success box, T, dock the box               settled 3/3  T   2.5 mm   1.5 deg  box to corner   0.2 mm   0.5 deg
+episode 673: success park the T, box, T, dock the box   settled 4/4  T   4.2 mm   5.6 deg  box to corner   0.1 mm   0.0 deg
+episode 674: success box, T, dock the box               settled 2/3  T   5.5 mm   7.9 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: tee, box, tee, dock)
+episode 675: success T, box, dock the box               settled 3/3  T   3.4 mm   4.6 deg  box to corner   0.2 mm   0.2 deg
+episode 676: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   1.0 deg  box to corner   0.7 mm   2.0 deg
+episode 677: miss    park the T, box, T, dock the box   settled 1/4  T 182.7 mm  26.5 deg  box to corner 206.3 mm  31.3 deg  (simulator's plan: box, tee, box, dock)
+episode 678: success box, T, dock the box               settled 3/3  T   2.9 mm   0.6 deg  box to corner   1.0 mm   2.1 deg
+episode 679: success T, box, dock the box               settled 3/3  T   6.9 mm   4.9 deg  box to corner   0.9 mm   0.0 deg
+episode 680: success box, T, dock the box               settled 3/3  T   2.1 mm   3.0 deg  box to corner   1.2 mm   0.8 deg
+episode 681: success park the box, T, box, dock the box settled 3/4  T   2.8 mm   0.8 deg  box to corner   1.0 mm   0.3 deg
+episode 682: success park the T, box, T, dock the box   settled 4/4  T   1.8 mm   0.3 deg  box to corner   0.0 mm   0.1 deg
+episode 683: success T, box, dock the box               settled 3/3  T   3.2 mm   4.7 deg  box to corner   0.1 mm   0.4 deg  (simulator's plan: box, tee, box, dock)
+episode 684: success box, T, dock the box               settled 3/3  T   4.7 mm   4.8 deg  box to corner   0.0 mm   0.0 deg
+episode 685: success box, T, dock the box               settled 3/3  T   1.2 mm   1.8 deg  box to corner   0.1 mm   0.1 deg
+episode 686: success park the T, box, T, dock the box   settled 3/4  T   1.0 mm   4.1 deg  box to corner   0.7 mm   1.9 deg  (simulator's plan: box, tee, box, dock)
+episode 687: success box, T, dock the box               settled 3/3  T   1.7 mm   2.9 deg  box to corner   0.0 mm   0.0 deg
+episode 688: success T, box, dock the box               settled 3/3  T   3.3 mm   6.9 deg  box to corner   0.9 mm   0.0 deg
+episode 689: success box, T, dock the box               settled 3/3  T   5.1 mm   0.9 deg  box to corner   1.2 mm   3.7 deg
+episode 690: success park the T, box, T, dock the box   settled 4/4  T   4.7 mm   1.4 deg  box to corner   0.5 mm   1.3 deg
+episode 691: not started (no push plan keeps the skills' 15 mm rule (the blocks are 11.5 mm apart; no parking spot or corner helps): move a block)
+episode 692: success T, box, dock the box               settled 3/3  T   2.9 mm   5.6 deg  box to corner   0.3 mm   0.2 deg
+episode 693: success park the box, T, box, dock the box settled 4/4  T   5.2 mm   3.9 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 694: success park the T, box, T, dock the box   settled 4/4  T   2.0 mm   0.9 deg  box to corner   1.0 mm   2.6 deg
+episode 695: success T, box, dock the box               settled 3/3  T   2.0 mm   4.1 deg  box to corner   0.4 mm   1.1 deg
+episode 696: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   1.0 deg  box to corner   0.0 mm   0.0 deg
+episode 697: success park the T, box, T, dock the box   settled 3/4  T   2.9 mm   2.4 deg  box to corner   1.6 mm   4.8 deg  (simulator's plan: box, tee, box, dock)
+episode 698: success box, T, dock the box               settled 3/3  T   2.6 mm   0.8 deg  box to corner   0.7 mm   1.2 deg
+episode 699: success box, T, dock the box               settled 3/3  T   1.9 mm   2.4 deg  box to corner   0.3 mm   0.4 deg
+episode 700: success T, box, dock the box               settled 3/3  T   2.1 mm   0.7 deg  box to corner   0.2 mm   0.0 deg
+episode 701: success box, T, dock the box               settled 3/3  T   2.1 mm   1.8 deg  box to corner   1.5 mm   4.6 deg
+episode 702: success park the T, box, T, dock the box   settled 4/4  T   0.3 mm   3.1 deg  box to corner   0.7 mm   1.9 deg
+episode 703: success box, T, dock the box               settled 3/3  T   3.4 mm   5.4 deg  box to corner   0.1 mm   0.5 deg
+episode 704: miss    park the T, box, T, dock the box   settled 1/4  T 101.9 mm 122.4 deg  box to corner 175.2 mm  29.6 deg
+episode 705: success box, T, dock the box               settled 3/3  T   0.3 mm   2.9 deg  box to corner   0.3 mm   0.3 deg
+episode 706: success T, box, dock the box               settled 3/3  T   1.9 mm   8.8 deg  box to corner   0.0 mm   0.0 deg
+episode 707: success T, box, dock the box               settled 3/3  T   3.8 mm   6.9 deg  box to corner   1.0 mm   1.2 deg
+episode 708: success T, box, dock the box               settled 3/3  T   3.4 mm   5.2 deg  box to corner   0.1 mm   0.3 deg
+episode 709: success park the T, box, T, dock the box   settled 4/4  T   1.6 mm   0.9 deg  box to corner   1.1 mm   1.3 deg
+episode 710: success park the T, box, T, dock the box   settled 4/4  T   2.2 mm   2.5 deg  box to corner   0.6 mm   0.9 deg
+episode 711: success T, box, dock the box               settled 3/3  T   1.4 mm   0.4 deg  box to corner   0.0 mm   0.0 deg
+episode 712: success box, T, dock the box               settled 3/3  T   1.6 mm   0.3 deg  box to corner   0.4 mm   1.1 deg
+episode 713: success box, T, dock the box               settled 3/3  T   2.5 mm   2.4 deg  box to corner   0.0 mm   0.0 deg
+episode 714: success T, box, dock the box               settled 3/3  T   1.1 mm   4.2 deg  box to corner   0.5 mm   0.4 deg
+episode 715: success T, box, dock the box               settled 3/3  T   1.4 mm   1.5 deg  box to corner   1.8 mm   0.8 deg
+episode 716: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   5.2 deg  box to corner   1.4 mm   3.6 deg
+episode 717: success park the T, box, T, dock the box   settled 4/4  T   2.3 mm   2.7 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 718: success park the T, box, T, dock the box   settled 4/4  T   1.9 mm   1.8 deg  box to corner   0.3 mm   0.8 deg
+episode 719: success box, T, dock the box               settled 2/3  T   1.4 mm   0.2 deg  box to corner   0.0 mm   0.0 deg
+episode 720: success park the box, T, box, dock the box settled 4/4  T   1.9 mm   0.8 deg  box to corner   0.3 mm   0.8 deg  (simulator's plan: tee, box, tee, dock)
+episode 721: success park the T, box, T, dock the box   settled 3/4  T   5.3 mm   2.6 deg  box to corner   1.4 mm   0.6 deg  (simulator's plan: box, tee, box, dock)
+episode 722: success park the box, T, box, dock the box settled 4/4  T   2.5 mm   0.5 deg  box to corner   0.1 mm   0.0 deg
+episode 723: success T, box, dock the box               settled 3/3  T   3.0 mm   4.2 deg  box to corner   0.9 mm   2.7 deg
+episode 724: success park the box, T, box, dock the box settled 4/4  T   1.9 mm   1.7 deg  box to corner   0.3 mm   0.5 deg
+episode 725: success box, T, dock the box               settled 2/3  T   5.0 mm   5.6 deg  box to corner   0.0 mm   0.1 deg
+episode 726: success park the box, T, box, dock the box settled 4/4  T   0.7 mm   1.3 deg  box to corner   0.2 mm   0.6 deg
+episode 727: miss    T, box, dock the box               settled 1/3  T  35.0 mm  23.3 deg  box to corner  82.2 mm  17.7 deg
+episode 728: success box, T, dock the box               settled 2/3  T   2.6 mm   4.3 deg  box to corner   3.0 mm   4.9 deg
+episode 729: miss    box, T, dock the box               settled 2/3  T   2.7 mm   1.3 deg  box to corner 146.1 mm  23.5 deg
+episode 730: success park the box, T, box, dock the box settled 3/4  T   2.6 mm   0.9 deg  box to corner   0.0 mm   0.0 deg
+episode 731: miss    park the T, box, T, dock the box   settled 3/4  T  19.5 mm   7.6 deg  box to corner   0.0 mm   0.0 deg
+episode 732: success park the T, box, T, dock the box   settled 4/4  T   2.2 mm   0.8 deg  box to corner   0.2 mm   0.3 deg
+episode 733: miss    T, box, dock the box               settled 1/3  T   2.1 mm   1.7 deg  box to corner 153.8 mm  40.5 deg
+episode 734: success T, box, dock the box               settled 3/3  T   1.2 mm   0.3 deg  box to corner   0.5 mm   1.0 deg
+episode 735: success park the T, box, T, dock the box   settled 4/4  T   6.5 mm   1.5 deg  box to corner   0.1 mm   0.3 deg
+episode 736: success T, box, dock the box               settled 3/3  T   0.9 mm   0.3 deg  box to corner   1.5 mm   2.3 deg
+episode 737: success T, box, dock the box               settled 3/3  T   2.3 mm   1.1 deg  box to corner   0.0 mm   0.1 deg
+episode 738: success T, box, dock the box               settled 3/3  T   1.6 mm   5.0 deg  box to corner   1.3 mm   1.1 deg
+episode 739: success park the T, box, T, dock the box   settled 4/4  T   0.4 mm   0.9 deg  box to corner   0.2 mm   0.5 deg
+episode 740: success T, box, dock the box               settled 3/3  T   1.1 mm   0.7 deg  box to corner   0.1 mm   0.2 deg
+episode 741: success T, box, dock the box               settled 3/3  T   4.8 mm   3.4 deg  box to corner   1.0 mm   2.0 deg
+episode 742: success T, box, dock the box               settled 3/3  T   5.4 mm   7.0 deg  box to corner   2.0 mm   4.1 deg
+episode 743: success park the T, box, T, dock the box   settled 3/4  T   2.1 mm   2.1 deg  box to corner   2.1 mm   0.8 deg
+episode 744: success box, T, dock the box               settled 3/3  T   1.9 mm   1.4 deg  box to corner   1.6 mm   2.8 deg
+episode 745: success T, box, dock the box               settled 3/3  T   1.9 mm   1.5 deg  box to corner   0.2 mm   0.5 deg
+episode 746: success park the T, box, T, dock the box   settled 4/4  T   3.0 mm   0.1 deg  box to corner   0.2 mm   0.2 deg
+episode 747: success box, T, dock the box               settled 3/3  T   0.7 mm   0.3 deg  box to corner   0.0 mm   0.0 deg
+episode 748: success box, T, dock the box               settled 3/3  T   4.3 mm   5.7 deg  box to corner   1.8 mm   1.1 deg
+episode 749: success park the T, box, T, dock the box   settled 3/4  T   2.7 mm   2.0 deg  box to corner   1.0 mm   0.1 deg
+episode 750: success box, T, dock the box               settled 3/3  T   1.4 mm   2.3 deg  box to corner   0.7 mm   2.1 deg
+episode 751: success park the T, box, T, dock the box   settled 4/4  T   1.2 mm   4.8 deg  box to corner   0.1 mm   0.1 deg
+episode 752: success T, box, dock the box               settled 3/3  T   3.2 mm   2.3 deg  box to corner   0.0 mm   0.0 deg
+episode 753: miss    box, T, dock the box               settled 2/3  T   8.5 mm  10.4 deg  box to corner   0.1 mm   0.0 deg
+episode 754: success park the T, box, T, dock the box   settled 4/4  T   1.0 mm   1.1 deg  box to corner   1.0 mm   0.1 deg
+episode 755: success T, box, dock the box               settled 3/3  T   1.8 mm   0.3 deg  box to corner   0.1 mm   0.3 deg
+episode 756: success box, T, dock the box               settled 3/3  T   2.2 mm   5.4 deg  box to corner   0.2 mm   0.5 deg
+episode 757: success park the T, box, T, dock the box   settled 4/4  T   0.4 mm   0.0 deg  box to corner   0.6 mm   1.3 deg  (simulator's plan: box, tee, box, dock)
+episode 758: success park the T, box, T, dock the box   settled 4/4  T   2.6 mm   0.1 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 759: success park the T, box, T, dock the box   settled 3/4  T   5.9 mm   1.8 deg  box to corner   0.8 mm   2.5 deg
+episode 760: success box, T, dock the box               settled 3/3  T   2.7 mm   1.5 deg  box to corner   0.3 mm   0.6 deg
+episode 761: success T, box, dock the box               settled 3/3  T   0.3 mm   1.1 deg  box to corner   0.4 mm   1.4 deg
+episode 762: success box, T, dock the box               settled 3/3  T   2.3 mm   1.1 deg  box to corner   0.4 mm   0.9 deg
+episode 763: success T, box, dock the box               settled 3/3  T   2.2 mm   0.2 deg  box to corner   0.6 mm   1.3 deg
+episode 764: success T, box, dock the box               settled 3/3  T   2.8 mm   3.5 deg  box to corner   0.0 mm   0.1 deg
+episode 765: success box, T, dock the box               settled 2/3  T   2.0 mm   4.0 deg  box to corner   0.0 mm   0.0 deg
+episode 766: success box, T, dock the box               settled 3/3  T   2.0 mm   0.9 deg  box to corner   1.5 mm   0.0 deg
+episode 767: success T, box, dock the box               settled 3/3  T   2.1 mm   3.0 deg  box to corner   1.4 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 768: success park the box, T, box, dock the box settled 4/4  T   2.9 mm   5.7 deg  box to corner   0.8 mm   0.0 deg
+episode 769: success park the T, box, T, dock the box   settled 4/4  T   3.3 mm   1.5 deg  box to corner   1.4 mm   0.3 deg  (simulator's plan: box, tee, box, dock)
+episode 770: success park the T, box, T, dock the box   settled 4/4  T   1.5 mm   0.5 deg  box to corner   1.4 mm   1.1 deg
+episode 771: success T, box, dock the box               settled 3/3  T   3.1 mm   0.4 deg  box to corner   0.1 mm   0.2 deg
+episode 772: success park the T, box, T, dock the box   settled 4/4  T   2.1 mm   0.1 deg  box to corner   0.1 mm   0.1 deg
+episode 773: success box, T, dock the box               settled 3/3  T   3.0 mm   3.7 deg  box to corner   0.7 mm   1.5 deg
+episode 774: success T, box, dock the box               settled 3/3  T   1.9 mm   6.7 deg  box to corner   0.1 mm   0.0 deg
+episode 775: success park the box, T, box, dock the box settled 4/4  T   4.0 mm   6.4 deg  box to corner   0.0 mm   0.0 deg
+episode 776: success T, box, dock the box               settled 3/3  T   0.7 mm   1.3 deg  box to corner   0.2 mm   0.7 deg
+episode 777: success T, box, dock the box               settled 2/3  T   3.1 mm   1.8 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 778: success park the T, box, T, dock the box   settled 4/4  T   3.3 mm   2.4 deg  box to corner   0.4 mm   0.0 deg
+episode 779: success park the T, box, T, dock the box   settled 4/4  T   3.7 mm   0.1 deg  box to corner   0.5 mm   1.5 deg
+episode 780: success T, box, dock the box               settled 3/3  T   0.1 mm   0.8 deg  box to corner   0.3 mm   0.3 deg
+episode 781: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   0.8 deg  box to corner   0.0 mm   0.0 deg
+episode 782: success T, box, dock the box               settled 3/3  T   1.2 mm   1.3 deg  box to corner   0.0 mm   0.0 deg
+episode 783: success T, box, dock the box               settled 3/3  T   1.6 mm   1.0 deg  box to corner   1.6 mm   1.6 deg
+episode 784: success T, box, dock the box               settled 3/3  T   2.4 mm   4.6 deg  box to corner   0.3 mm   0.2 deg
+episode 785: success park the box, T, box, dock the box settled 4/4  T   2.2 mm   1.2 deg  box to corner   0.3 mm   0.0 deg
+episode 786: success box, T, dock the box               settled 3/3  T   2.5 mm   0.8 deg  box to corner   0.1 mm   0.0 deg
+episode 787: success T, box, dock the box               settled 3/3  T   0.9 mm   3.6 deg  box to corner   0.2 mm   0.6 deg
+episode 788: success park the T, box, T, dock the box   settled 4/4  T   0.6 mm   3.0 deg  box to corner   2.7 mm   0.9 deg
+episode 789: success T, box, dock the box               settled 3/3  T   3.7 mm   4.4 deg  box to corner   0.5 mm   1.4 deg
+episode 790: success T, box, dock the box               settled 3/3  T   2.3 mm   1.0 deg  box to corner   0.0 mm   0.0 deg
+episode 791: success T, box, dock the box               settled 3/3  T   3.1 mm   1.3 deg  box to corner   0.1 mm   0.2 deg
+episode 792: success park the box, T, box, dock the box settled 4/4  T   0.2 mm   4.5 deg  box to corner   1.7 mm   1.7 deg
+episode 793: success T, box, dock the box               settled 3/3  T   3.1 mm   0.1 deg  box to corner   0.0 mm   0.0 deg
+episode 794: success T, box, dock the box               settled 3/3  T   1.8 mm   1.9 deg  box to corner   1.2 mm   0.9 deg
+episode 795: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   2.7 deg  box to corner   0.2 mm   0.5 deg  (simulator's plan: box, tee, box, dock)
+episode 796: success park the T, box, T, dock the box   settled 3/4  T   2.2 mm   2.0 deg  box to corner   1.3 mm   0.5 deg
+episode 797: success park the T, box, T, dock the box   settled 4/4  T   2.3 mm   4.5 deg  box to corner   0.8 mm   1.0 deg  (simulator's plan: box, tee, box, dock)
+episode 798: success box, T, dock the box               settled 3/3  T   1.0 mm   1.0 deg  box to corner   0.1 mm   0.2 deg
+episode 799: miss    T, box, dock the box               settled 1/3  T  14.2 mm  16.6 deg  box to corner  13.0 mm  28.6 deg  (simulator's plan: box, tee, box, dock)
+episode 800: success T, box, dock the box               settled 3/3  T   1.6 mm   2.5 deg  box to corner   0.2 mm   0.7 deg
+episode 801: success T, box, dock the box               settled 3/3  T   2.8 mm   1.1 deg  box to corner   1.8 mm   1.8 deg
+episode 802: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   2.0 deg  box to corner   0.0 mm   0.2 deg  (simulator's plan: box, tee, box, dock)
+episode 803: success T, box, dock the box               settled 3/3  T   4.9 mm   4.1 deg  box to corner   0.2 mm   0.1 deg
+episode 804: success T, box, dock the box               settled 3/3  T   2.4 mm   5.1 deg  box to corner   0.1 mm   0.3 deg
+episode 805: success T, box, dock the box               settled 3/3  T   8.1 mm   7.1 deg  box to corner   1.3 mm   2.7 deg
+episode 806: success box, T, dock the box               settled 3/3  T   1.2 mm   3.4 deg  box to corner   0.4 mm   0.9 deg
+episode 807: success T, box, dock the box               settled 2/3  T   1.5 mm   0.8 deg  box to corner   0.0 mm   0.0 deg
+episode 808: success box, T, dock the box               settled 3/3  T   4.4 mm   1.3 deg  box to corner   0.7 mm   0.7 deg
+episode 809: miss    box, T, dock the box               settled 1/3  T 113.7 mm  73.2 deg  box to corner 153.4 mm  19.3 deg
+episode 810: success T, box, dock the box               settled 3/3  T   1.5 mm   1.6 deg  box to corner   0.4 mm   0.1 deg
+episode 811: success box, T, dock the box               settled 3/3  T   2.3 mm   3.1 deg  box to corner   1.2 mm   2.6 deg
+episode 812: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   1.2 deg  box to corner   0.5 mm   0.0 deg
+episode 813: miss    park the T, box, T, dock the box   settled 1/4  T  12.7 mm   5.8 deg  box to corner  64.8 mm  26.8 deg
+episode 814: success box, T, dock the box               settled 3/3  T   4.9 mm   7.4 deg  box to corner   1.1 mm   0.0 deg
+episode 815: success park the T, box, T, dock the box   settled 4/4  T   2.4 mm   3.3 deg  box to corner   0.0 mm   0.0 deg
+episode 816: success T, box, dock the box               settled 3/3  T   0.2 mm   0.3 deg  box to corner   0.7 mm   0.0 deg
+episode 817: success box, T, dock the box               settled 3/3  T   4.3 mm   2.7 deg  box to corner   0.1 mm   0.0 deg
+episode 818: success T, box, dock the box               settled 2/3  T   2.3 mm   6.8 deg  box to corner   1.2 mm   3.5 deg
+episode 819: success T, box, dock the box               settled 3/3  T   3.9 mm   5.7 deg  box to corner   0.3 mm   0.6 deg
+episode 820: success box, T, dock the box               settled 3/3  T   3.7 mm   4.1 deg  box to corner   0.9 mm   0.2 deg
+episode 821: success T, box, dock the box               settled 3/3  T   1.6 mm   2.7 deg  box to corner   0.3 mm   0.0 deg
+episode 822: miss    box, T, dock the box               settled 1/3  T 110.3 mm   5.9 deg  box to corner   1.8 mm   0.5 deg
+episode 823: success T, box, dock the box               settled 3/3  T   3.7 mm   8.4 deg  box to corner   2.0 mm   1.5 deg
+episode 824: success T, box, dock the box               settled 3/3  T   1.8 mm   2.4 deg  box to corner   0.2 mm   0.6 deg
+episode 825: success T, box, dock the box               settled 2/3  T   1.3 mm   6.3 deg  box to corner   0.5 mm   0.9 deg
+episode 826: success park the T, box, T, dock the box   settled 4/4  T   2.6 mm   0.5 deg  box to corner   0.1 mm   0.2 deg
+episode 827: success T, box, dock the box               settled 3/3  T   2.7 mm   6.9 deg  box to corner   1.7 mm   0.3 deg
+episode 828: success T, box, dock the box               settled 3/3  T   1.8 mm   2.1 deg  box to corner   0.6 mm   0.5 deg
+episode 829: success T, box, dock the box               settled 3/3  T   1.0 mm   1.3 deg  box to corner   1.1 mm   1.0 deg
+episode 830: success box, T, dock the box               settled 3/3  T   6.7 mm   2.8 deg  box to corner   0.1 mm   0.0 deg
+episode 831: success T, box, dock the box               settled 3/3  T   4.8 mm   4.9 deg  box to corner   0.3 mm   0.3 deg
+episode 832: success park the box, T, box, dock the box settled 4/4  T   1.7 mm   3.2 deg  box to corner   0.5 mm   1.0 deg
+episode 833: success T, box, dock the box               settled 3/3  T   1.8 mm   0.2 deg  box to corner   0.2 mm   0.2 deg
+episode 834: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   5.1 deg  box to corner   0.2 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 835: success park the T, box, T, dock the box   settled 4/4  T   5.2 mm   2.8 deg  box to corner   0.1 mm   0.0 deg
+episode 836: success park the T, box, T, dock the box   settled 4/4  T   5.5 mm   0.1 deg  box to corner   1.5 mm   1.1 deg
+episode 837: success T, box, dock the box               settled 3/3  T   2.3 mm   2.8 deg  box to corner   0.1 mm   0.1 deg
+episode 838: success T, box, dock the box               settled 3/3  T   1.5 mm   1.8 deg  box to corner   0.6 mm   0.4 deg  (simulator's plan: box, tee, box, dock)
+episode 839: success box, T, dock the box               settled 3/3  T   5.6 mm   0.2 deg  box to corner   0.0 mm   0.0 deg
+episode 840: not started (no push plan keeps the skills' 15 mm rule (the blocks are 14.1 mm apart; no parking spot or corner helps): move a block)
+episode 841: success T, box, dock the box               settled 3/3  T   2.3 mm   1.4 deg  box to corner   0.5 mm   0.0 deg
+episode 842: success T, box, dock the box               settled 3/3  T   1.1 mm   1.2 deg  box to corner   1.8 mm   3.6 deg
+episode 843: success box, T, dock the box               settled 3/3  T   1.9 mm   3.5 deg  box to corner   1.0 mm   0.1 deg
+episode 844: not started (no push plan keeps the skills' 15 mm rule (the blocks are 14.5 mm apart; no parking spot or corner helps): move a block)
+episode 845: success T, box, dock the box               settled 3/3  T   3.1 mm   8.4 deg  box to corner   0.1 mm   0.1 deg
+episode 846: success T, box, dock the box               settled 3/3  T   2.6 mm   2.8 deg  box to corner   0.3 mm   0.0 deg
+episode 847: success T, box, dock the box               settled 3/3  T   0.6 mm   0.9 deg  box to corner   0.3 mm   0.9 deg
+episode 848: success park the T, box, T, dock the box   settled 4/4  T   2.8 mm   3.7 deg  box to corner   0.0 mm   0.0 deg
+episode 849: success park the T, box, T, dock the box   settled 4/4  T   3.0 mm   0.3 deg  box to corner   0.1 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 850: success box, T, dock the box               settled 3/3  T   2.1 mm   5.5 deg  box to corner   0.2 mm   0.0 deg
+episode 851: success box, T, dock the box               settled 3/3  T   6.5 mm   1.5 deg  box to corner   0.0 mm   0.0 deg
+episode 852: success T, box, dock the box               settled 3/3  T   2.8 mm   3.1 deg  box to corner   2.2 mm   3.2 deg
+episode 853: success T, box, dock the box               settled 3/3  T   1.5 mm   4.2 deg  box to corner   0.4 mm   0.0 deg
+episode 854: success park the box, T, box, dock the box settled 4/4  T   2.0 mm   5.4 deg  box to corner   1.3 mm   1.1 deg
+episode 855: success park the box, T, box, dock the box settled 3/4  T   1.6 mm   2.3 deg  box to corner   2.0 mm   0.2 deg
+episode 856: success box, T, dock the box               settled 3/3  T   2.6 mm   4.3 deg  box to corner   0.8 mm   0.2 deg
+episode 857: success box, T, dock the box               settled 3/3  T   4.0 mm   0.8 deg  box to corner   1.0 mm   2.1 deg
+episode 858: success park the box, T, box, dock the box settled 4/4  T   1.4 mm   2.5 deg  box to corner   0.5 mm   0.1 deg
+episode 859: success box, T, dock the box               settled 3/3  T   3.7 mm   2.1 deg  box to corner   1.0 mm   2.2 deg
+episode 860: success box, T, dock the box               settled 2/3  T   6.4 mm   0.5 deg  box to corner   1.2 mm   0.0 deg
+episode 861: success box, T, dock the box               settled 3/3  T   7.2 mm   3.9 deg  box to corner   0.9 mm   1.4 deg
+episode 862: success park the box, T, box, dock the box settled 4/4  T   2.1 mm   3.4 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: tee, box, tee, dock)
+episode 863: success T, box, dock the box               settled 3/3  T   2.6 mm   0.7 deg  box to corner   0.9 mm   0.3 deg
+episode 864: success box, T, dock the box               settled 3/3  T   2.6 mm   5.5 deg  box to corner   0.1 mm   0.2 deg
+episode 865: success box, T, dock the box               settled 3/3  T   3.4 mm   4.5 deg  box to corner   0.3 mm   0.0 deg
+episode 866: success box, T, dock the box               settled 3/3  T   5.0 mm   0.6 deg  box to corner   0.1 mm   0.1 deg
+episode 867: miss    park the box, T, box, dock the box settled 2/4  T  71.0 mm 105.7 deg  box to corner  63.3 mm  40.8 deg
+episode 868: success park the T, box, T, dock the box   settled 2/4  T   5.1 mm   9.7 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 869: success park the T, box, T, dock the box   settled 4/4  T   2.9 mm   2.3 deg  box to corner   0.7 mm   1.0 deg
+episode 870: success T, box, dock the box               settled 3/3  T   3.7 mm   1.0 deg  box to corner   1.6 mm   1.4 deg
+episode 871: success park the T, box, T, dock the box   settled 4/4  T   6.9 mm   4.4 deg  box to corner   0.2 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 872: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   4.1 deg  box to corner   0.0 mm   0.0 deg
+episode 873: success box, T, dock the box               settled 3/3  T   1.9 mm   0.1 deg  box to corner   1.4 mm   3.7 deg
+episode 874: success box, T, dock the box               settled 3/3  T   1.5 mm   2.6 deg  box to corner   0.4 mm   0.7 deg
+episode 875: success box, T, dock the box               settled 3/3  T   0.8 mm   2.4 deg  box to corner   1.1 mm   1.8 deg
+episode 876: success T, box, dock the box               settled 3/3  T   1.7 mm   0.5 deg  box to corner   0.4 mm   0.9 deg
+episode 877: success T, box, dock the box               settled 3/3  T   1.0 mm   4.6 deg  box to corner   0.2 mm   0.4 deg
+episode 878: success T, box, dock the box               settled 3/3  T   0.2 mm   0.6 deg  box to corner   0.0 mm   0.0 deg
+episode 879: success box, T, dock the box               settled 3/3  T   0.6 mm   3.8 deg  box to corner   0.5 mm   0.9 deg
+episode 880: success T, box, dock the box               settled 3/3  T   1.3 mm   3.4 deg  box to corner   1.7 mm   3.5 deg
+episode 881: success box, T, dock the box               settled 3/3  T   2.6 mm   5.2 deg  box to corner   0.0 mm   0.0 deg
+episode 882: success T, box, dock the box               settled 3/3  T   1.9 mm   5.1 deg  box to corner   0.0 mm   0.1 deg
+episode 883: miss    T, box, dock the box               settled 3/3  T   2.5 mm   4.3 deg  box to corner   4.0 mm   2.3 deg
+episode 884: success T, box, dock the box               settled 3/3  T   2.9 mm   0.8 deg  box to corner   0.4 mm   1.1 deg
+episode 885: success park the T, box, T, dock the box   settled 3/4  T   3.7 mm   1.9 deg  box to corner   0.0 mm   0.0 deg
+episode 886: success T, box, dock the box               settled 3/3  T   2.4 mm   2.1 deg  box to corner   0.1 mm   0.2 deg
+episode 887: success T, box, dock the box               settled 3/3  T   2.8 mm   3.1 deg  box to corner   0.2 mm   0.2 deg
+episode 888: miss    park the T, box, T, dock the box   settled 3/4  T  14.8 mm  10.0 deg  box to corner   0.6 mm   0.0 deg
+episode 889: success T, box, dock the box               settled 3/3  T   1.0 mm   4.7 deg  box to corner   0.3 mm   0.2 deg
+episode 890: success box, T, dock the box               settled 3/3  T   3.3 mm   7.2 deg  box to corner   2.6 mm   1.8 deg
+episode 891: success park the box, T, box, dock the box settled 4/4  T   1.1 mm   0.1 deg  box to corner   0.6 mm   1.3 deg
+episode 892: success T, box, dock the box               settled 3/3  T   2.1 mm   4.4 deg  box to corner   0.5 mm   1.8 deg
+episode 893: success box, T, dock the box               settled 2/3  T   6.0 mm   3.5 deg  box to corner   0.1 mm   0.2 deg
+episode 894: success T, box, dock the box               settled 3/3  T   1.8 mm   2.2 deg  box to corner   0.0 mm   0.0 deg
+episode 895: success T, box, dock the box               settled 3/3  T   3.7 mm   4.2 deg  box to corner   0.0 mm   0.0 deg
+episode 896: success box, T, dock the box               settled 3/3  T   4.2 mm   3.6 deg  box to corner   0.0 mm   0.0 deg
+episode 897: success T, box, dock the box               settled 3/3  T   1.3 mm   3.6 deg  box to corner   2.4 mm   0.0 deg
+episode 898: success park the box, T, box, dock the box settled 3/4  T   2.7 mm   6.7 deg  box to corner   0.3 mm   0.0 deg
+episode 899: success park the box, T, box, dock the box settled 4/4  T   0.6 mm   0.6 deg  box to corner   0.1 mm   0.1 deg
+episode 900: success box, T, dock the box               settled 3/3  T   3.2 mm   1.7 deg  box to corner   1.4 mm   1.9 deg
+episode 901: success T, box, dock the box               settled 3/3  T   1.5 mm   2.5 deg  box to corner   0.0 mm   0.0 deg
+episode 902: success T, box, dock the box               settled 3/3  T   1.0 mm   1.4 deg  box to corner   2.0 mm   0.8 deg
+episode 903: success park the T, box, T, dock the box   settled 3/4  T   5.2 mm   7.9 deg  box to corner   0.6 mm   0.5 deg  (simulator's plan: box, tee, box, dock)
+episode 904: success box, T, dock the box               settled 3/3  T   1.7 mm   3.4 deg  box to corner   2.0 mm   1.4 deg
+episode 905: success park the T, box, T, dock the box   settled 4/4  T   4.2 mm   0.5 deg  box to corner   2.3 mm   0.8 deg  (simulator's plan: box, tee, box, dock)
+episode 906: success park the T, box, T, dock the box   settled 4/4  T   0.6 mm   0.9 deg  box to corner   0.0 mm   0.0 deg
+episode 907: not started (no push plan keeps the skills' 15 mm rule (the blocks are 14.8 mm apart; no parking spot or corner helps): move a block)
+episode 908: success T, box, dock the box               settled 3/3  T   3.5 mm   6.1 deg  box to corner   0.0 mm   0.0 deg
+episode 909: success park the T, box, T, dock the box   settled 4/4  T   7.4 mm   4.8 deg  box to corner   0.2 mm   0.5 deg
+episode 910: success T, box, dock the box               settled 3/3  T   1.5 mm   5.5 deg  box to corner   1.1 mm   1.3 deg
+episode 911: success box, T, dock the box               settled 3/3  T   4.1 mm   0.5 deg  box to corner   1.3 mm   2.7 deg
+episode 912: success box, T, dock the box               settled 3/3  T   0.9 mm   2.3 deg  box to corner   0.0 mm   0.0 deg
+episode 913: success T, box, dock the box               settled 3/3  T   2.4 mm   7.8 deg  box to corner   0.0 mm   0.0 deg
+episode 914: success T, box, dock the box               settled 3/3  T   1.8 mm   5.0 deg  box to corner   1.3 mm   3.7 deg
+episode 915: success park the T, box, T, dock the box   settled 4/4  T   0.9 mm   1.6 deg  box to corner   0.4 mm   1.0 deg
+episode 916: success T, box, dock the box               settled 3/3  T   0.6 mm   2.2 deg  box to corner   0.1 mm   0.0 deg
+episode 917: success T, box, dock the box               settled 3/3  T   1.7 mm   0.4 deg  box to corner   0.0 mm   0.0 deg
+episode 918: success T, box, dock the box               settled 3/3  T   0.5 mm   3.9 deg  box to corner   0.5 mm   0.0 deg
+episode 919: success T, box, dock the box               settled 3/3  T   2.5 mm   0.2 deg  box to corner   0.1 mm   0.1 deg
+episode 920: success park the T, box, T, dock the box   settled 3/4  T   3.4 mm   2.2 deg  box to corner   1.4 mm   1.9 deg
+episode 921: success box, T, dock the box               settled 3/3  T   2.0 mm   2.1 deg  box to corner   0.2 mm   0.0 deg
+episode 922: success park the T, box, T, dock the box   settled 4/4  T   4.9 mm   3.3 deg  box to corner   2.2 mm   3.7 deg
+episode 923: success park the T, box, T, dock the box   settled 4/4  T   3.0 mm   2.7 deg  box to corner   0.0 mm   0.0 deg
+episode 924: success box, T, dock the box               settled 3/3  T   0.1 mm   1.1 deg  box to corner   1.0 mm   1.7 deg
+episode 925: success T, box, dock the box               settled 3/3  T   6.6 mm   2.4 deg  box to corner   0.0 mm   0.0 deg
+episode 926: miss    box, T, dock the box               settled 2/3  T  12.2 mm   8.9 deg  box to corner   0.1 mm   0.2 deg  (simulator's plan: tee, box, dock)
+episode 927: success T, box, dock the box               settled 3/3  T   2.7 mm   2.6 deg  box to corner   0.2 mm   0.0 deg
+episode 928: miss    park the T, box, T, dock the box   settled 1/4  T  47.9 mm  16.1 deg  box to corner  55.0 mm   0.1 deg
+episode 929: success T, box, dock the box               settled 3/3  T   0.9 mm   2.9 deg  box to corner   0.1 mm   0.2 deg
+episode 930: success T, box, dock the box               settled 3/3  T   2.7 mm   2.4 deg  box to corner   0.2 mm   0.0 deg
+episode 931: success box, T, dock the box               settled 3/3  T   0.2 mm   1.6 deg  box to corner   2.9 mm   0.4 deg
+episode 932: success T, box, dock the box               settled 3/3  T   1.2 mm   3.2 deg  box to corner   1.6 mm   0.1 deg
+episode 933: success T, box, dock the box               settled 3/3  T   3.5 mm   5.3 deg  box to corner   0.9 mm   0.8 deg
+episode 934: success T, box, dock the box               settled 3/3  T   2.7 mm   4.2 deg  box to corner   0.0 mm   0.0 deg
+episode 935: success T, box, dock the box               settled 3/3  T   1.1 mm   1.9 deg  box to corner   0.0 mm   0.0 deg
+episode 936: success park the T, box, T, dock the box   settled 3/4  T   2.8 mm   3.2 deg  box to corner   0.0 mm   0.0 deg  (simulator's plan: box, tee, box, dock)
+episode 937: success T, box, dock the box               settled 3/3  T   0.9 mm   5.0 deg  box to corner   0.8 mm   0.0 deg
+episode 938: success T, box, dock the box               settled 3/3  T   3.7 mm   1.7 deg  box to corner   1.5 mm   4.3 deg
+episode 939: success box, T, dock the box               settled 3/3  T   1.6 mm   3.7 deg  box to corner   0.8 mm   0.3 deg
+episode 940: success park the box, T, box, dock the box settled 4/4  T   4.6 mm   2.5 deg  box to corner   0.2 mm   0.6 deg  (simulator's plan: tee, box, tee, dock)
+episode 941: success box, T, dock the box               settled 3/3  T   3.4 mm   6.1 deg  box to corner   0.0 mm   0.0 deg
+episode 942: success box, T, dock the box               settled 3/3  T   1.0 mm   2.5 deg  box to corner   1.0 mm   0.0 deg
+episode 943: success box, T, dock the box               settled 3/3  T   1.6 mm   2.7 deg  box to corner   0.7 mm   2.0 deg
+episode 944: success T, box, dock the box               settled 3/3  T   1.9 mm   0.5 deg  box to corner   0.1 mm   0.3 deg
+episode 945: success park the T, box, T, dock the box   settled 4/4  T   3.7 mm   0.6 deg  box to corner   0.3 mm   0.6 deg  (simulator's plan: box, tee, box, dock)
+episode 946: success T, box, dock the box               settled 3/3  T   2.8 mm   0.8 deg  box to corner   1.0 mm   1.3 deg
+episode 947: success T, box, dock the box               settled 3/3  T   4.1 mm   2.9 deg  box to corner   0.5 mm   0.0 deg
+episode 948: miss    T, box, dock the box               settled 2/3  T   1.2 mm   1.9 deg  box to corner   2.8 mm   5.5 deg
+episode 949: success park the T, box, T, dock the box   settled 4/4  T   3.4 mm   6.5 deg  box to corner   0.1 mm   0.1 deg
+episode 950: success T, box, dock the box               settled 3/3  T   0.8 mm   3.3 deg  box to corner   0.6 mm   1.2 deg
+episode 951: success T, box, dock the box               settled 3/3  T   1.2 mm   3.6 deg  box to corner   0.6 mm   1.4 deg
+episode 952: success T, box, dock the box               settled 3/3  T   3.3 mm   1.5 deg  box to corner   0.1 mm   0.4 deg
+episode 953: success T, box, dock the box               settled 3/3  T   6.8 mm   6.3 deg  box to corner   0.0 mm   0.0 deg
+episode 954: success T, box, dock the box               settled 3/3  T   2.1 mm   5.6 deg  box to corner   1.0 mm   2.1 deg
+episode 955: success box, T, dock the box               settled 3/3  T   0.6 mm   2.8 deg  box to corner   0.6 mm   1.6 deg
+episode 956: success T, box, dock the box               settled 3/3  T   0.7 mm   2.2 deg  box to corner   1.0 mm   2.8 deg
+episode 957: success park the box, T, box, dock the box settled 4/4  T   2.0 mm   2.9 deg  box to corner   0.3 mm   1.0 deg
+episode 958: miss    T, box, dock the box               settled 3/3  T   3.8 mm   5.9 deg  box to corner   4.3 mm   1.3 deg
+episode 959: success T, box, dock the box               settled 3/3  T   3.3 mm   1.0 deg  box to corner   0.1 mm   0.0 deg
+episode 960: success park the T, box, T, dock the box   settled 4/4  T   1.5 mm   2.0 deg  box to corner   0.0 mm   0.0 deg
+episode 961: success T, box, dock the box               settled 2/3  T   2.8 mm   5.1 deg  box to corner   0.1 mm   0.0 deg
+episode 962: success park the T, box, T, dock the box   settled 4/4  T   4.9 mm   0.4 deg  box to corner   0.0 mm   0.0 deg
+episode 963: success box, T, dock the box               settled 3/3  T   3.3 mm   5.7 deg  box to corner   0.5 mm   0.1 deg
+episode 964: success park the T, box, T, dock the box   settled 4/4  T   5.4 mm   3.2 deg  box to corner   0.1 mm   0.2 deg
+episode 965: miss    park the T, box, T, dock the box   settled 3/4  T  54.6 mm  42.2 deg  box to corner   1.1 mm   1.3 deg
+episode 966: success T, box, dock the box               settled 3/3  T   2.5 mm   4.5 deg  box to corner   0.8 mm   0.0 deg
+episode 967: success park the box, T, box, dock the box settled 4/4  T   4.2 mm   7.4 deg  box to corner   1.0 mm   0.1 deg
+episode 968: success T, box, dock the box               settled 3/3  T   1.9 mm   4.3 deg  box to corner   0.1 mm   0.0 deg
+episode 969: success box, T, dock the box               settled 3/3  T   0.1 mm   0.3 deg  box to corner   1.4 mm   0.2 deg
+episode 970: success box, T, dock the box               settled 3/3  T   5.4 mm   4.5 deg  box to corner   0.0 mm   0.0 deg
+episode 971: success park the T, box, T, dock the box   settled 4/4  T   1.4 mm   0.7 deg  box to corner   1.8 mm   0.4 deg
+episode 972: success park the T, box, T, dock the box   settled 4/4  T   0.8 mm   1.1 deg  box to corner   0.0 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 973: success park the T, box, T, dock the box   settled 3/4  T   3.2 mm   2.8 deg  box to corner   0.1 mm   0.0 deg
+episode 974: success park the T, box, T, dock the box   settled 3/4  T   4.7 mm   0.2 deg  box to corner   1.9 mm   4.1 deg
+episode 975: success T, box, dock the box               settled 3/3  T   1.6 mm   4.2 deg  box to corner   2.1 mm   0.1 deg
+episode 976: success box, T, dock the box               settled 3/3  T   4.9 mm   4.4 deg  box to corner   0.8 mm   1.5 deg
+episode 977: success box, T, dock the box               settled 3/3  T   3.5 mm   5.8 deg  box to corner   0.0 mm   0.0 deg
+episode 978: success T, box, dock the box               settled 3/3  T   2.4 mm   2.3 deg  box to corner   0.3 mm   0.8 deg
+episode 979: success T, box, dock the box               settled 3/3  T   2.7 mm   2.4 deg  box to corner   1.3 mm   2.7 deg
+episode 980: miss    park the T, box, T, dock the box   settled 3/4  T  16.1 mm   8.1 deg  box to corner   0.7 mm   2.1 deg
+episode 981: success T, box, dock the box               settled 3/3  T   0.4 mm   1.7 deg  box to corner   0.0 mm   0.1 deg
+episode 982: success box, T, dock the box               settled 3/3  T   0.9 mm   3.1 deg  box to corner   1.8 mm   0.1 deg
+episode 983: success park the T, box, T, dock the box   settled 4/4  T   3.2 mm   0.3 deg  box to corner   0.2 mm   0.1 deg  (simulator's plan: box, tee, box, dock)
+episode 984: success box, T, dock the box               settled 3/3  T   3.1 mm   1.5 deg  box to corner   1.0 mm   3.1 deg
+episode 985: success park the T, box, T, dock the box   settled 4/4  T   2.9 mm   0.8 deg  box to corner   0.1 mm   0.3 deg
+episode 986: success box, T, dock the box               settled 2/3  T   3.9 mm   9.4 deg  box to corner   1.0 mm   2.8 deg
+episode 987: success park the T, box, T, dock the box   settled 4/4  T   2.7 mm   0.9 deg  box to corner   0.6 mm   0.9 deg
+episode 988: success park the T, box, T, dock the box   settled 3/4  T   2.9 mm   1.2 deg  box to corner   0.2 mm   0.3 deg
+episode 989: success box, T, dock the box               settled 3/3  T   0.9 mm   1.2 deg  box to corner   0.0 mm   0.1 deg
+episode 990: success park the T, box, T, dock the box   settled 4/4  T   3.8 mm   2.8 deg  box to corner   1.4 mm   0.3 deg
+episode 991: success park the box, T, box, dock the box settled 4/4  T   0.2 mm   3.9 deg  box to corner   0.0 mm   0.0 deg
+episode 992: success park the box, T, box, dock the box settled 4/4  T   0.9 mm   0.6 deg  box to corner   0.3 mm   0.4 deg
+episode 993: success park the T, box, T, dock the box   settled 4/4  T   1.1 mm   1.4 deg  box to corner   0.1 mm   0.1 deg
+episode 994: success park the T, box, T, dock the box   settled 4/4  T   5.0 mm   1.5 deg  box to corner   0.4 mm   1.0 deg
+episode 995: success box, T, dock the box               settled 3/3  T   2.3 mm   2.0 deg  box to corner   0.4 mm   1.3 deg
+episode 996: success box, T, dock the box               settled 3/3  T   3.2 mm   4.9 deg  box to corner   0.2 mm   0.1 deg
+episode 997: success T, box, dock the box               settled 3/3  T   5.4 mm   0.2 deg  box to corner   1.8 mm   0.2 deg
+episode 998: success T, box, dock the box               settled 3/3  T   0.6 mm   0.3 deg  box to corner   1.0 mm   1.0 deg
+episode 999: success box, T, dock the box               settled 3/3  T   0.8 mm   1.0 deg  box to corner   0.4 mm   0.2 deg
+episode 1000: success park the T, box, T, dock the box   settled 4/4  T   4.4 mm   4.0 deg  box to corner   1.4 mm   1.3 deg
+
+8 of 1000 episodes not started (episodes [172, 227, 242, 396, 691, 840, 844, 907])
+
+Level 3: 992 scenes (seed 20000003) through the hardware path
+  success                                          91.7%
+    T at its goal                                  94.7%
+    box nested in the corner                       95.3%
+  every push settled at its target                 82.2%
+  a block that had to stay moved >10 mm            3.0%
+  failures (a block left the band)                 0.9%
+  plans as the simulator's                         90.8%
+  episodes with a lost-object recovery             0.0%
+  gave up (object lost)                            0.0%
+  time to finish, median (s)                       17.4
