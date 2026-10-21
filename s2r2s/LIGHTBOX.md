@@ -242,12 +242,14 @@ ahead: each step removes one suspect from the list when a real push goes wrong.
    `scene.mat_height` to the measured value. Keep the mat flat (no bubbles, taped edges).
 2. *Mat and robot placement.* Mat near edge 7.9 cm from the pan axis, both centred left to right; base clamped.
    A mat further from the robot puts start poses over its near edge.
-3. *Rod.* Ø12 mm, 30 mm below the jaw tips (calipers). Otherwise set `pusher_radius` / `pusher_tip_z`.
+3. *Rod.* Ø12 mm, 30 mm below the jaw tips (calipers). Otherwise set `pusher_radius` / `pusher_tip_z`. Printable:
+   `print/rod.stl` (60 mm long, rounded tip); mounting in `print/README.txt`.
 4. *Friction.* Tilt test: a printed, ballasted T on a strip of the mat on a board; raise one end until it slides;
    μ = tan(angle), five repeats, also rod against T. Pass: inside the policy's training range (0.20–0.90 for
    `tee_lightbox_v1`). Then re-run `python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt --set rand.table_friction=μ,μ`.
-5. *Objects.* Print the T and the box to `objects.py`; colour them for the camera: bright, matte and different
-   from each other (the mat is black, the walls white).
+5. *Objects.* Print the T and the box to `objects.py` (`print/tee.stl`, `print/box.stl`; regenerate with
+   `python -m s2r2s.print_parts`); colour them for the camera: bright, matte and different from each other (the mat
+   is black, the walls white).
 
 **B. The arm, no objects**
 1. LeRobot calibration through every joint's full range (HARDWARE.md §1).

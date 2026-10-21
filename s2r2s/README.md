@@ -536,5 +536,6 @@ To change the rod after building the tool, edit `SceneConfig` in `scene.py`.
 | `s2r2s/camera_study.py` | Arm-occlusion study for choosing the real camera mount |
 | `s2r2s/occlusion.py` | Arm occlusion in the camera model (`rand.occlusion_camera`): ray-cast visible share, hidden frames dropped |
 | `s2r2s/lightbox.py` | Grade a policy in the lightbox scene and under its unmeasured quantities (see LIGHTBOX.md) |
+| `s2r2s/print_parts.py`, `print/` | Ready-to-print STLs of the T, the box, the rod and the gate walls, from the simulator's own dimensions, with print and mounting notes |
 | `s2r2s/hardware/` | Real-arm bridge (LeRobot), joint-map calibration, tracking test, policy runner (one policy, or Levels 2 and 3 with the planner and a skill per push): see [HARDWARE.md](HARDWARE.md) |
 | `tests/` | Regression tests |
