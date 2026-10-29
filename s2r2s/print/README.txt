@@ -15,12 +15,16 @@ BOX (box.stl): 40 x 40 x 20.
   (gyroid or grid, 3 walls), weigh, and adjust. Keep the infill even: the centre of mass may sit at most
   3 mm from the middle. Accuracy: within 0.3 mm of the sizes above; if a part is off by more, put
   its measured size in objects.py.
-  Colour: matte, bright and different for the T and the box (for example orange and green). Not black,
-  white or grey (the mat is black, the walls white), not silk or glossy. No text or logo on the top face:
-  the camera finds the blocks by the colour of their top face. Keep the top edges sharp.
+  Colour: matte and saturated, a different colour for each: a blue T (mid or royal blue, not navy) and a
+  magenta or hot-pink box, the colours the simulator tests (vision.DEFAULT_COLOURS). Not yellow or orange
+  (the camera software treats that range as the arm and ignores it), not black, white or grey (the mat,
+  servos and walls), not pastel or very dark, not silk, glossy or translucent. One spool per part. No text
+  or logo on the top face: the camera finds the blocks by the colour of their top face. Keep the top edges
+  sharp. `camera_calibrate colours` then learns the exact colours from the printed parts.
 
 ROD (rod.stl): diameter 12, length 60, rounded end (radius 6) = the tip.
   Print standing on its flat end, 100 % infill (or use a 12 mm wooden dowel or metal rod with a rounded end).
+  Colour: black, grey or white, never the T's or the box's colour (it touches them in the camera image).
   Mounting: rod vertical, rounded end down, clamped in the closed gripper and touching the FIXED jaw,
   centred between the jaw tips. The tip must reach exactly
   29.3 mm below the lowest point of the fixed jaw (the simulator's design figure is 30 mm). Mark
@@ -31,7 +35,8 @@ ROD (rod.stl): diameter 12, length 60, rounded end (radius 6) = the tip.
 GATE WALLS (Level 1 only): 10 thick, 25 tall, 90 (inner) and 110 (outer) long.
   Stand them in one line pointing straight away from the robot, with an opening of 64-70 between their ends,
   the shorter one nearer the robot, the opening's centre 195-205 from the base origin (38.8 behind the pan axis). Fix them
-  to the mat (double-sided tape) so they cannot move. Any infill.
+  to the mat (double-sided tape) so they cannot move. Any infill. Colour: white or light grey (the camera
+  need not see them: the runner is told where the gate is), never the T's or the box's colour.
 
 AFTER PRINTING: measure every part with calipers; weigh the T and the box; tilt-test the T on the mat for
 friction (LIGHTBOX.md A4). Paper printouts (ChArUco board, mat markers, rod marker) come from

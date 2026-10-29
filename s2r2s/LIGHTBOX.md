@@ -248,8 +248,9 @@ ahead: each step removes one suspect from the list when a real push goes wrong.
    μ = tan(angle), five repeats, also rod against T. Pass: inside the policy's training range (0.20–0.90 for
    `tee_lightbox_v1`). Then re-run `python -m s2r2s.lightbox runs\tee_lightbox_v1\best.pt --set rand.table_friction=μ,μ`.
 5. *Objects.* Print the T and the box to `objects.py` (`print/tee.stl`, `print/box.stl`; regenerate with
-   `python -m s2r2s.print_parts`); colour them for the camera: bright, matte and different from each other (the mat
-   is black, the walls white).
+   `python -m s2r2s.print_parts`); colour them for the camera: a blue T and a magenta box, matte and saturated, the
+   colours the simulator tests. Not yellow or orange (the camera software takes that range for the arm), black (the
+   mat) or white and grey (the walls). Gate walls white or light grey; rod black, grey or white.
 
 **B. The arm, no objects**
 1. LeRobot calibration through every joint's full range (HARDWARE.md §1).
