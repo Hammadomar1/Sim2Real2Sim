@@ -11,6 +11,7 @@ from s2r2s.hardware.joint_map import JointMap
 from s2r2s.hardware.poses import SimPoseSource
 from s2r2s.hardware.robots import SimRobot, SO101Robot
 from s2r2s.hardware.runner import PolicyRunner
+from s2r2s.hardware.safety import SafetyGuard, SafetyLimits, SafetyStop
 from s2r2s.kinematics import PusherKinematics
 from s2r2s.scene import SceneConfig, build_model
 
@@ -47,6 +48,8 @@ def test_calibration_recovers_signs_and_offsets():
 
 def test_so101_robot_talks_lerobot_degrees(monkeypatch):
     sent = {}
+    motors = ("shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper")
+    registers = {"Present_Load": 0, "Present_Temperature": 30, "Present_Voltage": 120, "Status": 0}
 
     class Config:
         def __init__(self, **kw):
@@ -54,7 +57,9 @@ def test_so101_robot_talks_lerobot_degrees(monkeypatch):
 
     class Follower:
         def __init__(self, config):
-            self.bus = types.SimpleNamespace(enable_torque=lambda: None, disable_torque=lambda: None)
+            self.calibration = {m: types.SimpleNamespace(range_min=100, range_max=3995) for m in motors}
+            self.bus = types.SimpleNamespace(enable_torque=lambda: None, disable_torque=lambda: None,
+                                             sync_read=lambda reg, names, normalize=True: {n: registers[reg] for n in names})
 
         def connect(self, calibrate=True):
             sent["calibrate"] = calibrate
@@ -75,12 +80,27 @@ def test_so101_robot_talks_lerobot_degrees(monkeypatch):
     for name in ("lerobot", "lerobot.robots"):
         monkeypatch.setitem(sys.modules, name, types.ModuleType(name))
     monkeypatch.setitem(sys.modules, "lerobot.robots.so_follower", module)
-    robot = SO101Robot("COM9", max_step_deg=3.0)
-    assert sent["config"]["use_degrees"] is True and sent["config"]["max_relative_target"] == 3.0
+    with pytest.raises(TypeError):                          # no real arm without a safety guard
+        SO101Robot("COM9", guard=None)
+    guard = SafetyGuard(limits=SafetyLimits(max_step_deg=3.0))
+    robot = SO101Robot("COM9", guard=guard)
+    assert sent["config"]["use_degrees"] is True
+    assert sent["config"]["max_relative_target"] is None    # the guard limits the step, from the same reading
     assert sent["config"]["disable_torque_on_disconnect"] is False      # the arm must not drop at exit
+    half = (3995 - 100) / 2 * 360 / 4095                    # the calibrated range reaches the guard
+    assert np.allclose(robot.calibrated_range_deg(), [[-half, half]] * 5)
     assert np.allclose(robot.read_joints(), [1, 2, 3, 4, 5])
-    robot.send_joints([10, 20, 30, 40, 50])
-    assert sent["action"]["elbow_flex.pos"] == 30 and sent["action"]["gripper.pos"] == 42.0   # gripper holds
+    robot.send_joints([1.5, 2.5, 30, 4, 5])
+    assert sent["action"]["elbow_flex.pos"] == pytest.approx(6.0)        # 3 deg from the measured 3 deg
+    assert sent["action"]["shoulder_pan.pos"] == pytest.approx(1.5) and sent["action"]["gripper.pos"] == 42.0
+    assert robot.health()["temperature"].tolist() == [30] * 5 and robot.health()["voltage"][0] == 12.0
+    registers["Status"] = 32                                # the servo reports an overload: hold and stop
+    robot.last_health = -math.inf
+    with pytest.raises(SafetyStop, match="overload"):
+        robot.send_joints([1, 2, 3, 4, 5])
+    assert sent["action"]["elbow_flex.pos"] == 3.0           # held where it was read
+    with pytest.raises(SafetyStop):
+        robot.send_joints([1, 2, 3, 4, 5])
     robot.close()
     assert sent["closed"]
 

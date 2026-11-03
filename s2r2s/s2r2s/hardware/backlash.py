@@ -42,6 +42,7 @@ from ..scene import SceneConfig, build_model
 from .joint_map import JointMap
 from .robots import SimRobot, SO101Robot
 from .runner import move_to
+from .safety import SafetyLimits, guard_for
 
 PROJECT = Path(__file__).resolve().parents[2]
 JOINTS = {"pan": 0, "lift": 1, "elbow": 2, "wrist": 3}
@@ -273,15 +274,16 @@ def main(argv=None):
         from .vision import EXTRINSICS, INTRINSICS
         probe_name = "camera" if sim or (INTRINSICS.exists() and EXTRINSICS.exists()) else "manual"
 
+    limits = SafetyLimits(max_step_deg=args.max_step_deg)
     if sim:
-        robot = SimRobot(scene, encoder_noise_deg=0.05, backlash_deg=_floats(args.sim_backlash),
-                         slack_deg=_floats(args.sim_slack))
         jmap = JointMap()
+        robot = SimRobot(scene, encoder_noise_deg=0.05, backlash_deg=_floats(args.sim_backlash),
+                         slack_deg=_floats(args.sim_slack), guard=guard_for(scene, jmap, limits))
     else:
         if not args.map:
             ap.error("--map is required on the real arm (run calibrate.py first)")
         jmap = JointMap.load(args.map)
-        robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
+        robot = SO101Robot(args.port, guard=guard_for(scene, jmap, limits))
 
     probe, cam = Probe(), None
     if probe_name == "camera":

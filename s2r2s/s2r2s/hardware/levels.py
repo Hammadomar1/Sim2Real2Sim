@@ -36,7 +36,9 @@ from ..train import load_policy
 from .joint_map import JointMap
 from .poses import CameraPoseSource, SimPoseSource
 from .robots import SimRobot, SO101Robot
-from .runner import PROJECT, PolicyRunner, lift_clear, load_skill, move_to, runner_options, save_trial
+from .runner import (PROJECT, PolicyRunner, lift_clear, load_skill, move_to, policy_scene, run_guard, runner_options,
+                     safety_meta, save_trial)
+from .safety import SafetyStop
 
 SKILLS = {TEE: "tee", BOX: "box", DOCK: "dock"}           # as the --tee / --box / --dock checkpoints
 EPISODE_SECONDS = {2: 60.0, 3: 80.0}                     # level2 / level3 main, with parking: 20 s per push at most
@@ -241,7 +243,8 @@ def dry_run(args):
     scenes = (Level3Env if args.level == 3 else Level2Env)(scenes_cfg, parking=True)
     hidden = JointMap.load(args.hidden_map) if args.hidden_map else JointMap()
     jmap = JointMap.load(args.map) if args.map else JointMap()
-    robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
+    robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05,
+                     guard=run_guard(cfg.scene, jmap, args))
     runner = LevelRunner(args.level, _skills(args), robot, None, jmap, realtime=False, **runner_options(args))
     camera = None
     if args.camera == "render":                  # the C920 pipeline on rendered frames (slow: ~0.25 s per tick)
@@ -323,7 +326,11 @@ def dry_run(args):
 
 def real_run(args):
     jmap = JointMap.load(args.map)
-    robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
+    try:       # the skills share the T skill's scene (lightbox, rod)
+        guard = run_guard(policy_scene(args.tee, args.lightbox), jmap, args)
+    except SafetyStop as stop:
+        raise SystemExit(f"not starting: {stop}")
+    robot = SO101Robot(args.port, guard=guard)
     runner = LevelRunner(args.level, _skills(args), robot, None, jmap, **runner_options(args))
     try:      # the camera masks the arm out using the skills' scene (lightbox, rod)
         poses = runner.poses = CameraPoseSource(scene=runner.cfg.scene, object_name=runner.cfg.task.objects[0],
@@ -355,6 +362,8 @@ def real_run(args):
                 break
     except KeyboardInterrupt:
         print("stopped by user")
+    except SafetyStop as stop:
+        print(f"SAFETY STOP: {stop}\nThe arm holds where it is. Support it before turning the power off.")
     except RuntimeError as error:
         print(f"trial not started: {error}")
     finally:
@@ -366,7 +375,7 @@ def real_run(args):
         box, _ = poses.read_block()
         meta = dict(skills={SKILLS[w]: str(c) for w, c in _skills(args).items() if w in runner.skills},
                     final=None if tee is None else tee.tolist(), block_final=None if box is None else box.tolist(),
-                    gave_up=mode == "lost", **(runner.summary() if runner.plan else {}))
+                    gave_up=mode == "lost", **(runner.summary() if runner.plan else {}), **safety_meta(robot))
         if runner.plan and tee is not None and box is not None:
             meta.update(runner.outcome(tee, box))
             print(f"{'success' if meta['success'] else 'miss'}: T {meta['tee_pos_mm']:.1f} mm {meta['tee_yaw_deg']:.1f} deg, "
