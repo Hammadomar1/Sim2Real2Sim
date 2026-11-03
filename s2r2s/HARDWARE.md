@@ -16,6 +16,58 @@ to `calibrate`, `tracking` and `runner` so the kinematics put z = 0 on the mat t
 commanded 4.8 mm into the mat. Policies trained in the lightbox (`runs/tee_lightbox_v1`) carry the setting.
 [LIGHTBOX.md](LIGHTBOX.md) has the measured geometry, the simulator's predictions and the full bring-up order.
 
+## Safety: every command is checked (`safety.py`)
+
+LeRobot writes whatever goal it is given. The servos clamp each joint to its calibrated range, but that range
+ends at the mechanical stops, and no single-joint limit stops a combination of angles from driving the gripper
+into the mat, the base, a wall or the arm itself. So every tool here (calibrate's hover moves, tracking,
+backlash, latency, the runner, Levels 2 and 3, teleoperation) sends its joint targets through one `SafetyGuard`,
+on the real arm and on the simulated one alike. `SO101Robot` refuses to start without one.
+
+| Check | When | Limit (`SafetyLimits`) |
+|---|---|---|
+| Joint ranges | every command | the model's range, and each servo's calibrated range less 3° |
+| Step and speed | every command | 5° from the measured joints (runner: `--max-step-deg`, 4°); 120°/s |
+| Collisions | every command: the target and the straight joint-space path to it, every 1° | rod: not below the mat; links: 10 mm from the mat, floor, table, walls and the calibrated camera; 5 mm from each other and the base |
+| Slower near anything | every command | within 20 mm of a clearance, speed and step shrink to 20 % (not for the rod over the mat: it pushes 5 mm above it) |
+| Servo monitor | 5 times a second | an error flag; 65 °C; 80 % load for 0.3 s without moving; told to move, not moving for 1 s; 10° from the last command (falling or pushed) |
+| Self-test | every tool start | known-unsafe commands refused, safe ones let through |
+| Workspace | every tool start | the joint map was calibrated with the same `--lightbox` setting (`calibrate.py` records it) |
+
+An unsafe target is cut back to the last safe point on its path: the arm waits there and follows again when the
+command comes back. From a pose that is already too close (the arm folded at rest) only moves that make nothing
+worse go through, so it can always be moved out. A fault holds the arm where it is (torque stays on: it does
+not drop) and ends the tool with `SAFETY STOP: <reason>`; support the arm before turning the power off. The
+trial log records the stop and every command the guard limited. Pushing never trips it: the guard flags none of
+4,100 poses across the pushing band, and limits no command of a lightbox Push-T episode.
+
+```powershell
+python -m s2r2s.hardware.safety                                                     # the guard's self-test, no robot
+python -m s2r2s.hardware.safety --robot so101 --port COM5 --map calibration\joint_map.json --lightbox --wiggle
+```
+
+The second, after every power-up: the self-test, the arm's pose against the limits, every servo's load,
+temperature, voltage and error flags, each servo's own position limits against LeRobot's calibration, then
+each joint moved ±3° slowly while the monitor watches.
+
+**Teleoperation** goes through the same guard (LeRobot's `lerobot-teleoperate` writes the leader's angles
+straight to the follower). The follower moves to the leader's pose slowly at the start, then follows with
+smooth acceleration; where the leader goes and the follower may not, it waits at the boundary.
+
+```powershell
+python -m s2r2s.hardware.teleop --leader-port COM6 --port COM5 --map calibration\joint_map.json --lightbox
+python -m s2r2s.hardware.teleop --robot sim --lightbox      # rehearsal: a scripted leader drives into everything
+```
+
+The rod stays clamped by default (the follower's gripper holds it); `--no-rod` lets the gripper follow the
+leader and drops the rod from the collision model. Rehearsed four ways (flat table or lightbox, with or
+without the rod): a leader driving the rod into the mat, the arm into the base, into itself, into the mat and
+into a wall; each time the follower stopped short, came back clear, and was never stopped by the monitor.
+
+**What the guard cannot know:** the pieces on the mat (the rod is meant to touch them), hands, cables, anything
+added to the setup, and errors in the joint map (calibration off by degrees moves the model). The servo
+monitor is the backstop for those; keep a hand near the power switch for the first runs.
+
 ## 0. Install (once)
 
 ```powershell

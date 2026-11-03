@@ -34,6 +34,7 @@ from ..kinematics import PusherKinematics
 from ..scene import SceneConfig, build_model
 from .joint_map import JointMap
 from .robots import SimRobot, SO101Robot
+from .safety import guard_for
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -151,10 +152,11 @@ def main(argv=None):
                           offset_deg=[*map(float, args.sim_offsets.split(",")), 0.0])
         scene = SceneConfig(timestep=0.005, lightbox=args.lightbox)
         scene.pusher_tip_z -= args.sim_rod
-        robot = SimRobot(scene, hidden=hidden, encoder_noise_deg=0.1)
+        robot = SimRobot(scene, hidden=hidden, encoder_noise_deg=0.1,
+                         guard=guard_for(SceneConfig(timestep=0.005, lightbox=args.lightbox), JointMap()))
         readings = simulate_touches(robot, points)
-    else:
-        robot = SO101Robot(args.port)
+    else:      # no map yet: the guard gets the fitted one before the arm moves (--verify)
+        robot = SO101Robot(args.port, guard=guard_for(SceneConfig(timestep=0.005, lightbox=args.lightbox), JointMap()))
         input("Torque will turn OFF. Support the arm with one hand, then press Enter...")
         robot.set_torque(False)
         readings = []
@@ -181,6 +183,8 @@ def main(argv=None):
         print(f"(sim rehearsal: hidden signs {args.sim_signs}, offsets {args.sim_offsets} deg, rod +{args.sim_rod * 1e3:.1f} mm)")
     if errors.max() > 0.003:
         print("WARNING: errors above 3 mm. Re-measure the points or check that the rod is not slipping.")
+    jmap.lightbox = args.lightbox
+    robot.guard.set_map(jmap)
     jmap.save(args.out)
     Path(args.out).with_suffix(".points.json").write_text(json.dumps(
         {"points": points.tolist(), "readings_deg": np.asarray(readings).tolist(), "errors_m": errors.tolist()}, indent=1))

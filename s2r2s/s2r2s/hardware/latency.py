@@ -39,6 +39,7 @@ from ..scene import PAN_AXIS_X, SceneConfig, build_model
 from .joint_map import JointMap
 from .rod_marker import ROD_MARKER, find, locate
 from .runner import move_to
+from .safety import SafetyLimits, guard_for
 
 PROJECT = Path(__file__).resolve().parents[2]
 SIM_ESTIMATOR_MS = 33.0          # HARDWARE.md section 4: median per frame on this laptop, rendered C920 frames
@@ -236,7 +237,8 @@ def main(argv=None):
         from .robots import SimRobot
         from .vision import DEFAULT_COLOURS
         scene.c920_pos, scene.c920_target = MOUNTS[args.mount]
-        robot = SimRobot(scene, control_dt=0.01, encoder_noise_deg=0.05)
+        robot = SimRobot(scene, control_dt=0.01, encoder_noise_deg=0.05,
+                         guard=guard_for(scene, JointMap(), SafetyLimits(max_step_deg=args.max_step_deg)))
         robot.place((args.reach, 0.0), (0.27, -0.12, 0.6), tool_z=args.hover)    # the T in view, out of the way
         robot.move_by_hand(q0)
         sim_cam = SimCamera(scene, rod_marker=ROD_MARKER)
@@ -251,7 +253,7 @@ def main(argv=None):
         camera = CameraModel.load()
         colours = Colours.load() if COLOURS.exists() else None
         jmap = JointMap.load(args.map)
-        robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
+        robot = SO101Robot(args.port, guard=guard_for(scene, jmap, SafetyLimits(max_step_deg=args.max_step_deg)))
         source = None
         try:
             input(f"Tape the rod marker to the rod (rod_marker.py) and put the T on the mat in view, away from the rod. "

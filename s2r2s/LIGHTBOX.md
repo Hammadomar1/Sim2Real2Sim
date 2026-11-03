@@ -252,14 +252,19 @@ ahead: each step removes one suspect from the list when a real push goes wrong.
    is black, the walls white).
 
 **B. The arm, no objects**
-1. LeRobot calibration through every joint's full range (HARDWARE.md §1).
+1. LeRobot calibration through every joint's full range (HARDWARE.md §1). Then, and after every power-up, the
+   safety check: `python -m s2r2s.hardware.safety --robot so101 --port COM5 --lightbox --wiggle` (add `--map` once
+   step 2 has made one). Pass: every line PASS. Every tool below sends its commands through the same guard
+   (HARDWARE.md, *Safety*).
 2. *Touch-point calibration on the mat:* `python -m s2r2s.hardware.calibrate --robot so101 --port COM5 --verify --lightbox`.
    Pass: RMS ≤ 1.5 mm, no point above 3 mm. (Simulated calibration error ≤0.5° per joint costs the flat-table
    policy 0.3 points, ≤1° costs 6.) The residual cannot catch a missing `--lightbox`: in simulation, a fit on the
    mat with the flat-table model still reaches 0.56 mm RMS, hiding the 9.8 mm in elbow and wrist offsets 4–5° off,
    and when it also fits the rod length (no `--no-fit-rod`) the rod ends 1 mm into the mat. Step 3 catches that.
-3. *Rod height.* Hover at commanded heights +2, +1, 0 and −1 mm over the nine points (`--verify` shows the
-   points); paper should slide under at +1 mm and catch at −1 mm. This checks mat height and calibration together.
+3. *Rod height.* Hover at commanded heights +2, +1 and 0 mm over the nine points (`--verify` shows the
+   points); paper should slide under at +1 mm and be caught at 0 mm. This checks mat height and calibration
+   together. (The safety guard refuses any command below the mat: a position servo pressing on a surface
+   reaches full torque within a fraction of a degree.)
 4. *Backlash:* `python -m s2r2s.hardware.backlash --robot so101 --port COM5 --map calibration\joint_map.json --lightbox`
    (HARDWARE.md §3). At reaches of 15, 20 and 25 cm each joint comes to the same target from both sides, three
    times. The encoders give the play they see. The rod's actual motion gives the play they miss: from the C920 and

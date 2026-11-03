@@ -14,6 +14,9 @@ sources of measurements differ:
     latency.py     camera latency: a rod marker swung by the pan joint, camera track against the encoders
     rod_marker.py  the ArUco marker on the rod that backlash.py and latency.py track
     runner.py      run a trained policy in a 20 Hz loop, with safety limits, lost-object recovery and trial logs
+    safety.py      the guard every arm command goes through: joint limits, speed, a collision check of the path,
+                   a servo monitor, a start-up self-test (python -m s2r2s.hardware.safety)
+    teleop.py      teleoperation from the leader arm, through the guard
 
 Every tool works against SimRobot today, so the pipeline is tested before the arm is ready.
 """

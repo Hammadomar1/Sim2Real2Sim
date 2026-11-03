@@ -8,7 +8,8 @@ a few degrees and a joint may turn the other way. Per joint:
     q_mujoco [rad] = sign * radians(reading [deg] - offset [deg])
 
 ``calibrate.py`` measures sign and offset on your arm; until then the defaults (sign +1,
-offset 0) apply.
+offset 0) apply. It also records whether the points were on the lightbox mat (``lightbox``), so a
+later run in the other workspace is refused (safety.guard_for); None: not recorded (older maps).
 """
 from __future__ import annotations
 
@@ -27,6 +28,7 @@ class JointMap:
     offset_deg: list[float] = field(default_factory=lambda: [0.0] * 5)
     tool_length_error: float = 0.0        # measured rod length minus the model's (m), informational
     names: tuple[str, ...] = ARM_JOINTS
+    lightbox: bool | None = None          # calibrated on the lightbox mat (True), a flat table (False), unknown
 
     def to_sim(self, reading_deg) -> np.ndarray:
         """Robot readings (..., 5) in degrees -> MuJoCo radians."""

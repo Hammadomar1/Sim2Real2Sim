@@ -26,6 +26,7 @@ from ..scene import SceneConfig, build_model
 from .joint_map import JointMap
 from .robots import SimRobot, SO101Robot
 from .runner import move_to
+from .safety import guard_for
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -69,7 +70,8 @@ def main(argv=None):
     scene = SceneConfig(timestep=0.005, lightbox=args.lightbox)
     kin = PusherKinematics(build_model(scene, visual=False))
     realtime = args.robot == "so101"
-    robot = SO101Robot(args.port) if realtime else SimRobot(scene, encoder_noise_deg=0.05)
+    guard = guard_for(scene, jmap)
+    robot = SO101Robot(args.port, guard=guard) if realtime else SimRobot(scene, encoder_noise_deg=0.05, guard=guard)
     path = square_path(half=args.half, speed=args.speed, dt=dt)
     move_to(robot, jmap, kin, (*path[0], args.height), seconds=3.0, realtime=realtime)
     q = jmap.to_sim(robot.read_joints())[None]

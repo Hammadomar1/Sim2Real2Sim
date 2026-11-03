@@ -437,9 +437,11 @@ def touch_markers(layout: list[Marker], args) -> list[Marker]:
     from ..scene import build_model
     from .joint_map import JointMap
     from .robots import SO101Robot
+    from .safety import guard_for
     jmap = JointMap.load(args.map)
-    kin = PusherKinematics(build_model(SceneConfig(timestep=0.005, lightbox=True), visual=False))
-    robot = SO101Robot(args.port)
+    scene = SceneConfig(timestep=0.005, lightbox=True)
+    kin = PusherKinematics(build_model(scene, visual=False))
+    robot = SO101Robot(args.port, guard=guard_for(scene, jmap, camera=False))   # the camera is being calibrated
     out = []
     try:
         input("Torque will turn OFF. Support the arm with one hand, then press Enter...")

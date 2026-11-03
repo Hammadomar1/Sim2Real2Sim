@@ -11,7 +11,10 @@
 The policy, the controller (action -> commanded rod position -> IK) and the observation code are
 the ones used in training; only the measurements come from outside (joint encoders, camera).
 Safety: joint targets move at most --max-step-deg per tick from the measured joints and the rod stays
-inside the reachable annulus at its fixed height. When the object has not been seen for --max-pose-age
+inside the reachable annulus at its fixed height. Every servo target, the sim dry run's too, then goes through
+the safety guard (safety.py: joint limits, speed, a collision check of the path against the arm itself, the base,
+the mat, the walls and the camera, a servo monitor); a safety stop ends the trial with the arm holding where it
+is, and the trial log records it and every command the guard limited. When the object has not been seen for --max-pose-age
 seconds (2 s: the policy closes most shorter gaps itself by pushing on), the runner lifts the rod and
 moves it a few cm out of the camera's way until the object is seen again, then hands back to the policy
 (--on-lost hold: hold still instead); after --recover-seconds it gives up. A trial whose start position
@@ -39,6 +42,7 @@ from ..train import load_policy
 from .joint_map import JointMap
 from .poses import CameraPoseSource, SimPoseSource
 from .robots import SimRobot, SO101Robot
+from .safety import SafetyLimits, SafetyStop, guard_for
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -601,8 +605,28 @@ def runner_options(args) -> dict:
                 on_lost=args.on_lost, recover_seconds=args.recover_seconds, ramp=not args.no_ramp, ramp_hz=args.ramp_hz)
 
 
+def run_guard(scene, jmap: JointMap, args):
+    """The safety guard for a run: the policy's scene (lightbox, rod), the joint map, ``--max-step-deg``."""
+    return guard_for(scene, jmap, SafetyLimits(max_step_deg=args.max_step_deg))
+
+
+def policy_scene(checkpoint, lightbox: bool = False):
+    """The scene a policy was trained in, in the lightbox with ``lightbox`` (the guard must know the mat)."""
+    _, cfg, _ = load_policy(checkpoint, "cpu")
+    cfg.scene.lightbox = cfg.scene.lightbox or lightbox
+    return cfg.scene
+
+
+def safety_meta(robot) -> dict:
+    """What the guard limited during a real trial, and why it stopped the arm (for the trial log)."""
+    return dict(safety_stop=robot.stopped, safety_events=[[t, e] for t, e in robot.event_log[-200:]])
+
+
 def lift_clear(robot, jmap: JointMap, runner: PolicyRunner):
-    """End of a real trial: lift the rod clear, up to 4 cm, as high as a vertical rod reaches there."""
+    """End of a real trial: lift the rod clear, up to 4 cm, as high as a vertical rod reaches there. Not after a
+    safety stop: then the arm holds where it is."""
+    if getattr(robot, "stopped", None):
+        return
     tip = runner.twin.tip[0]
     try:
         move_to(robot, jmap, runner.twin.kin, (tip[0], tip[1], runner._lift_z(tip[:2], top=0.04)), seconds=1.0)
@@ -620,7 +644,8 @@ def dry_run(args):
     scenes = make_env(scenes_cfg)            # only used to draw the same kind of scenes as training
     hidden = JointMap.load(args.hidden_map) if args.hidden_map else JointMap()
     jmap = JointMap.load(args.map) if args.map else JointMap()
-    robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05)
+    robot = SimRobot(cfg.scene, cfg.task.objects[0], hidden=hidden, encoder_noise_deg=0.05,
+                     guard=run_guard(cfg.scene, jmap, args))
     gate_task, clutter_task = hasattr(scenes, "gate_centre"), hasattr(scenes, "clutter_home")
     runner = PolicyRunner(args.checkpoint, robot, None, jmap, realtime=False, **runner_options(args))
     camera = None
@@ -706,7 +731,11 @@ def dry_run(args):
 
 def real_run(args):
     jmap = JointMap.load(args.map)
-    robot = SO101Robot(args.port, max_step_deg=args.max_step_deg)
+    try:
+        guard = run_guard(policy_scene(args.checkpoint, args.lightbox), jmap, args)
+    except SafetyStop as stop:
+        raise SystemExit(f"not starting: {stop}")
+    robot = SO101Robot(args.port, guard=guard)
     runner = PolicyRunner(args.checkpoint, robot, None, jmap, **runner_options(args))
     try:      # the camera masks the arm out using the policy's own scene (lightbox, rod)
         poses = runner.poses = CameraPoseSource(scene=runner.cfg.scene, block_name=runner.cfg.task.clutter or "box")
@@ -727,13 +756,17 @@ def real_run(args):
                 break
     except KeyboardInterrupt:
         print("stopped by user")
+    except SafetyStop as stop:
+        print(f"SAFETY STOP: {stop}\nThe arm holds where it is. Support it before turning the power off.")
     except RuntimeError as error:
         print(f"trial not started: {error}")
     finally:
         lift_clear(robot, jmap, runner)
         pose, _ = poses.read()
         meta = dict(checkpoint=args.checkpoint, goal=goal.tolist(), final=None if pose is None else pose.tolist(),
-                    start_shift=runner.start_shift, recoveries=runner.events)
+                    start_shift=runner.start_shift, recoveries=runner.events, **safety_meta(robot))
+        if robot.event_log:
+            print(f"the safety guard limited {len(robot.event_log)} commands (see the trial log)")
         if pose is not None:
             meta["pos_err"], meta["yaw_err"] = runner.errors(pose)
         meta["camera"] = poses.summary()
